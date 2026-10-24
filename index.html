@@ -49,7 +49,6 @@
         radial-gradient(circle at 90% 85%, rgba(56, 189, 248, 0.03) 0%, transparent 50%);
     }
 
-    /* Hero Section */
     .hero-section {
       height: 100vh;
       width: 100%;
@@ -209,7 +208,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Workspace */
     .app-workspace {
       min-height: 100vh;
       display: flex;
@@ -221,26 +219,27 @@
       width: 320px;
       background: var(--bg-surface);
       border-right: 1px solid var(--border-subtle);
-      padding: 24px 18px;
+      padding: 28px 20px;
       display: flex;
       flex-direction: column;
-      gap: 18px;
+      gap: 22px;
     }
 
     .brand-wrap {
       display: flex;
       align-items: center;
       gap: 12px;
-      padding-bottom: 16px;
+      padding-bottom: 18px;
       border-bottom: 1px solid var(--border-subtle);
     }
 
     .brand-mark {
-      width: 36px;
-      height: 36px;
+      width: 40px;
+      height: 40px;
       display: flex;
       align-items: center;
       justify-content: center;
+      flex-shrink: 0;
     }
 
     .brand-mark svg {
@@ -262,8 +261,8 @@
     .copilot-sidebar-card {
       background: linear-gradient(145deg, rgba(212, 175, 55, 0.06), rgba(16, 185, 129, 0.04));
       border: 1px solid rgba(212, 175, 55, 0.25);
-      border-radius: 12px;
-      padding: 14px;
+      border-radius: 14px;
+      padding: 16px;
       display: flex;
       flex-direction: column;
       gap: 10px;
@@ -273,7 +272,7 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      font-size: 0.72rem;
+      font-size: 0.75rem;
       font-weight: 700;
       color: var(--gold);
       text-transform: uppercase;
@@ -283,14 +282,14 @@
     .copilot-sidebar-card p {
       font-size: 0.78rem;
       color: var(--text-muted);
-      line-height: 1.4;
+      line-height: 1.45;
     }
 
     .btn-ai-trigger {
       background: var(--gold-gradient);
       color: #06080d;
       font-weight: 700;
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       border: none;
       padding: 10px 14px;
       border-radius: 8px;
@@ -299,22 +298,23 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      transition: all 0.25s;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      letter-spacing: 0.5px;
     }
 
     .btn-ai-trigger:hover {
-      box-shadow: 0 4px 18px rgba(212, 175, 55, 0.35);
+      box-shadow: 0 4px 20px rgba(212, 175, 55, 0.35);
       transform: translateY(-2px);
     }
 
-    .sidebar-widget {
+    .discipline-box {
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
       border-radius: 12px;
-      padding: 14px;
+      padding: 16px;
     }
 
-    .sidebar-widget h4 {
+    .discipline-box h4 {
       font-size: 0.72rem;
       text-transform: uppercase;
       letter-spacing: 1px;
@@ -323,7 +323,7 @@
     }
 
     .discipline-score {
-      font-size: 1.6rem;
+      font-size: 1.7rem;
       font-weight: 800;
     }
 
@@ -332,7 +332,7 @@
       background: rgba(255, 255, 255, 0.08);
       border-radius: 3px;
       overflow: hidden;
-      margin-top: 8px;
+      margin-top: 10px;
     }
 
     .discipline-bar-fill {
@@ -342,20 +342,35 @@
       transition: width 0.4s ease;
     }
 
+    .leak-tracker {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 16px;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .leak-tracker h4 {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
     .leak-list {
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      max-height: 140px;
-      overflow-y: auto;
+      gap: 10px;
     }
 
     .leak-item {
       display: flex;
       flex-direction: column;
-      font-size: 0.76rem;
+      font-size: 0.78rem;
       border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-      padding-bottom: 6px;
+      padding-bottom: 8px;
     }
 
     .leak-header {
@@ -365,32 +380,15 @@
       font-weight: 600;
     }
 
-    .data-mgmt-buttons {
-      display: flex;
-      gap: 8px;
-    }
-
-    .btn-secondary {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--border-subtle);
+    .leak-impact {
+      font-size: 0.7rem;
       color: var(--text-muted);
-      padding: 8px;
-      border-radius: 6px;
-      font-size: 0.75rem;
-      cursor: pointer;
-      flex: 1;
-      text-align: center;
-      transition: all 0.2s;
-    }
-
-    .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.1);
-      color: var(--text-main);
+      margin-top: 3px;
     }
 
     main {
       flex: 1;
-      padding: 28px 36px;
+      padding: 32px 42px;
       overflow-y: auto;
     }
 
@@ -398,24 +396,25 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 24px;
+      margin-bottom: 28px;
     }
 
     .header-bar h2 {
-      font-size: 1.35rem;
+      font-size: 1.3rem;
       font-weight: 600;
       letter-spacing: -0.02em;
     }
 
     .month-selector select {
-      background: rgba(18, 24, 38, 0.85);
+      background: rgba(18, 24, 38, 0.8);
       color: var(--text-main);
       border: 1px solid var(--border-subtle);
-      padding: 8px 14px;
+      padding: 9px 16px;
       border-radius: 8px;
-      font-size: 0.88rem;
+      font-size: 0.9rem;
       cursor: pointer;
       outline: none;
+      backdrop-filter: blur(8px);
     }
 
     .month-selector select:focus {
@@ -425,20 +424,20 @@
     .kpi-grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      gap: 14px;
-      margin-bottom: 24px;
+      gap: 16px;
+      margin-bottom: 28px;
     }
 
     .kpi-card {
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
       border-radius: 12px;
-      padding: 16px 18px;
+      padding: 18px 20px;
       backdrop-filter: blur(10px);
     }
 
     .kpi-label {
-      font-size: 0.7rem;
+      font-size: 0.72rem;
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.8px;
@@ -446,52 +445,22 @@
     }
 
     .kpi-value {
-      font-size: 1.5rem;
+      font-size: 1.55rem;
       font-weight: 700;
       letter-spacing: -0.03em;
     }
 
     .kpi-sub {
-      font-size: 0.74rem;
+      font-size: 0.75rem;
       color: var(--text-muted);
-      margin-top: 4px;
+      margin-top: 5px;
     }
 
-    /* Equity Curve Chart Box */
-    .chart-box {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: 14px;
-      padding: 18px 20px;
-      margin-bottom: 24px;
-    }
-
-    .chart-box-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-    }
-
-    .chart-box-header h3 {
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--gold);
-    }
-
-    #equityCanvas {
-      width: 100%;
-      height: 120px;
-      display: block;
-    }
-
-    /* Calendar Grid */
     .calendar-container {
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
       border-radius: 16px;
-      padding: 22px;
+      padding: 24px;
       backdrop-filter: blur(12px);
     }
 
@@ -501,26 +470,26 @@
       text-align: center;
       color: var(--text-muted);
       font-weight: 600;
-      font-size: 0.78rem;
+      font-size: 0.8rem;
       text-transform: uppercase;
       letter-spacing: 1px;
-      padding-bottom: 12px;
+      padding-bottom: 14px;
       border-bottom: 1px solid var(--border-subtle);
     }
 
     .calendar-days {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      gap: 10px;
-      margin-top: 12px;
+      gap: 12px;
+      margin-top: 14px;
     }
 
     .day-cell {
-      min-height: 105px;
+      min-height: 110px;
       background: rgba(12, 16, 23, 0.6);
       border: 1px solid var(--border-subtle);
       border-radius: 10px;
-      padding: 10px;
+      padding: 12px;
       cursor: pointer;
       display: flex;
       flex-direction: column;
@@ -554,13 +523,14 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 0.82rem;
+      font-size: 0.85rem;
       color: var(--text-muted);
     }
 
     .day-pnl {
       font-weight: 700;
-      font-size: 1rem;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
       margin-top: 4px;
     }
 
@@ -571,14 +541,15 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 0.7rem;
+      font-size: 0.72rem;
     }
 
     .trade-badge {
       background: rgba(255, 255, 255, 0.08);
-      padding: 2px 6px;
+      padding: 2px 7px;
       border-radius: 4px;
       color: var(--text-muted);
+      font-weight: 500;
     }
 
     .mistake-badge {
@@ -586,7 +557,6 @@
       font-weight: 600;
     }
 
-    /* Modals */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -603,21 +573,21 @@
       border: 1px solid var(--border-focus);
       border-radius: 16px;
       width: 90%;
-      max-width: 620px;
-      padding: 26px;
+      max-width: 650px;
+      padding: 28px;
       max-height: 90vh;
       display: flex;
       flex-direction: column;
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
     }
 
-    .modal.modal-large { max-width: 800px; }
+    .modal.modal-large { max-width: 780px; }
 
     .modal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 18px;
+      margin-bottom: 20px;
     }
 
     .close-btn {
@@ -633,40 +603,40 @@
       padding-right: 6px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 16px;
     }
 
     .ai-headline-box {
       background: rgba(212, 175, 55, 0.07);
       border-left: 3px solid var(--gold);
-      padding: 14px;
+      padding: 16px;
       border-radius: 6px;
-      font-size: 0.9rem;
-      line-height: 1.5;
+      font-size: 0.92rem;
+      line-height: 1.6;
     }
 
     .ai-grid-stats {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
+      gap: 14px;
     }
 
     .ai-stat-card {
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
       border-radius: 10px;
-      padding: 12px;
+      padding: 14px;
     }
 
     .ai-stat-card .label {
-      font-size: 0.68rem;
+      font-size: 0.7rem;
       color: var(--text-muted);
       text-transform: uppercase;
       font-weight: 600;
     }
 
     .ai-stat-card .val {
-      font-size: 1.2rem;
+      font-size: 1.25rem;
       font-weight: 700;
       margin-top: 4px;
     }
@@ -675,30 +645,30 @@
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
       border-radius: 10px;
-      padding: 16px;
+      padding: 18px;
     }
 
     .ai-section h4 {
-      font-size: 0.78rem;
+      font-size: 0.8rem;
       text-transform: uppercase;
       letter-spacing: 1px;
       color: var(--gold);
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
 
     .ai-rules-list {
       list-style-type: none;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
     }
 
     .ai-rules-list li {
-      font-size: 0.84rem;
+      font-size: 0.86rem;
       display: flex;
       align-items: flex-start;
-      gap: 8px;
-      line-height: 1.4;
+      gap: 10px;
+      line-height: 1.5;
     }
 
     .ai-rules-list li::before {
@@ -706,45 +676,35 @@
       color: var(--gold);
     }
 
-    /* Modal Form Inputs */
     .form-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      gap: 14px;
     }
 
     .form-group {
       display: flex;
       flex-direction: column;
-      gap: 5px;
+      gap: 6px;
     }
 
     .form-group.full { grid-column: span 2; }
 
     label {
-      font-size: 0.7rem;
+      font-size: 0.72rem;
       color: var(--text-muted);
       text-transform: uppercase;
       font-weight: 600;
-      letter-spacing: 0.5px;
     }
 
-    /* Modern Dark Themed Form Controls */
     input, select, textarea {
-      background: #080c14;
+      background: var(--bg-base);
       border: 1px solid var(--border-subtle);
       border-radius: 8px;
-      padding: 10px;
+      padding: 11px;
       color: var(--text-main);
-      font-size: 0.88rem;
+      font-size: 0.9rem;
       outline: none;
-      transition: border-color 0.2s;
-    }
-
-    select option {
-      background: #0f141f;
-      color: var(--text-main);
-      padding: 8px;
     }
 
     input:focus, select:focus, textarea:focus {
@@ -755,28 +715,28 @@
       background: var(--gold-gradient);
       color: #06080d;
       font-weight: 700;
-      padding: 12px;
+      padding: 13px;
       border-radius: 8px;
       border: none;
       cursor: pointer;
-      margin-top: 14px;
+      margin-top: 18px;
       width: 100%;
     }
 
     .trade-list-container {
-      margin-top: 16px;
-      max-height: 160px;
+      margin-top: 20px;
+      max-height: 180px;
       overflow-y: auto;
       border-top: 1px solid var(--border-subtle);
-      padding-top: 12px;
+      padding-top: 14px;
     }
 
     .trade-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 0.82rem;
-      padding: 6px 0;
+      font-size: 0.85rem;
+      padding: 8px 0;
       border-bottom: 1px solid rgba(255, 255, 255, 0.04);
     }
 
@@ -790,26 +750,10 @@
     }
 
     .delete-btn:hover { color: var(--rose); }
-
-    .image-preview-box {
-      margin-top: 6px;
-      max-height: 100px;
-      border-radius: 6px;
-      overflow: hidden;
-      display: none;
-      border: 1px solid var(--border-subtle);
-    }
-
-    .image-preview-box img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
   </style>
 </head>
 <body>
 
-  <!-- 1. Hero Landing Section -->
   <section class="hero-section">
     <div class="hero-glow"></div>
     <div class="hero-content">
@@ -840,16 +784,19 @@
         Eliminate discretionary leaks. Master your behavioral psychology and calculate your exact statistical edge with institutional calendar tracking and autonomous AI audits.
       </p>
       <div class="hero-actions">
-        <a href="#workspace" class="btn-enter" id="slideDownBtn">Launch Terminal ↓</a>
+        <a href="#workspace" class="btn-enter" id="slideDownBtn">
+          Launch Terminal <span>↓</span>
+        </a>
       </div>
     </div>
 
-    <a href="#workspace" class="scroll-down-indicator">ENTER TERMINAL<span></span></a>
+    <a href="#workspace" class="scroll-down-indicator">
+      ENTER ARCHIVE
+      <span></span>
+    </a>
   </section>
 
-  <!-- 2. Terminal Workspace -->
   <div class="app-workspace" id="workspace">
-    <!-- Sidebar -->
     <aside>
       <div class="brand-wrap">
         <div class="brand-mark">
@@ -863,15 +810,13 @@
         <div class="brand-text">QUARK</div>
       </div>
 
-      <!-- AI Copilot Card -->
       <div class="copilot-sidebar-card">
         <div class="copilot-badge">✨ AI Edge Audit</div>
-        <p>Run deep execution audits across session times, setups, and psychological mistakes.</p>
+        <p>Autonomous scan of execution leaks, playbook expectancy, and discipline score.</p>
         <button class="btn-ai-trigger" id="openAiReportBtn">Generate Audit</button>
       </div>
 
-      <!-- Discipline Score -->
-      <div class="sidebar-widget">
+      <div class="discipline-box">
         <h4>Discipline Rate</h4>
         <div class="discipline-score" id="disciplineScore">100%</div>
         <div class="discipline-bar-bg">
@@ -879,41 +824,20 @@
         </div>
       </div>
 
-      <!-- Tilt / Max Loss Monitor -->
-      <div class="sidebar-widget">
-        <h4>Daily Loss Threshold</h4>
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
-          <span style="font-size:0.75rem; color:var(--text-muted);">Max Risk:</span>
-          <input type="number" id="riskLimitInput" value="500" style="width:75px; padding:4px 6px; font-size:0.75rem; text-align:right;" />
-        </div>
-      </div>
-
-      <!-- Execution Leaks -->
-      <div class="sidebar-widget" style="flex:1; overflow-y:auto;">
+      <div class="leak-tracker">
         <h4>Identified Leaks</h4>
         <div class="leak-list" id="leakList">
-          <span style="color:var(--text-muted); font-size:0.76rem;">No rule violations logged</span>
-        </div>
-      </div>
-
-      <!-- Data Backup & Restore -->
-      <div class="sidebar-widget">
-        <h4>Data Archive</h4>
-        <div class="data-mgmt-buttons" style="margin-top:6px;">
-          <button class="btn-secondary" id="exportBtn">Export JSON</button>
-          <button class="btn-secondary" id="importBtn">Import JSON</button>
-          <input type="file" id="importInput" style="display:none;" accept=".json" />
+          <span style="color: var(--text-muted); font-size: 0.8rem;">No rule violations logged</span>
         </div>
       </div>
     </aside>
 
-    <!-- Main View -->
     <main>
       <div class="header-bar">
         <div>
           <h2>Performance Matrix</h2>
         </div>
-        <div style="display:flex; gap:12px; align-items:center;">
+        <div style="display: flex; gap: 12px; align-items: center;">
           <div class="month-selector">
             <select id="monthSelect"></select>
             <select id="yearSelect"></select>
@@ -922,7 +846,6 @@
         </div>
       </div>
 
-      <!-- KPI Grid -->
       <div class="kpi-grid">
         <div class="kpi-card">
           <div class="kpi-label">Month Net P&L</div>
@@ -951,16 +874,6 @@
         </div>
       </div>
 
-      <!-- Cumulative Equity Curve Box -->
-      <div class="chart-box">
-        <div class="chart-box-header">
-          <h3>Cumulative Net Equity Curve</h3>
-          <span id="equityTotal" style="font-weight:700; font-size:0.85rem; color:var(--gold);">$0.00</span>
-        </div>
-        <canvas id="equityCanvas"></canvas>
-      </div>
-
-      <!-- Calendar Matrix -->
       <div class="calendar-container">
         <div class="calendar-weekdays">
           <div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div><div>Sun</div>
@@ -970,7 +883,7 @@
     </main>
   </div>
 
-  <!-- AI Monthly Audit Modal -->
+  <!-- AI Modal -->
   <div class="modal-overlay" id="aiModalOverlay">
     <div class="modal modal-large">
       <div class="modal-header">
@@ -992,35 +905,38 @@
       <form id="tradeForm">
         <div class="form-grid">
           <div class="form-group">
-            <label>Ticker / Instrument</label>
+            <label>Ticker / Pair</label>
             <input type="text" id="symbol" placeholder="e.g. NQ, ES, BTC, NVDA" required />
+          </div>
+          <div class="form-group">
+            <label>Direction</label>
+            <select id="direction">
+              <option value="Long">Long ↗</option>
+              <option value="Short">Short ↘</option>
+            </select>
           </div>
           <div class="form-group">
             <label>Net P&L ($)</label>
             <input type="number" step="0.01" id="pnl" placeholder="e.g. 450 or -200" required />
           </div>
           <div class="form-group">
-            <label>Trading Session</label>
-            <select id="session">
-              <option value="NY Open (AM)">NY Open (AM)</option>
-              <option value="London (LO)">London (LO)</option>
-              <option value="NY PM / Close">NY PM / Close</option>
-              <option value="Asia Session">Asia Session</option>
-            </select>
+            <label>Planned Risk 1R ($ optional)</label>
+            <input type="number" step="0.01" id="riskR" placeholder="e.g. 150" />
           </div>
           <div class="form-group">
             <label>Playbook Setup</label>
             <select id="setup">
               <option value="Liquidity Sweep">Liquidity Sweep</option>
-              <option value="Break & Retest">Break & Retest</option>
               <option value="Fair Value Gap">Fair Value Gap</option>
-              <option value="Trend Continuation">Trend Continuation</option>
+              <option value="Break & Retest">Break & Retest</option>
               <option value="Opening Range Breakout">Opening Range Breakout</option>
+              <option value="Trend Continuation">Trend Continuation</option>
+              <option value="Break of Structure (BOS)">Break of Structure (BOS)</option>
+              <option value="Supply/Demand Flip">Supply/Demand Flip</option>
+              <option value="VWAP Reversal">VWAP Reversal</option>
             </select>
           </div>
-
-          <!-- Extended Mistake Registry -->
-          <div class="form-group full">
+          <div class="form-group">
             <label>Execution Mistake</label>
             <select id="mistake">
               <option value="None">None (Followed Plan)</option>
@@ -1029,24 +945,17 @@
               <option value="Oversized Position">Oversized Position</option>
               <option value="Revenge Trading">Revenge Trading</option>
               <option value="Early Exit (Cut Winner)">Early Exit (Cut Winner)</option>
-              <option value="Overtrading / Boredom">Overtrading / Boredom</option>
-              <option value="Ignored Stop Loss / Hope">Ignored Stop Loss / Hope</option>
-              <option value="Traded High-Impact News">Traded High-Impact News</option>
-              <option value="Premature Entry">Premature Entry (Didn't wait for close)</option>
+              <option value="No Stop Loss / Wide Stop">No Stop Loss / Wide Stop</option>
+              <option value="Late Entry">Late Entry</option>
+              <option value="Traded News / High Vol">Traded News / High Vol</option>
+              <option value="Overtrading (Boredom)">Overtrading (Boredom)</option>
+              <option value="Hesitation / Missed Entry">Hesitation / Missed Entry</option>
+              <option value="Premature Entry">Premature Entry (Jumped Trigger)</option>
             </select>
           </div>
-
-          <div class="form-group full">
-            <label>Chart Proof / Screenshot (Upload or Paste Ctrl+V)</label>
-            <input type="file" id="chartImageInput" accept="image/*" />
-            <div class="image-preview-box" id="previewContainer">
-              <img id="chartPreview" src="" alt="Proof Preview" />
-            </div>
-          </div>
-
           <div class="form-group full">
             <label>Psychology & Session Context</label>
-            <textarea id="notes" rows="2" placeholder="Entry trigger, patience, emotional state..."></textarea>
+            <textarea id="notes" rows="2" placeholder="Impatience? Distraction? Execution mindset checklist?"></textarea>
           </div>
         </div>
         <button type="submit" class="btn-save">Record Execution</button>
@@ -1059,7 +968,6 @@
   <script>
     let trades = JSON.parse(localStorage.getItem('quark_trades')) || [];
     let selectedDate = null;
-    let base64Chart = "";
 
     const months = [
       "January", "February", "March", "April", "May", "June", 
@@ -1117,83 +1025,9 @@
       });
     }
 
-    /* Equity Curve Canvas Renderer */
-    function renderEquityCurve(monthTrades) {
-      const canvas = document.getElementById('equityCanvas');
-      const ctx = canvas.getContext('2d');
-      const dpr = window.devicePixelRatio || 1;
-      
-      canvas.width = canvas.parentElement.clientWidth * dpr;
-      canvas.height = 120 * dpr;
-      ctx.scale(dpr, dpr);
-
-      const w = canvas.parentElement.clientWidth;
-      const h = 120;
-      ctx.clearRect(0, 0, w, h);
-
-      if (monthTrades.length === 0) {
-        ctx.fillStyle = '#7e8c9f';
-        ctx.font = '11px sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText('Log executions this month to map your cumulative trajectory', w / 2, h / 2);
-        document.getElementById('equityTotal').textContent = '$0.00';
-        return;
-      }
-
-      const sorted = [...monthTrades].sort((a, b) => a.date.localeCompare(b.date));
-      let points = [0];
-      let running = 0;
-      sorted.forEach(t => {
-        running += Number(t.pnl);
-        points.push(running);
-      });
-
-      document.getElementById('equityTotal').textContent = formatCurrency(running);
-      document.getElementById('equityTotal').style.color = running >= 0 ? 'var(--emerald)' : 'var(--rose)';
-
-      const minVal = Math.min(0, ...points);
-      const maxVal = Math.max(0, ...points);
-      const range = (maxVal - minVal) || 1;
-
-      const getX = (idx) => (idx / (points.length - 1)) * (w - 40) + 20;
-      const getY = (val) => h - 20 - ((val - minVal) / range) * (h - 40);
-
-      const zeroY = getY(0);
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.moveTo(20, zeroY);
-      ctx.lineTo(w - 20, zeroY);
-      ctx.stroke();
-
-      ctx.strokeStyle = '#d4af37';
-      ctx.lineWidth = 2.5;
-      ctx.shadowColor = 'rgba(212, 175, 55, 0.5)';
-      ctx.shadowBlur = 10;
-      ctx.beginPath();
-      points.forEach((pt, i) => {
-        const x = getX(i);
-        const y = getY(pt);
-        if (i === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-      });
-      ctx.stroke();
-      ctx.shadowBlur = 0;
-
-      points.forEach((pt, i) => {
-        const x = getX(i);
-        const y = getY(pt);
-        ctx.fillStyle = pt >= 0 ? '#10b981' : '#f43f5e';
-        ctx.beginPath();
-        ctx.arc(x, y, 3, 0, Math.PI * 2);
-        ctx.fill();
-      });
-    }
-
     function renderDashboard() {
       const m = parseInt(monthSelect.value);
       const y = parseInt(yearSelect.value);
-      const riskLimit = parseFloat(document.getElementById('riskLimitInput').value) || 500;
 
       calendarDays.innerHTML = '';
       const firstDay = new Date(y, m, 1).getDay();
@@ -1220,7 +1054,7 @@
         cell.onclick = () => openTradeModal(dateKey);
 
         const dayTotalPnl = dayTrades.reduce((acc, t) => acc + Number(t.pnl), 0);
-        const dayMistakes = dayTrades.filter(t => t.mistake !== 'None').length;
+        const dayMistakes = dayTrades.filter(t => t.mistake && t.mistake !== 'None').length;
 
         let pnlHtml = '';
         if (dayTrades.length > 0) {
@@ -1231,12 +1065,6 @@
             cell.classList.add('loss');
             redDays++;
           }
-
-          if (dayTotalPnl <= -riskLimit) {
-            cell.style.border = '1px solid #f43f5e';
-            cell.style.boxShadow = 'inset 0 0 10px rgba(244, 63, 94, 0.3)';
-          }
-
           pnlHtml = `<div class="day-pnl">${formatCurrency(dayTotalPnl)}</div>`;
         }
 
@@ -1248,7 +1076,6 @@
           ${pnlHtml}
           <div class="day-meta">
             ${dayMistakes > 0 ? `<span class="mistake-badge">⚠️ ${dayMistakes} Leak</span>` : '<span></span>'}
-            ${dayTrades.some(t => t.image) ? '<span>📷</span>' : ''}
           </div>
         `;
         calendarDays.appendChild(cell);
@@ -1283,7 +1110,6 @@
       document.getElementById('activeDaysCount').textContent = `${greenDays + redDays} active sessions`;
 
       renderDisciplineAndLeaks(monthTrades);
-      renderEquityCurve(monthTrades);
     }
 
     function renderDisciplineAndLeaks(monthTrades) {
@@ -1293,7 +1119,9 @@
       monthTrades.forEach(t => {
         if (t.mistake && t.mistake !== 'None') {
           totalMistakes++;
-          if (!mistakeStats[t.mistake]) mistakeStats[t.mistake] = { count: 0, cost: 0 };
+          if (!mistakeStats[t.mistake]) {
+            mistakeStats[t.mistake] = { count: 0, cost: 0 };
+          }
           mistakeStats[t.mistake].count += 1;
           mistakeStats[t.mistake].cost += Number(t.pnl);
         }
@@ -1313,7 +1141,7 @@
 
       const keys = Object.keys(mistakeStats);
       if (keys.length === 0) {
-        leakList.innerHTML = `<span style="color:var(--text-muted); font-size:0.76rem;">No rule violations logged</span>`;
+        leakList.innerHTML = `<span style="color: var(--text-muted); font-size: 0.8rem;">No rule violations logged</span>`;
         return;
       }
 
@@ -1325,13 +1153,12 @@
             <span>${k}</span>
             <span>${mistakeStats[k].count}x</span>
           </div>
-          <div style="font-size:0.7rem; color:var(--text-muted);">P&L Drag: ${formatCurrency(mistakeStats[k].cost)}</div>
+          <div class="leak-impact">P&L Drag: ${formatCurrency(mistakeStats[k].cost)}</div>
         `;
         leakList.appendChild(item);
       });
     }
 
-    /* Advanced AI Audit Generator */
     function generateMonthlyAudit() {
       const monthName = months[monthSelect.value];
       const yearName = yearSelect.value;
@@ -1376,48 +1203,57 @@
         }
       }
 
-      const sessionMap = {};
+      const setupMap = {};
       monthTrades.forEach(t => {
-        const s = t.session || 'Unspecified';
-        if (!sessionMap[s]) sessionMap[s] = { count: 0, pnl: 0 };
-        sessionMap[s].count++;
-        sessionMap[s].pnl += Number(t.pnl);
+        if (!setupMap[t.setup]) setupMap[t.setup] = { trades: 0, pnl: 0, wins: 0 };
+        setupMap[t.setup].trades++;
+        setupMap[t.setup].pnl += Number(t.pnl);
+        if (Number(t.pnl) > 0) setupMap[t.setup].wins++;
       });
 
-      let bestSession = { name: "N/A", pnl: -Infinity };
-      Object.entries(sessionMap).forEach(([sName, sData]) => {
-        if (sData.pnl > bestSession.pnl) bestSession = { name: sName, pnl: sData.pnl, count: sData.count };
+      let bestSetup = { name: "N/A", pnl: -Infinity, winRate: 0 };
+      Object.entries(setupMap).forEach(([setup, s]) => {
+        if (s.pnl > bestSetup.pnl) bestSetup = { name: setup, pnl: s.pnl, winRate: Math.round((s.wins / s.trades) * 100) };
       });
+
+      let summaryHeadline = "";
+      if (mistakeTrades.length === 0) {
+        summaryHeadline = `Exceptional adherence to protocol. You executed <strong>${monthTrades.length} trades</strong> with a 100% discipline score, netting <strong>${formatCurrency(netPnl)}</strong>. Your edge is functioning efficiently.`;
+      } else if (mistakePnl < 0 && cleanPnl > 0) {
+        summaryHeadline = `🚨 <strong>Capital Leak Detected:</strong> Your strategy delivered <strong>+${formatCurrency(cleanPnl)}</strong> when adhering to rules, but execution mistakes drained <strong>${formatCurrency(mistakePnl)}</strong>, settling net return at <strong>${formatCurrency(netPnl)}</strong>.`;
+      } else {
+        summaryHeadline = `You executed <strong>${monthTrades.length} trades</strong> this month. Deviations accounted for <strong>${mistakeTrades.length} trades</strong> with a net drag of <strong>${formatCurrency(mistakePnl)}</strong>.`;
+      }
 
       content.innerHTML = `
         <div class="ai-headline-box">
-          You logged <strong>${monthTrades.length} trades</strong> this month. Clean playbook trades produced <strong>${formatCurrency(cleanPnl)}</strong>, while behavioral errors drained <strong>${formatCurrency(mistakePnl)}</strong>, settling net earnings at <strong>${formatCurrency(netPnl)}</strong>.
+          ${summaryHeadline}
         </div>
 
         <div class="ai-grid-stats">
           <div class="ai-stat-card">
-            <div class="label">Top Leak Identified</div>
-            <div class="val" style="color:var(--rose); font-size:1.05rem;">${worstMistake}</div>
+            <div class="label">Primary Leak</div>
+            <div class="val" style="color:var(--rose); font-size: 1.05rem;">${worstMistake}</div>
             <small style="color:var(--text-muted);">${worstMistakeCount}x occurrences (${formatCurrency(worstMistakeCost)})</small>
           </div>
           <div class="ai-stat-card">
-            <div class="label">Optimal Session Window</div>
-            <div class="val" style="color:var(--gold); font-size:1.05rem;">${bestSession.name}</div>
-            <small style="color:var(--text-muted);">${formatCurrency(bestSession.pnl)} across ${bestSession.count || 0} trades</small>
+            <div class="label">Disciplined P&L</div>
+            <div class="val" style="color:${cleanPnl >= 0 ? 'var(--emerald)' : 'var(--rose)'}; font-size: 1.05rem;">${formatCurrency(cleanPnl)}</div>
+            <small style="color:var(--text-muted);">P&L when plan was followed</small>
           </div>
           <div class="ai-stat-card">
-            <div class="label">Disciplined Alpha</div>
-            <div class="val" style="color:${cleanPnl >= 0 ? 'var(--emerald)' : 'var(--rose)'}; font-size:1.05rem;">${formatCurrency(cleanPnl)}</div>
-            <small style="color:var(--text-muted);">Result without rule infractions</small>
+            <div class="label">Top Playbook Setup</div>
+            <div class="val" style="color:var(--gold); font-size: 1.05rem;">${bestSetup.name}</div>
+            <small style="color:var(--text-muted);">${formatCurrency(bestSetup.pnl)} (${bestSetup.winRate}% WR)</small>
           </div>
         </div>
 
         <div class="ai-section">
-          <h4>Institutional Tactical Directives</h4>
+          <h4>Quark AI Protocol Directives</h4>
           <ul class="ai-rules-list">
-            <li><strong>Hard Cooldown on "${worstMistake}":</strong> This flaw resulted in ${formatCurrency(worstMistakeCost)} of drawdown. Institute a 45-minute terminal lock when observing this pattern.</li>
-            <li><strong>Session Allocation:</strong> Your best risk-adjusted performance is concentrated in <strong>${bestSession.name}</strong>. Reduce trade sizing outside of this volatility bracket.</li>
-            <li><strong>Preserve Edge:</strong> Disciplined trades generated a ${cleanTrades.length > 0 ? Math.round((cleanTrades.filter(t => t.pnl > 0).length / cleanTrades.length) * 100) : 0}% win rate. Stop trading for the day upon two consecutive losses.</li>
+            <li><strong>Hard Filter on "${worstMistake}":</strong> This flaw cost your desk ${formatCurrency(worstMistakeCost)}. Enforce an immediate cool-off after logging this trigger.</li>
+            <li><strong>Focus on "${bestSetup.name}":</strong> Your positive expectancy is concentrated in this setup (${formatCurrency(bestSetup.pnl)} net). Prioritize these setups over lower-grade setups.</li>
+            <li><strong>Preserve Edge:</strong> Clean setups yielded a ${cleanTrades.length > 0 ? Math.round((cleanTrades.filter(t => t.pnl > 0).length / cleanTrades.length) * 100) : 0}% win rate. Protect capital by walking away after two consecutive behavioral infractions.</li>
           </ul>
         </div>
       `;
@@ -1427,10 +1263,7 @@
 
     function openTradeModal(dateKey) {
       selectedDate = dateKey;
-      base64Chart = "";
       document.getElementById('modalDateTitle').textContent = `Journal — ${dateKey}`;
-      document.getElementById('previewContainer').style.display = 'none';
-      document.getElementById('chartPreview').src = '';
       tradeModalOverlay.style.display = 'flex';
       renderModalTrades();
     }
@@ -1441,22 +1274,22 @@
       const dayTrades = trades.filter(t => t.date === selectedDate);
 
       if (dayTrades.length === 0) {
-        container.innerHTML = `<div style="font-size:0.8rem; color:var(--text-muted); padding:8px 0;">No trades recorded for this session.</div>`;
+        container.innerHTML = `<div style="font-size:0.8rem; color:var(--text-muted); padding: 8px 0;">No trades recorded for this session.</div>`;
         return;
       }
 
       dayTrades.forEach(t => {
         const row = document.createElement('div');
         row.className = 'trade-row';
+        const rDisplay = t.riskR ? ` (${(Number(t.pnl) / Number(t.riskR)).toFixed(1)}R)` : '';
         row.innerHTML = `
           <div>
-            <strong>${t.symbol}</strong> • ${t.setup} <span style="color:var(--text-muted); font-size:0.75rem;">(${t.session || 'Session'})</span>
-            ${t.mistake !== 'None' ? `<br><small style="color:#fbbf24;">⚠️ ${t.mistake}</small>` : ''}
-            ${t.image ? `<br><a href="${t.image}" target="_blank" style="color:var(--gold); font-size:0.72rem;">[View Attached Chart]</a>` : ''}
+            <strong>${t.symbol}</strong> • <span style="font-size:0.75rem; color:var(--gold);">${t.direction || 'Long'}</span> • ${t.setup}
+            ${t.mistake && t.mistake !== 'None' ? `<br><small style="color:#fbbf24;">⚠️ ${t.mistake}</small>` : ''}
           </div>
           <div style="display:flex; align-items:center;">
             <span style="font-weight:700; color:${Number(t.pnl) >= 0 ? 'var(--emerald)' : 'var(--rose)'}">
-              ${formatCurrency(Number(t.pnl))}
+              ${formatCurrency(Number(t.pnl))}${rDisplay}
             </span>
             <button class="delete-btn" onclick="deleteTrade(${t.id})">&times;</button>
           </div>
@@ -1472,67 +1305,6 @@
       renderDashboard();
     }
 
-    // Image Input & Paste Handlers
-    document.getElementById('chartImageInput').addEventListener('change', function(e) {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(evt) {
-          base64Chart = evt.target.result;
-          document.getElementById('chartPreview').src = base64Chart;
-          document.getElementById('previewContainer').style.display = 'block';
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-
-    window.addEventListener('paste', (e) => {
-      if (tradeModalOverlay.style.display === 'flex' && e.clipboardData.files.length > 0) {
-        const file = e.clipboardData.files[0];
-        if (file.type.startsWith('image/')) {
-          const reader = new FileReader();
-          reader.onload = function(evt) {
-            base64Chart = evt.target.result;
-            document.getElementById('chartPreview').src = base64Chart;
-            document.getElementById('previewContainer').style.display = 'block';
-          };
-          reader.readAsDataURL(file);
-        }
-      }
-    });
-
-    // JSON Export / Import Handlers
-    document.getElementById('exportBtn').onclick = () => {
-      const blob = new Blob([JSON.stringify(trades, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `Quark_Journal_${new Date().toISOString().slice(0, 10)}.json`;
-      a.click();
-    };
-
-    document.getElementById('importBtn').onclick = () => document.getElementById('importInput').click();
-    document.getElementById('importInput').addEventListener('change', function(e) {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(evt) {
-          try {
-            const imported = JSON.parse(evt.target.result);
-            if (Array.isArray(imported)) {
-              trades = imported;
-              localStorage.setItem('quark_trades', JSON.stringify(trades));
-              renderDashboard();
-              alert('Trades imported successfully.');
-            }
-          } catch(err) {
-            alert('Invalid backup file.');
-          }
-        };
-        reader.readAsText(file);
-      }
-    });
-
     closeTradeModal.onclick = () => tradeModalOverlay.style.display = 'none';
     closeAiModal.onclick = () => aiModalOverlay.style.display = 'none';
     openAiReportBtn.onclick = generateMonthlyAudit;
@@ -1545,7 +1317,6 @@
 
     monthSelect.addEventListener('change', renderDashboard);
     yearSelect.addEventListener('change', renderDashboard);
-    document.getElementById('riskLimitInput').addEventListener('change', renderDashboard);
 
     tradeForm.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -1553,11 +1324,11 @@
         id: Date.now(),
         date: selectedDate,
         symbol: document.getElementById('symbol').value.toUpperCase(),
+        direction: document.getElementById('direction').value,
         pnl: parseFloat(document.getElementById('pnl').value),
-        session: document.getElementById('session').value,
+        riskR: parseFloat(document.getElementById('riskR').value) || null,
         setup: document.getElementById('setup').value,
         mistake: document.getElementById('mistake').value,
-        image: base64Chart,
         notes: document.getElementById('notes').value
       };
 
@@ -1565,13 +1336,10 @@
       localStorage.setItem('quark_trades', JSON.stringify(trades));
 
       tradeForm.reset();
-      base64Chart = "";
-      document.getElementById('previewContainer').style.display = 'none';
       renderModalTrades();
       renderDashboard();
     });
 
-    window.addEventListener('resize', () => renderEquityCurve(getSelectedMonthTrades()));
     renderDashboard();
   </script>
 </body>
