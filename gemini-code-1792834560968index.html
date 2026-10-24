@@ -1,0 +1,1357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quark — The Institutional Trading Terminal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-base: #05070b;
+      --bg-surface: #0a0e17;
+      --bg-card: rgba(16, 22, 34, 0.7);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-focus: rgba(212, 175, 55, 0.4);
+      --text-main: #f8fafc;
+      --text-muted: #7e8c9f;
+      --gold: #d4af37;
+      --gold-gradient: linear-gradient(135deg, #f7df8b 0%, #d4af37 50%, #997c1f 100%);
+      --emerald: #10b981;
+      --emerald-bg: rgba(16, 185, 129, 0.12);
+      --emerald-border: rgba(16, 185, 129, 0.35);
+      --rose: #f43f5e;
+      --rose-bg: rgba(244, 63, 94, 0.12);
+      --rose-border: rgba(244, 63, 94, 0.35);
+      --sans: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      --serif: 'Cinzel', serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: var(--sans);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 10% 15%, rgba(212, 175, 55, 0.04) 0%, transparent 50%),
+        radial-gradient(circle at 90% 85%, rgba(56, 189, 248, 0.03) 0%, transparent 50%);
+    }
+
+    /* ========================================================
+       1. HERO & INTRO ENTRY
+    ======================================================== */
+    .hero-section {
+      height: 100vh;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      text-align: center;
+      padding: 0 20px;
+      overflow: hidden;
+    }
+
+    .hero-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(212, 175, 55, 0.12) 0%, transparent 70%);
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 820px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+      animation: fadeInHero 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Distinct Focus Logo */
+    .hero-logo-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 4px;
+    }
+
+    .hero-logo-svg {
+      width: 88px;
+      height: 88px;
+      filter: drop-shadow(0 0 24px rgba(212, 175, 55, 0.45));
+      transition: transform 0.4s ease;
+    }
+
+    .hero-logo-wrapper:hover .hero-logo-svg {
+      transform: scale(1.06) rotate(4deg);
+    }
+
+    .quark-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(212, 175, 55, 0.08);
+      border: 1px solid rgba(212, 175, 55, 0.25);
+      padding: 6px 14px;
+      border-radius: 50px;
+      font-size: 0.78rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 700;
+    }
+
+    .hero-title {
+      font-family: var(--serif);
+      font-size: clamp(3.2rem, 7vw, 5.5rem);
+      font-weight: 800;
+      letter-spacing: 6px;
+      background: var(--gold-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-transform: uppercase;
+      line-height: 1.1;
+      filter: drop-shadow(0 10px 25px rgba(212, 175, 55, 0.25));
+    }
+
+    .hero-subtitle {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      line-height: 1.6;
+      font-weight: 300;
+    }
+
+    .hero-actions {
+      margin-top: 18px;
+      display: flex;
+      gap: 16px;
+    }
+
+    .btn-enter {
+      background: var(--gold-gradient);
+      color: #05070b;
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 15px 36px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 25px rgba(212, 175, 55, 0.35);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .btn-enter:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 8px 35px rgba(212, 175, 55, 0.5);
+    }
+
+    .scroll-down-indicator {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      z-index: 2;
+      animation: bounce 2s infinite ease-in-out;
+      text-decoration: none;
+    }
+
+    .scroll-down-indicator span {
+      width: 20px;
+      height: 20px;
+      border-right: 2px solid var(--gold);
+      border-bottom: 2px solid var(--gold);
+      transform: rotate(45deg);
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0) translateX(-50%); }
+      40% { transform: translateY(-10px) translateX(-50%); }
+      60% { transform: translateY(-5px) translateX(-50%); }
+    }
+
+    @keyframes fadeInHero {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ========================================================
+       2. JOURNAL APPLICATION WORKSPACE
+    ======================================================== */
+    .app-workspace {
+      min-height: 100vh;
+      display: flex;
+      border-top: 1px solid var(--border-subtle);
+      background-color: var(--bg-base);
+      scroll-margin-top: 0;
+    }
+
+    aside {
+      width: 310px;
+      background: var(--bg-surface);
+      border-right: 1px solid var(--border-subtle);
+      padding: 28px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .brand-mark {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .brand-mark svg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 2px 8px rgba(212, 175, 55, 0.3));
+    }
+
+    .brand-text {
+      font-family: var(--serif);
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      background: var(--gold-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .copilot-sidebar-card {
+      background: linear-gradient(145deg, rgba(212, 175, 55, 0.06), rgba(16, 185, 129, 0.04));
+      border: 1px solid rgba(212, 175, 55, 0.25);
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .copilot-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .copilot-sidebar-card p {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    .btn-ai-trigger {
+      background: var(--gold-gradient);
+      color: #06080d;
+      font-weight: 700;
+      font-size: 0.82rem;
+      border: none;
+      padding: 10px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      letter-spacing: 0.5px;
+    }
+
+    .btn-ai-trigger:hover {
+      box-shadow: 0 4px 20px rgba(212, 175, 55, 0.35);
+      transform: translateY(-2px);
+    }
+
+    .discipline-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .discipline-box h4 {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .discipline-score {
+      font-size: 1.7rem;
+      font-weight: 800;
+    }
+
+    .discipline-bar-bg {
+      height: 5px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .discipline-bar-fill {
+      height: 100%;
+      background: var(--emerald);
+      width: 100%;
+      transition: width 0.4s ease;
+    }
+
+    .leak-tracker {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 16px;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .leak-tracker h4 {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .leak-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .leak-item {
+      display: flex;
+      flex-direction: column;
+      font-size: 0.78rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      padding-bottom: 8px;
+    }
+
+    .leak-header {
+      display: flex;
+      justify-content: space-between;
+      color: #fda4af;
+      font-weight: 600;
+    }
+
+    .leak-impact {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    main {
+      flex: 1;
+      padding: 32px 42px;
+      overflow-y: auto;
+    }
+
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+
+    .header-bar h2 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .month-selector select {
+      background: rgba(18, 24, 38, 0.8);
+      color: var(--text-main);
+      border: 1px solid var(--border-subtle);
+      padding: 9px 16px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      outline: none;
+      backdrop-filter: blur(8px);
+    }
+
+    .month-selector select:focus {
+      border-color: var(--gold);
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .kpi-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 18px 20px;
+      backdrop-filter: blur(10px);
+    }
+
+    .kpi-label {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 6px;
+    }
+
+    .kpi-value {
+      font-size: 1.55rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+
+    .kpi-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 5px;
+    }
+
+    .calendar-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 24px;
+      backdrop-filter: blur(12px);
+    }
+
+    .calendar-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .calendar-days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .day-cell {
+      min-height: 110px;
+      background: rgba(12, 16, 23, 0.6);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 12px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.25s ease;
+    }
+
+    .day-cell:hover {
+      border-color: var(--gold);
+      background: rgba(26, 35, 54, 0.7);
+      transform: translateY(-2px);
+    }
+
+    .day-cell.empty {
+      background: transparent;
+      border-color: transparent;
+      cursor: default;
+    }
+
+    .day-cell.profit {
+      background: var(--emerald-bg);
+      border-color: var(--emerald-border);
+    }
+
+    .day-cell.loss {
+      background: var(--rose-bg);
+      border-color: var(--rose-border);
+    }
+
+    .day-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .day-pnl {
+      font-weight: 700;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+      margin-top: 4px;
+    }
+
+    .profit .day-pnl { color: var(--emerald); }
+    .loss .day-pnl { color: var(--rose); }
+
+    .day-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.72rem;
+    }
+
+    .trade-badge {
+      background: rgba(255, 255, 255, 0.08);
+      padding: 2px 7px;
+      border-radius: 4px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .mistake-badge {
+      color: #fbbf24;
+      font-weight: 600;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 5, 8, 0.85);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal {
+      background: #0f141f;
+      border: 1px solid var(--border-focus);
+      border-radius: 16px;
+      width: 90%;
+      max-width: 620px;
+      padding: 28px;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+    }
+
+    .modal.modal-large { max-width: 780px; }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .close-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.6rem;
+      cursor: pointer;
+    }
+
+    .ai-report-body {
+      overflow-y: auto;
+      padding-right: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .ai-headline-box {
+      background: rgba(212, 175, 55, 0.07);
+      border-left: 3px solid var(--gold);
+      padding: 16px;
+      border-radius: 6px;
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+    .ai-grid-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .ai-stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 14px;
+    }
+
+    .ai-stat-card .label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .ai-stat-card .val {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+
+    .ai-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 18px;
+    }
+
+    .ai-section h4 {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+
+    .ai-rules-list {
+      list-style-type: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .ai-rules-list li {
+      font-size: 0.86rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      line-height: 1.5;
+    }
+
+    .ai-rules-list li::before {
+      content: "✦";
+      color: var(--gold);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group.full { grid-column: span 2; }
+
+    label {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    input, select, textarea {
+      background: var(--bg-base);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 11px;
+      color: var(--text-main);
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--gold);
+    }
+
+    .btn-save {
+      background: var(--gold-gradient);
+      color: #06080d;
+      font-weight: 700;
+      padding: 13px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      margin-top: 18px;
+      width: 100%;
+    }
+
+    .trade-list-container {
+      margin-top: 20px;
+      max-height: 180px;
+      overflow-y: auto;
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 14px;
+    }
+
+    .trade-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .delete-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      margin-left: 10px;
+      font-size: 1.1rem;
+    }
+
+    .delete-btn:hover { color: var(--rose); }
+  </style>
+</head>
+<body>
+
+  <!-- ==============================================
+       1. COOL QUARK ENTRY / HERO SECTION
+  ============================================== -->
+  <section class="hero-section">
+    <div class="hero-glow"></div>
+    <div class="hero-content">
+
+      <!-- DEDICATED LOGO: ONE CONVERGENT EDGE -->
+      <div class="hero-logo-wrapper" title="Quark: Singular Precision Edge">
+        <svg class="hero-logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="logoGoldGrad" x1="10%" y1="10%" x2="90%" y2="90%">
+              <stop offset="0%" stop-color="#fdf3c6" />
+              <stop offset="45%" stop-color="#d4af37" />
+              <stop offset="100%" stop-color="#7d5c0e" />
+            </linearGradient>
+            <filter id="coreGlow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="3" result="blur" />
+              <feComposite in="SourceGraphic" in2="blur" operator="over" />
+            </filter>
+          </defs>
+
+          <!-- Outer Precision Reticle (One Frame) -->
+          <circle cx="50" cy="50" r="44" stroke="url(#logoGoldGrad)" stroke-width="1.2" stroke-opacity="0.35" stroke-dasharray="3 3"/>
+          
+          <!-- Concentric Ring with Single Break -->
+          <circle cx="50" cy="46" r="32" stroke="url(#logoGoldGrad)" stroke-width="4.5" stroke-linecap="round"/>
+
+          <!-- Convergence Vector: Forms the Q-tail pointing to execution -->
+          <path d="M56 52 L78 78" stroke="url(#logoGoldGrad)" stroke-width="5" stroke-linecap="round"/>
+
+          <!-- The Singular Core (The "One Thing": Absolute Focus) -->
+          <circle cx="50" cy="46" r="6" fill="url(#logoGoldGrad)" filter="url(#coreGlow)"/>
+          <circle cx="50" cy="46" r="2.5" fill="#ffffff"/>
+        </svg>
+      </div>
+
+      <div class="quark-badge">⚡ Precision Execution Terminal</div>
+      <h1 class="hero-title">QUARK</h1>
+      <p class="hero-subtitle">
+        Eliminate discretionary leaks. Master your behavioral psychology and calculate your exact statistical edge with institutional calendar tracking and autonomous AI audits.
+      </p>
+      <div class="hero-actions">
+        <a href="#workspace" class="btn-enter" id="slideDownBtn">
+          Launch Terminal <span>↓</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Slide Down Indicator -->
+    <a href="#workspace" class="scroll-down-indicator">
+      ENTER ARCHIVE
+      <span></span>
+    </a>
+  </section>
+
+  <!-- ==============================================
+       2. WORKSPACE / CALENDAR JOURNAL (SLID DOWN)
+  ============================================== -->
+  <div class="app-workspace" id="workspace">
+    <!-- Sidebar -->
+    <aside>
+      <div class="brand-wrap">
+        <div class="brand-mark">
+          <!-- Matching Compact Brand Icon -->
+          <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="46" r="32" stroke="url(#logoGoldGrad)" stroke-width="6.5" stroke-linecap="round"/>
+            <path d="M56 52 L78 78" stroke="url(#logoGoldGrad)" stroke-width="7" stroke-linecap="round"/>
+            <circle cx="50" cy="46" r="8" fill="url(#logoGoldGrad)"/>
+            <circle cx="50" cy="46" r="3" fill="#ffffff"/>
+          </svg>
+        </div>
+        <div class="brand-text">QUARK</div>
+      </div>
+
+      <!-- AI Copilot Card -->
+      <div class="copilot-sidebar-card">
+        <div class="copilot-badge">✨ AI Edge Audit</div>
+        <p>Autonomous scan of execution leaks, playbook expectancy, and discipline score.</p>
+        <button class="btn-ai-trigger" id="openAiReportBtn">Generate Audit</button>
+      </div>
+
+      <!-- Discipline Score -->
+      <div class="discipline-box">
+        <h4>Discipline Rate</h4>
+        <div class="discipline-score" id="disciplineScore">100%</div>
+        <div class="discipline-bar-bg">
+          <div class="discipline-bar-fill" id="disciplineBar"></div>
+        </div>
+      </div>
+
+      <!-- Identified Leaks -->
+      <div class="leak-tracker">
+        <h4>Identified Leaks</h4>
+        <div class="leak-list" id="leakList">
+          <span style="color: var(--text-muted); font-size: 0.8rem;">No rule violations logged</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main View -->
+    <main>
+      <div class="header-bar">
+        <div>
+          <h2>Performance Matrix</h2>
+        </div>
+        <div style="display: flex; gap: 12px; align-items: center;">
+          <div class="month-selector">
+            <select id="monthSelect"></select>
+            <select id="yearSelect"></select>
+          </div>
+          <button class="btn-ai-trigger" id="topAiButton">Generate Audit</button>
+        </div>
+      </div>
+
+      <!-- KPI Grid -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-label">Month Net P&L</div>
+          <div class="kpi-value" id="totalPnl">$0.00</div>
+          <div class="kpi-sub" id="pnlSub">0 logged trades</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Win Rate</div>
+          <div class="kpi-value" id="winRate">0%</div>
+          <div class="kpi-sub" id="winLossCount">0W / 0L</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Profit Factor</div>
+          <div class="kpi-value" id="profitFactor">0.00</div>
+          <div class="kpi-sub" id="grossWinsLosses">$0 / $0</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Avg Win / Loss</div>
+          <div class="kpi-value" id="avgWinLoss">$0 / $0</div>
+          <div class="kpi-sub" id="riskRewardRatio">Ratio: 0.00R</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Green / Red Days</div>
+          <div class="kpi-value" id="greenRedDays">0 / 0</div>
+          <div class="kpi-sub" id="activeDaysCount">0 active sessions</div>
+        </div>
+      </div>
+
+      <!-- Calendar Matrix -->
+      <div class="calendar-container">
+        <div class="calendar-weekdays">
+          <div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div><div>Sun</div>
+        </div>
+        <div class="calendar-days" id="calendarDays"></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- AI Monthly Audit Modal -->
+  <div class="modal-overlay" id="aiModalOverlay">
+    <div class="modal modal-large">
+      <div class="modal-header">
+        <h3 id="aiModalTitle">✨ Quark AI Execution Audit</h3>
+        <button class="close-btn" id="closeAiModal">&times;</button>
+      </div>
+      <div class="ai-report-body" id="aiReportContent"></div>
+    </div>
+  </div>
+
+  <!-- Trade Logging Modal -->
+  <div class="modal-overlay" id="tradeModalOverlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modalDateTitle">Log Execution</h3>
+        <button class="close-btn" id="closeTradeModal">&times;</button>
+      </div>
+
+      <form id="tradeForm">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Ticker / Pair</label>
+            <input type="text" id="symbol" placeholder="e.g. NQ, ES, BTC, NVDA" required />
+          </div>
+          <div class="form-group">
+            <label>Net P&L ($)</label>
+            <input type="number" step="0.01" id="pnl" placeholder="e.g. 450 or -200" required />
+          </div>
+          <div class="form-group">
+            <label>Playbook Setup</label>
+            <select id="setup">
+              <option value="Liquidity Sweep">Liquidity Sweep</option>
+              <option value="Break & Retest">Break & Retest</option>
+              <option value="Fair Value Gap">Fair Value Gap</option>
+              <option value="Trend Continuation">Trend Continuation</option>
+              <option value="Opening Range Breakout">Opening Range Breakout</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Execution Mistake</label>
+            <select id="mistake">
+              <option value="None">None (Followed Plan)</option>
+              <option value="FOMO / Chased">FOMO / Chased</option>
+              <option value="Moved Stop Loss">Moved Stop Loss</option>
+              <option value="Oversized Position">Oversized Position</option>
+              <option value="Revenge Trading">Revenge Trading</option>
+              <option value="Early Exit">Early Exit (Cut Winner)</option>
+            </select>
+          </div>
+          <div class="form-group full">
+            <label>Psychology & Session Context</label>
+            <textarea id="notes" rows="2" placeholder="Impatience? Checklist completed?"></textarea>
+          </div>
+        </div>
+        <button type="submit" class="btn-save">Record Execution</button>
+      </form>
+
+      <div class="trade-list-container" id="modalTradeList"></div>
+    </div>
+  </div>
+
+  <script>
+    let trades = JSON.parse(localStorage.getItem('quark_trades')) || [];
+    let selectedDate = null;
+
+    const months = [
+      "January", "February", "March", "April", "May", "June", 
+      "July", "August", "September", "October", "November", "December"
+    ];
+
+    const currentYear = new Date().getFullYear();
+    const currentMonth = new Date().getMonth();
+
+    const monthSelect = document.getElementById('monthSelect');
+    const yearSelect = document.getElementById('yearSelect');
+    const calendarDays = document.getElementById('calendarDays');
+    
+    // Modals & Triggers
+    const tradeModalOverlay = document.getElementById('tradeModalOverlay');
+    const closeTradeModal = document.getElementById('closeTradeModal');
+    const aiModalOverlay = document.getElementById('aiModalOverlay');
+    const closeAiModal = document.getElementById('closeAiModal');
+    const openAiReportBtn = document.getElementById('openAiReportBtn');
+    const topAiButton = document.getElementById('topAiButton');
+    const tradeForm = document.getElementById('tradeForm');
+    const slideDownBtn = document.getElementById('slideDownBtn');
+
+    slideDownBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      document.getElementById('workspace').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    months.forEach((m, idx) => {
+      const opt = document.createElement('option');
+      opt.value = idx;
+      opt.textContent = m;
+      if (idx === currentMonth) opt.selected = true;
+      monthSelect.appendChild(opt);
+    });
+
+    for (let y = currentYear - 2; y <= currentYear + 2; y++) {
+      const opt = document.createElement('option');
+      opt.value = y;
+      opt.textContent = y;
+      if (y === currentYear) opt.selected = true;
+      yearSelect.appendChild(opt);
+    }
+
+    function formatCurrency(val) {
+      const sign = val < 0 ? '-' : '';
+      return `${sign}$${Math.abs(val).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    }
+
+    function getSelectedMonthTrades() {
+      const m = parseInt(monthSelect.value);
+      const y = parseInt(yearSelect.value);
+      return trades.filter(t => {
+        const [tY, tM] = t.date.split('-').map(Number);
+        return tY === y && (tM - 1) === m;
+      });
+    }
+
+    function renderDashboard() {
+      const m = parseInt(monthSelect.value);
+      const y = parseInt(yearSelect.value);
+
+      calendarDays.innerHTML = '';
+      const firstDay = new Date(y, m, 1).getDay();
+      const startOffset = (firstDay + 6) % 7; 
+      const totalDays = new Date(y, m + 1, 0).getDate();
+
+      for (let i = 0; i < startOffset; i++) {
+        const emptyCell = document.createElement('div');
+        emptyCell.className = 'day-cell empty';
+        calendarDays.appendChild(emptyCell);
+      }
+
+      let monthTrades = [];
+      let greenDays = 0;
+      let redDays = 0;
+
+      for (let day = 1; day <= totalDays; day++) {
+        const dateKey = `${y}-${String(m + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        const dayTrades = trades.filter(t => t.date === dateKey);
+        monthTrades = monthTrades.concat(dayTrades);
+
+        const cell = document.createElement('div');
+        cell.className = 'day-cell';
+        cell.onclick = () => openTradeModal(dateKey);
+
+        const dayTotalPnl = dayTrades.reduce((acc, t) => acc + Number(t.pnl), 0);
+        const dayMistakes = dayTrades.filter(t => t.mistake !== 'None').length;
+
+        let pnlHtml = '';
+        if (dayTrades.length > 0) {
+          if (dayTotalPnl > 0) {
+            cell.classList.add('profit');
+            greenDays++;
+          } else if (dayTotalPnl < 0) {
+            cell.classList.add('loss');
+            redDays++;
+          }
+          pnlHtml = `<div class="day-pnl">${formatCurrency(dayTotalPnl)}</div>`;
+        }
+
+        cell.innerHTML = `
+          <div class="day-header">
+            <span>${day}</span>
+            ${dayTrades.length > 0 ? `<span class="trade-badge">${dayTrades.length}T</span>` : ''}
+          </div>
+          ${pnlHtml}
+          <div class="day-meta">
+            ${dayMistakes > 0 ? `<span class="mistake-badge">⚠️ ${dayMistakes} Leak</span>` : '<span></span>'}
+          </div>
+        `;
+        calendarDays.appendChild(cell);
+      }
+
+      const totalMonthPnl = monthTrades.reduce((acc, t) => acc + Number(t.pnl), 0);
+      const winningTrades = monthTrades.filter(t => Number(t.pnl) > 0);
+      const losingTrades = monthTrades.filter(t => Number(t.pnl) < 0);
+
+      const grossProfit = winningTrades.reduce((acc, t) => acc + Number(t.pnl), 0);
+      const grossLoss = Math.abs(losingTrades.reduce((acc, t) => acc + Number(t.pnl), 0));
+
+      const winRate = monthTrades.length > 0 ? ((winningTrades.length / monthTrades.length) * 100).toFixed(1) : 0;
+      const profitFactor = grossLoss > 0 ? (grossProfit / grossLoss).toFixed(2) : (grossProfit > 0 ? '∞' : '0.00');
+
+      const avgWin = winningTrades.length > 0 ? grossProfit / winningTrades.length : 0;
+      const avgLoss = losingTrades.length > 0 ? grossLoss / losingTrades.length : 0;
+
+      const pnlEl = document.getElementById('totalPnl');
+      pnlEl.textContent = formatCurrency(totalMonthPnl);
+      pnlEl.style.color = totalMonthPnl > 0 ? 'var(--emerald)' : totalMonthPnl < 0 ? 'var(--rose)' : 'var(--text-main)';
+      document.getElementById('pnlSub').textContent = `${monthTrades.length} logged trades`;
+
+      document.getElementById('winRate').textContent = `${winRate}%`;
+      document.getElementById('winLossCount').textContent = `${winningTrades.length}W / ${losingTrades.length}L`;
+      document.getElementById('profitFactor').textContent = profitFactor;
+      document.getElementById('grossWinsLosses').textContent = `+$${Math.round(grossProfit)} / -$${Math.round(grossLoss)}`;
+
+      document.getElementById('avgWinLoss').textContent = `$${Math.round(avgWin)} / $${Math.round(avgLoss)}`;
+      document.getElementById('riskRewardRatio').textContent = `Ratio: ${(avgLoss > 0 ? (avgWin / avgLoss).toFixed(2) : '0.00')}R`;
+      document.getElementById('greenRedDays').textContent = `${greenDays} / ${redDays}`;
+      document.getElementById('activeDaysCount').textContent = `${greenDays + redDays} active sessions`;
+
+      renderDisciplineAndLeaks(monthTrades);
+    }
+
+    function renderDisciplineAndLeaks(monthTrades) {
+      const mistakeStats = {};
+      let totalMistakes = 0;
+
+      monthTrades.forEach(t => {
+        if (t.mistake && t.mistake !== 'None') {
+          totalMistakes++;
+          if (!mistakeStats[t.mistake]) {
+            mistakeStats[t.mistake] = { count: 0, cost: 0 };
+          }
+          mistakeStats[t.mistake].count += 1;
+          mistakeStats[t.mistake].cost += Number(t.pnl);
+        }
+      });
+
+      const totalTrades = monthTrades.length;
+      const disciplinedTrades = totalTrades - totalMistakes;
+      const disciplineRate = totalTrades > 0 ? Math.round((disciplinedTrades / totalTrades) * 100) : 100;
+
+      document.getElementById('disciplineScore').textContent = `${disciplineRate}%`;
+      const barFill = document.getElementById('disciplineBar');
+      barFill.style.width = `${disciplineRate}%`;
+      barFill.style.background = disciplineRate >= 80 ? 'var(--emerald)' : disciplineRate >= 50 ? '#fbbf24' : 'var(--rose)';
+
+      const leakList = document.getElementById('leakList');
+      leakList.innerHTML = '';
+
+      const keys = Object.keys(mistakeStats);
+      if (keys.length === 0) {
+        leakList.innerHTML = `<span style="color: var(--text-muted); font-size: 0.8rem;">No rule violations logged</span>`;
+        return;
+      }
+
+      keys.forEach(k => {
+        const item = document.createElement('div');
+        item.className = 'leak-item';
+        item.innerHTML = `
+          <div class="leak-header">
+            <span>${k}</span>
+            <span>${mistakeStats[k].count}x</span>
+          </div>
+          <div class="leak-impact">P&L Drag: ${formatCurrency(mistakeStats[k].cost)}</div>
+        `;
+        leakList.appendChild(item);
+      });
+    }
+
+    function generateMonthlyAudit() {
+      const monthName = months[monthSelect.value];
+      const yearName = yearSelect.value;
+      const monthTrades = getSelectedMonthTrades();
+      const content = document.getElementById('aiReportContent');
+
+      document.getElementById('aiModalTitle').textContent = `✨ Quark AI Execution Audit — ${monthName} ${yearName}`;
+
+      if (monthTrades.length === 0) {
+        content.innerHTML = `
+          <div class="ai-headline-box">
+            No executions logged for <strong>${monthName} ${yearName}</strong>. Log trades to activate Quark's behavioral audit engine.
+          </div>
+        `;
+        aiModalOverlay.style.display = 'flex';
+        return;
+      }
+
+      const cleanTrades = monthTrades.filter(t => t.mistake === 'None');
+      const mistakeTrades = monthTrades.filter(t => t.mistake !== 'None');
+
+      const cleanPnl = cleanTrades.reduce((acc, t) => acc + Number(t.pnl), 0);
+      const mistakePnl = mistakeTrades.reduce((acc, t) => acc + Number(t.pnl), 0);
+      const netPnl = cleanPnl + mistakePnl;
+
+      const mistakeMap = {};
+      mistakeTrades.forEach(t => {
+        if (!mistakeMap[t.mistake]) mistakeMap[t.mistake] = { count: 0, cost: 0 };
+        mistakeMap[t.mistake].count++;
+        mistakeMap[t.mistake].cost += Number(t.pnl);
+      });
+
+      let worstMistake = "None";
+      let worstMistakeCount = 0;
+      let worstMistakeCost = 0;
+
+      for (const [mName, stats] of Object.entries(mistakeMap)) {
+        if (stats.count > worstMistakeCount || (stats.count === worstMistakeCount && stats.cost < worstMistakeCost)) {
+          worstMistake = mName;
+          worstMistakeCount = stats.count;
+          worstMistakeCost = stats.cost;
+        }
+      }
+
+      const setupMap = {};
+      monthTrades.forEach(t => {
+        if (!setupMap[t.setup]) setupMap[t.setup] = { trades: 0, pnl: 0, wins: 0 };
+        setupMap[t.setup].trades++;
+        setupMap[t.setup].pnl += Number(t.pnl);
+        if (Number(t.pnl) > 0) setupMap[t.setup].wins++;
+      });
+
+      let bestSetup = { name: "N/A", pnl: -Infinity, winRate: 0 };
+      Object.entries(setupMap).forEach(([setup, s]) => {
+        if (s.pnl > bestSetup.pnl) bestSetup = { name: setup, pnl: s.pnl, winRate: Math.round((s.wins / s.trades) * 100) };
+      });
+
+      let summaryHeadline = "";
+      if (mistakeTrades.length === 0) {
+        summaryHeadline = `Exceptional adherence to protocol. You executed <strong>${monthTrades.length} trades</strong> with a 100% discipline score, netting <strong>${formatCurrency(netPnl)}</strong>. Your edge is functioning efficiently.`;
+      } else if (mistakePnl < 0 && cleanPnl > 0) {
+        summaryHeadline = `🚨 <strong>Capital Leak Detected:</strong> Your strategy delivered <strong>+${formatCurrency(cleanPnl)}</strong> when adhering to rules, but execution mistakes drained <strong>${formatCurrency(mistakePnl)}</strong>, settling net return at <strong>${formatCurrency(netPnl)}</strong>.`;
+      } else {
+        summaryHeadline = `You executed <strong>${monthTrades.length} trades</strong> this month. Deviations accounted for <strong>${mistakeTrades.length} trades</strong> with a net drag of <strong>${formatCurrency(mistakePnl)}</strong>.`;
+      }
+
+      content.innerHTML = `
+        <div class="ai-headline-box">
+          ${summaryHeadline}
+        </div>
+
+        <div class="ai-grid-stats">
+          <div class="ai-stat-card">
+            <div class="label">Primary Leak</div>
+            <div class="val" style="color:var(--rose); font-size: 1.05rem;">${worstMistake}</div>
+            <small style="color:var(--text-muted);">${worstMistakeCount}x occurrences (${formatCurrency(worstMistakeCost)})</small>
+          </div>
+          <div class="ai-stat-card">
+            <div class="label">Disciplined P&L</div>
+            <div class="val" style="color:${cleanPnl >= 0 ? 'var(--emerald)' : 'var(--rose)'}; font-size: 1.05rem;">${formatCurrency(cleanPnl)}</div>
+            <small style="color:var(--text-muted);">P&L when plan was followed</small>
+          </div>
+          <div class="ai-stat-card">
+            <div class="label">Top Playbook Setup</div>
+            <div class="val" style="color:var(--gold); font-size: 1.05rem;">${bestSetup.name}</div>
+            <small style="color:var(--text-muted);">${formatCurrency(bestSetup.pnl)} (${bestSetup.winRate}% WR)</small>
+          </div>
+        </div>
+
+        <div class="ai-section">
+          <h4>Quark AI Protocol Directives</h4>
+          <ul class="ai-rules-list">
+            <li><strong>Hard Filter on "${worstMistake}":</strong> This single flaw cost your desk ${formatCurrency(worstMistakeCost)}. Introduce an immediate cooldown timer after detecting this urge.</li>
+            <li><strong>Focus on "${bestSetup.name}":</strong> Your statistical edge lies clearly within this pattern (${formatCurrency(bestSetup.pnl)} net). Cull secondary setups that produce lower conviction.</li>
+            <li><strong>Preserve Edge:</strong> Disciplined executions yielded a ${cleanTrades.length > 0 ? Math.round((cleanTrades.filter(t => t.pnl > 0).length / cleanTrades.length) * 100) : 0}% win rate. Protect capital by stopping trading on any session with 2 consecutive rule breaks.</li>
+          </ul>
+        </div>
+      `;
+
+      aiModalOverlay.style.display = 'flex';
+    }
+
+    function openTradeModal(dateKey) {
+      selectedDate = dateKey;
+      document.getElementById('modalDateTitle').textContent = `Journal — ${dateKey}`;
+      tradeModalOverlay.style.display = 'flex';
+      renderModalTrades();
+    }
+
+    function renderModalTrades() {
+      const container = document.getElementById('modalTradeList');
+      container.innerHTML = '';
+      const dayTrades = trades.filter(t => t.date === selectedDate);
+
+      if (dayTrades.length === 0) {
+        container.innerHTML = `<div style="font-size:0.8rem; color:var(--text-muted); padding: 8px 0;">No trades recorded for this session.</div>`;
+        return;
+      }
+
+      dayTrades.forEach(t => {
+        const row = document.createElement('div');
+        row.className = 'trade-row';
+        row.innerHTML = `
+          <div>
+            <strong>${t.symbol}</strong> • ${t.setup}
+            ${t.mistake !== 'None' ? `<br><small style="color:#fbbf24;">⚠️ ${t.mistake}</small>` : ''}
+          </div>
+          <div style="display:flex; align-items:center;">
+            <span style="font-weight:700; color:${Number(t.pnl) >= 0 ? 'var(--emerald)' : 'var(--rose)'}">
+              ${formatCurrency(Number(t.pnl))}
+            </span>
+            <button class="delete-btn" onclick="deleteTrade(${t.id})">&times;</button>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    function deleteTrade(id) {
+      trades = trades.filter(t => t.id !== id);
+      localStorage.setItem('quark_trades', JSON.stringify(trades));
+      renderModalTrades();
+      renderDashboard();
+    }
+
+    closeTradeModal.onclick = () => tradeModalOverlay.style.display = 'none';
+    closeAiModal.onclick = () => aiModalOverlay.style.display = 'none';
+    openAiReportBtn.onclick = generateMonthlyAudit;
+    topAiButton.onclick = generateMonthlyAudit;
+
+    window.onclick = (e) => { 
+      if (e.target === tradeModalOverlay) tradeModalOverlay.style.display = 'none'; 
+      if (e.target === aiModalOverlay) aiModalOverlay.style.display = 'none'; 
+    };
+
+    monthSelect.addEventListener('change', renderDashboard);
+    yearSelect.addEventListener('change', renderDashboard);
+
+    tradeForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const newTrade = {
+        id: Date.now(),
+        date: selectedDate,
+        symbol: document.getElementById('symbol').value.toUpperCase(),
+        pnl: parseFloat(document.getElementById('pnl').value),
+        setup: document.getElementById('setup').value,
+        mistake: document.getElementById('mistake').value,
+        notes: document.getElementById('notes').value
+      };
+
+      trades.push(newTrade);
+      localStorage.setItem('quark_trades', JSON.stringify(trades));
+
+      tradeForm.reset();
+      renderModalTrades();
+      renderDashboard();
+    });
+
+    renderDashboard();
+  </script>
+</body>
+</html>
