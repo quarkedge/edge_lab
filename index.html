@@ -1282,10 +1282,13 @@
         const row = document.createElement('div');
         row.className = 'trade-row';
         const rDisplay = t.riskR ? ` (${(Number(t.pnl) / Number(t.riskR)).toFixed(1)}R)` : '';
+        const notesDisplay = t.notes ? `<br><small style="color:var(--text-muted); font-style: italic;">"${t.notes}"</small>` : '';
+
         row.innerHTML = `
           <div>
             <strong>${t.symbol}</strong> • <span style="font-size:0.75rem; color:var(--gold);">${t.direction || 'Long'}</span> • ${t.setup}
             ${t.mistake && t.mistake !== 'None' ? `<br><small style="color:#fbbf24;">⚠️ ${t.mistake}</small>` : ''}
+            ${notesDisplay}
           </div>
           <div style="display:flex; align-items:center;">
             <span style="font-weight:700; color:${Number(t.pnl) >= 0 ? 'var(--emerald)' : 'var(--rose)'}">
@@ -1329,7 +1332,7 @@
         riskR: parseFloat(document.getElementById('riskR').value) || null,
         setup: document.getElementById('setup').value,
         mistake: document.getElementById('mistake').value,
-        notes: document.getElementById('notes').value
+        notes: document.getElementById('notes').value // Added missing notes field mapping
       };
 
       trades.push(newTrade);
