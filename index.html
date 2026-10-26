@@ -4,6 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Quark — The Institutional Trading Terminal</title>
+  
+  <!-- Custom Favicon using your gold logo design -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22 fill=%22none%22><circle cx=%2250%22 cy=%2250%22 r=%2244%22 stroke=%22%23d4af37%22 stroke-width=%223%22 stroke-opacity=%220.5%22 stroke-dasharray=%224 4%22/><circle cx=%2250%22 cy=%2246%22 r=%2232%22 stroke=%22%23d4af37%22 stroke-width=%228%22/><path d=%22M56 52 L78 78%22 stroke=%22%23d4af37%22 stroke-width=%229%22 stroke-linecap=%22round%22/><circle cx=%2250%22 cy=%2246%22 r=%229%22 fill=%22%23d4af37%22/><circle cx=%2250%22 cy=%2246%22 r=%223.5%22 fill=%22%23ffffff%22/></svg>">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -1332,7 +1336,7 @@
         riskR: parseFloat(document.getElementById('riskR').value) || null,
         setup: document.getElementById('setup').value,
         mistake: document.getElementById('mistake').value,
-        notes: document.getElementById('notes').value // Added missing notes field mapping
+        notes: document.getElementById('notes').value // Fixed: Now saves notes properly
       };
 
       trades.push(newTrade);
