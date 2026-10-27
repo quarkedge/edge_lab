@@ -350,21 +350,16 @@
       transition: width 0.4s ease;
     }
 
-    .leak-tracker, .logic-fail-tracker {
+    .leak-tracker {
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
       border-radius: 12px;
       padding: 14px;
-      max-height: 190px;
+      max-height: 220px;
       overflow-y: auto;
     }
 
-    .logic-fail-tracker {
-      border-color: rgba(244, 63, 94, 0.25);
-      background: linear-gradient(145deg, rgba(244, 63, 94, 0.03), rgba(16, 22, 34, 0.7));
-    }
-
-    .leak-tracker h4, .logic-fail-tracker h4 {
+    .leak-tracker h4 {
       font-size: 0.72rem;
       text-transform: uppercase;
       letter-spacing: 1px;
@@ -372,11 +367,7 @@
       margin-bottom: 10px;
     }
 
-    .logic-fail-tracker h4 {
-      color: #fda4af;
-    }
-
-    .leak-list, .fail-list {
+    .leak-list {
       display: flex;
       flex-direction: column;
       gap: 8px;
@@ -896,13 +887,6 @@
         </div>
       </div>
 
-      <div class="logic-fail-tracker">
-        <h4>🚨 Logic Fail Section</h4>
-        <div class="fail-list" id="logicFailList">
-          <span style="color: var(--text-muted); font-size: 0.8rem;">No trade logic breakdowns logged</span>
-        </div>
-      </div>
-
       <div class="leak-tracker">
         <h4>Identified Leaks</h4>
         <div class="leak-list" id="leakList">
@@ -1033,19 +1017,6 @@
             </select>
           </div>
           <div class="form-group">
-            <label>🚨 Logic Fail Reason (Independent Breakdown)</label>
-            <select id="logicFailReason">
-              <option value="None">None (Solid Trade Logic)</option>
-              <option value="Ignored Higher Timeframe Bias">Ignored Higher Timeframe Bias</option>
-              <option value="Fought Strong Trend">Fought Strong Trend</option>
-              <option value="Invalid Market Structure Break">Invalid Market Structure Break</option>
-              <option value="Entered Into Daily Liquidity Wall">Entered Into Daily Liquidity Wall</option>
-              <option value="Poor Risk-to-Reward Placement">Poor Risk-to-Reward Placement</option>
-              <option value="Traded Against Key Economic News">Traded Against Key Economic News</option>
-              <option value="Premature Thesis Invalidation Ignored">Premature Thesis Invalidation Ignored</option>
-            </select>
-          </div>
-          <div class="form-group">
             <label>Trade / Chart Screenshot</label>
             <input type="file" id="tradeImage" accept="image/*" />
           </div>
@@ -1158,7 +1129,6 @@
 
         const dayTotalPnl = dayTrades.reduce((acc, t) => acc + Number(t.pnl), 0);
         const dayMistakes = dayTrades.filter(t => t.mistake && t.mistake !== 'None').length;
-        const dayFails = dayTrades.filter(t => t.logicFailReason && t.logicFailReason !== 'None').length;
 
         let pnlHtml = '';
         if (dayTrades.length > 0) {
@@ -1179,7 +1149,7 @@
           </div>
           ${pnlHtml}
           <div class="day-meta">
-            ${(dayMistakes > 0 || dayFails > 0) ? `<span class="mistake-badge">⚠️ ${dayMistakes + dayFails} Flaw</span>` : '<span></span>'}
+            ${dayMistakes > 0 ? `<span class="mistake-badge">⚠️ ${dayMistakes} Leak</span>` : '<span></span>'}
           </div>
         `;
         calendarDays.appendChild(cell);
@@ -1213,12 +1183,11 @@
       document.getElementById('greenRedDays').textContent = `${greenDays} / ${redDays}`;
       document.getElementById('activeDaysCount').textContent = `${greenDays + redDays} active sessions`;
 
-      renderDisciplineAndFails(monthTrades);
+      renderDisciplineAndLeaks(monthTrades);
     }
 
-    function renderDisciplineAndFails(monthTrades) {
+    function renderDisciplineAndLeaks(monthTrades) {
       const mistakeStats = {};
-      const logicFailStats = {};
       let totalMistakes = 0;
 
       monthTrades.forEach(t => {
@@ -1229,14 +1198,6 @@
           }
           mistakeStats[t.mistake].count += 1;
           mistakeStats[t.mistake].cost += Number(t.pnl);
-        }
-
-        if (t.logicFailReason && t.logicFailReason !== 'None') {
-          if (!logicFailStats[t.logicFailReason]) {
-            logicFailStats[t.logicFailReason] = { count: 0, cost: 0 };
-          }
-          logicFailStats[t.logicFailReason].count += 1;
-          logicFailStats[t.logicFailReason].cost += Number(t.pnl);
         }
       });
 
@@ -1249,47 +1210,26 @@
       barFill.style.width = `${disciplineRate}%`;
       barFill.style.background = disciplineRate >= 80 ? 'var(--emerald)' : disciplineRate >= 50 ? '#fbbf24' : 'var(--rose)';
 
-      // Render Leaks Tracker
       const leakList = document.getElementById('leakList');
       leakList.innerHTML = '';
-      const leakKeys = Object.keys(mistakeStats);
-      if (leakKeys.length === 0) {
+      const keys = Object.keys(mistakeStats);
+      if (keys.length === 0) {
         leakList.innerHTML = `<span style="color: var(--text-muted); font-size: 0.8rem;">No rule violations logged</span>`;
-      } else {
-        leakKeys.forEach(k => {
-          const item = document.createElement('div');
-          item.className = 'leak-item';
-          item.innerHTML = `
-            <div class="leak-header">
-              <span>${k}</span>
-              <span>${mistakeStats[k].count}x</span>
-            </div>
-            <div class="leak-impact">P&L Impact: ${formatCurrency(mistakeStats[k].cost)}</div>
-          `;
-          leakList.appendChild(item);
-        });
+        return;
       }
 
-      // Render Logic Fail Tracker
-      const failList = document.getElementById('logicFailList');
-      failList.innerHTML = '';
-      const failKeys = Object.keys(logicFailStats);
-      if (failKeys.length === 0) {
-        failList.innerHTML = `<span style="color: var(--text-muted); font-size: 0.8rem;">No trade logic breakdowns logged</span>`;
-      } else {
-        failKeys.forEach(k => {
-          const item = document.createElement('div');
-          item.className = 'leak-item';
-          item.innerHTML = `
-            <div class="leak-header" style="color: #f43f5e;">
-              <span>${k}</span>
-              <span>${logicFailStats[k].count}x</span>
-            </div>
-            <div class="leak-impact">P&L Impact: ${formatCurrency(logicFailStats[k].cost)}</div>
-          `;
-          failList.appendChild(item);
-        });
-      }
+      keys.forEach(k => {
+        const item = document.createElement('div');
+        item.className = 'leak-item';
+        item.innerHTML = `
+          <div class="leak-header">
+            <span>${k}</span>
+            <span>${mistakeStats[k].count}x</span>
+          </div>
+          <div class="leak-impact">P&L Drag: ${formatCurrency(mistakeStats[k].cost)}</div>
+        `;
+        leakList.appendChild(item);
+      });
     }
 
     function generateMonthlyAudit() {
@@ -1310,8 +1250,8 @@
         return;
       }
 
+      const cleanTrades = monthTrades.filter(t => t.mistake === 'None');
       const mistakeTrades = monthTrades.filter(t => t.mistake !== 'None');
-      const logicFailTrades = monthTrades.filter(t => t.logicFailReason && t.logicFailReason !== 'None');
       const netPnl = monthTrades.reduce((acc, t) => acc + Number(t.pnl), 0);
 
       const setupMap = {};
@@ -1329,7 +1269,7 @@
 
       content.innerHTML = `
         <div class="ai-headline-box">
-          You logged <strong>${monthTrades.length} trades</strong> this month for a net total of <strong>${formatCurrency(netPnl)}</strong>. Your records show <strong>${mistakeTrades.length} behavioral rule leaks</strong> and <strong>${logicFailTrades.length} structural logic breakdowns</strong>.
+          You logged <strong>${monthTrades.length} trades</strong> this month for a net total of <strong>${formatCurrency(netPnl)}</strong>. Your records show <strong>${mistakeTrades.length} execution leaks</strong>.
         </div>
 
         <div class="ai-grid-stats">
@@ -1337,11 +1277,6 @@
             <div class="label">Behavioral Leaks</div>
             <div class="val" style="color:var(--rose); font-size: 1.05rem;">${mistakeTrades.length} Trades</div>
             <small style="color:var(--text-muted);">Rule infractions recorded</small>
-          </div>
-          <div class="ai-stat-card">
-            <div class="label">Logic Fail Breakdowns</div>
-            <div class="val" style="color:#f43f5e; font-size: 1.05rem;">${logicFailTrades.length} Trades</div>
-            <small style="color:var(--text-muted);">Flawed entry context / thesis</small>
           </div>
           <div class="ai-stat-card">
             <div class="label">Top Playbook Setup</div>
@@ -1353,9 +1288,8 @@
         <div class="ai-section">
           <h4>Quark AI Protocol Directives</h4>
           <ul class="ai-rules-list">
-            <li><strong>Audit Profit-Taking Logic Fails:</strong> Inspect your attached chart photos for any trades where profit was booked despite structural logic flaws to avoid repeating bad execution habits.</li>
             <li><strong>Focus on "${bestSetup.name}":</strong> Your positive expectancy is concentrated here (${formatCurrency(bestSetup.pnl)} net). Prioritize these setups over lower-grade setups.</li>
-            <li><strong>Strict Structural Rules:</strong> Eliminate recurring logic failures by cross-referencing higher timeframe bias before pulling the trigger.</li>
+            <li><strong>Preserve Edge:</strong> Protect your capital by strictly respecting your risk boundaries and trade management playbook.</li>
           </ul>
         </div>
       `;
@@ -1386,15 +1320,12 @@
         const rDisplay = t.riskR ? ` (${(Number(t.pnl) / Number(t.riskR)).toFixed(1)}R)` : '';
         const notesDisplay = t.notes ? `<br><small style="color:var(--text-muted); font-style: italic;">"${t.notes}"</small>` : '';
         const mistakeDisplay = t.mistake && t.mistake !== 'None' ? `<br><small style="color:#fbbf24;">⚠️ Leak: ${t.mistake}</small>` : '';
-        const logicFailDisplay = t.logicFailReason && t.logicFailReason !== 'None' ? `<br><small style="color:#f43f5e;">🚨 Logic Fail: ${t.logicFailReason}</small>` : '';
-        
         const photoThumb = t.imageBase64 ? `<br><a class="chart-thumb-link" onclick="openLightbox('${t.imageBase64}')">📷 View Chart Photo</a>` : '';
 
         row.innerHTML = `
           <div class="trade-row-info">
             <strong>${t.symbol}</strong> • <span style="font-size:0.75rem; color:var(--gold);">${t.direction || 'Long'}</span> • ${t.setup}
             ${mistakeDisplay}
-            ${logicFailDisplay}
             ${notesDisplay}
             ${photoThumb}
           </div>
@@ -1465,7 +1396,6 @@
         riskR: parseFloat(document.getElementById('riskR').value) || null,
         setup: document.getElementById('setup').value,
         mistake: document.getElementById('mistake').value,
-        logicFailReason: document.getElementById('logicFailReason').value,
         notes: document.getElementById('notes').value,
         imageBase64: imageBase64
       };
@@ -1474,7 +1404,7 @@
       localStorage.setItem('quark_trades', JSON.stringify(trades));
 
       tradeForm.reset();
-      tradeModalOverlay.style.display = 'none'; // Automatically closes modal on save
+      tradeModalOverlay.style.display = 'none';
       renderDashboard();
     }
 
