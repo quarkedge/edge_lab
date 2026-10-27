@@ -220,20 +220,24 @@
     }
 
     aside {
-      width: 320px;
+      width: 340px;
       background: var(--bg-surface);
       border-right: 1px solid var(--border-subtle);
-      padding: 28px 20px;
+      padding: 24px 16px;
       display: flex;
       flex-direction: column;
-      gap: 22px;
+      gap: 16px;
+      overflow-y: auto;
+      max-height: 100vh;
+      position: sticky;
+      top: 0;
     }
 
     .brand-wrap {
       display: flex;
       align-items: center;
       gap: 12px;
-      padding-bottom: 18px;
+      padding-bottom: 14px;
       border-bottom: 1px solid var(--border-subtle);
     }
 
@@ -265,11 +269,11 @@
     .copilot-sidebar-card {
       background: linear-gradient(145deg, rgba(212, 175, 55, 0.06), rgba(16, 185, 129, 0.04));
       border: 1px solid rgba(212, 175, 55, 0.25);
-      border-radius: 14px;
-      padding: 16px;
+      border-radius: 12px;
+      padding: 14px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
     }
 
     .copilot-badge {
@@ -284,7 +288,7 @@
     }
 
     .copilot-sidebar-card p {
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       color: var(--text-muted);
       line-height: 1.45;
     }
@@ -295,7 +299,7 @@
       font-weight: 700;
       font-size: 0.82rem;
       border: none;
-      padding: 10px 14px;
+      padding: 9px 12px;
       border-radius: 8px;
       cursor: pointer;
       display: flex;
@@ -315,7 +319,7 @@
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
       border-radius: 12px;
-      padding: 16px;
+      padding: 14px;
     }
 
     .discipline-box h4 {
@@ -327,7 +331,7 @@
     }
 
     .discipline-score {
-      font-size: 1.7rem;
+      font-size: 1.6rem;
       font-weight: 800;
     }
 
@@ -336,7 +340,7 @@
       background: rgba(255, 255, 255, 0.08);
       border-radius: 3px;
       overflow: hidden;
-      margin-top: 10px;
+      margin-top: 8px;
     }
 
     .discipline-bar-fill {
@@ -346,27 +350,36 @@
       transition: width 0.4s ease;
     }
 
-    .leak-tracker {
+    .leak-tracker, .logic-fail-tracker {
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
       border-radius: 12px;
-      padding: 16px;
-      flex: 1;
+      padding: 14px;
+      max-height: 190px;
       overflow-y: auto;
     }
 
-    .leak-tracker h4 {
+    .logic-fail-tracker {
+      border-color: rgba(244, 63, 94, 0.25);
+      background: linear-gradient(145deg, rgba(244, 63, 94, 0.03), rgba(16, 22, 34, 0.7));
+    }
+
+    .leak-tracker h4, .logic-fail-tracker h4 {
       font-size: 0.72rem;
       text-transform: uppercase;
       letter-spacing: 1px;
       color: var(--text-muted);
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
-    .leak-list {
+    .logic-fail-tracker h4 {
+      color: #fda4af;
+    }
+
+    .leak-list, .fail-list {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
     }
 
     .leak-item {
@@ -374,7 +387,7 @@
       flex-direction: column;
       font-size: 0.78rem;
       border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-      padding-bottom: 8px;
+      padding-bottom: 6px;
     }
 
     .leak-header {
@@ -387,7 +400,7 @@
     .leak-impact {
       font-size: 0.7rem;
       color: var(--text-muted);
-      margin-top: 3px;
+      margin-top: 2px;
     }
 
     main {
@@ -684,6 +697,9 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 14px;
+      max-height: 65vh;
+      overflow-y: auto;
+      padding-right: 4px;
     }
 
     .form-group {
@@ -711,6 +727,11 @@
       outline: none;
     }
 
+    input[type="file"] {
+      padding: 8px;
+      cursor: pointer;
+    }
+
     input:focus, select:focus, textarea:focus {
       border-color: var(--gold);
     }
@@ -728,20 +749,48 @@
     }
 
     .trade-list-container {
-      margin-top: 20px;
-      max-height: 180px;
+      margin-top: 16px;
+      max-height: 200px;
       overflow-y: auto;
       border-top: 1px solid var(--border-subtle);
-      padding-top: 14px;
+      padding-top: 12px;
     }
 
     .trade-row {
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: flex-start;
       font-size: 0.85rem;
-      padding: 8px 0;
+      padding: 10px 0;
       border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      gap: 12px;
+    }
+
+    .trade-row-info {
+      flex: 1;
+    }
+
+    .trade-row-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .chart-thumb-link {
+      font-size: 0.72rem;
+      color: var(--gold);
+      text-decoration: none;
+      background: rgba(212, 175, 55, 0.1);
+      padding: 3px 8px;
+      border-radius: 4px;
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      cursor: pointer;
+      display: inline-block;
+      margin-top: 4px;
+    }
+
+    .chart-thumb-link:hover {
+      background: rgba(212, 175, 55, 0.2);
     }
 
     .delete-btn {
@@ -749,11 +798,30 @@
       border: none;
       color: var(--text-muted);
       cursor: pointer;
-      margin-left: 10px;
       font-size: 1.1rem;
     }
 
     .delete-btn:hover { color: var(--rose); }
+
+    /* Image Lightbox Modal */
+    .lightbox-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.9);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      padding: 20px;
+    }
+
+    .lightbox-content {
+      max-width: 90vw;
+      max-height: 90vh;
+      border-radius: 8px;
+      border: 1px solid var(--border-focus);
+      object-fit: contain;
+    }
   </style>
 </head>
 <body>
@@ -825,6 +893,13 @@
         <div class="discipline-score" id="disciplineScore">100%</div>
         <div class="discipline-bar-bg">
           <div class="discipline-bar-fill" id="disciplineBar"></div>
+        </div>
+      </div>
+
+      <div class="logic-fail-tracker">
+        <h4>🚨 Logic Fail Section</h4>
+        <div class="fail-list" id="logicFailList">
+          <span style="color: var(--text-muted); font-size: 0.8rem;">No trade logic breakdowns logged</span>
         </div>
       </div>
 
@@ -900,7 +975,7 @@
 
   <!-- Trade Logging Modal -->
   <div class="modal-overlay" id="tradeModalOverlay">
-    <div class="modal">
+    <div class="modal modal-large">
       <div class="modal-header">
         <h3 id="modalDateTitle">Log Execution</h3>
         <button class="close-btn" id="closeTradeModal">&times;</button>
@@ -957,8 +1032,25 @@
               <option value="Premature Entry">Premature Entry (Jumped Trigger)</option>
             </select>
           </div>
+          <div class="form-group">
+            <label>🚨 Logic Fail Breakdown Reason</label>
+            <select id="logicFailReason">
+              <option value="None">None (Solid Trade Logic)</option>
+              <option value="Ignored Higher Timeframe Bias">Ignored Higher Timeframe Bias</option>
+              <option value="Fought Strong Trend">Fought Strong Trend</option>
+              <option value="Invalid Market Structure Break">Invalid Market Structure Break</option>
+              <option value="Entered Into Daily Liquidity Wall">Entered Into Daily Liquidity Wall</option>
+              <option value="Poor Risk-to-Reward Placement">Poor Risk-to-Reward Placement</option>
+              <option value="Traded Against Key Economic News">Traded Against Key Economic News</option>
+              <option value="Premature Thesis Invalidation Ignored">Premature Thesis Invalidation Ignored</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Trade / Chart Screenshot</label>
+            <input type="file" id="tradeImage" accept="image/*" />
+          </div>
           <div class="form-group full">
-            <label>Psychology & Session Context</label>
+            <label>Psychology & Session Context Notes</label>
             <textarea id="notes" rows="2" placeholder="Impatience? Distraction? Execution mindset checklist?"></textarea>
           </div>
         </div>
@@ -967,6 +1059,11 @@
 
       <div class="trade-list-container" id="modalTradeList"></div>
     </div>
+  </div>
+
+  <!-- Lightbox Modal for Chart Images -->
+  <div class="lightbox-overlay" id="lightboxOverlay">
+    <img class="lightbox-content" id="lightboxImg" alt="Trade Chart Full View" />
   </div>
 
   <script>
@@ -993,6 +1090,8 @@
     const topAiButton = document.getElementById('topAiButton');
     const tradeForm = document.getElementById('tradeForm');
     const slideDownBtn = document.getElementById('slideDownBtn');
+    const lightboxOverlay = document.getElementById('lightboxOverlay');
+    const lightboxImg = document.getElementById('lightboxImg');
 
     slideDownBtn.addEventListener('click', (e) => {
       e.preventDefault();
@@ -1113,11 +1212,12 @@
       document.getElementById('greenRedDays').textContent = `${greenDays} / ${redDays}`;
       document.getElementById('activeDaysCount').textContent = `${greenDays + redDays} active sessions`;
 
-      renderDisciplineAndLeaks(monthTrades);
+      renderDisciplineAndFails(monthTrades);
     }
 
-    function renderDisciplineAndLeaks(monthTrades) {
+    function renderDisciplineAndFails(monthTrades) {
       const mistakeStats = {};
+      const logicFailStats = {};
       let totalMistakes = 0;
 
       monthTrades.forEach(t => {
@@ -1128,6 +1228,14 @@
           }
           mistakeStats[t.mistake].count += 1;
           mistakeStats[t.mistake].cost += Number(t.pnl);
+        }
+
+        if (t.logicFailReason && t.logicFailReason !== 'None') {
+          if (!logicFailStats[t.logicFailReason]) {
+            logicFailStats[t.logicFailReason] = { count: 0, cost: 0 };
+          }
+          logicFailStats[t.logicFailReason].count += 1;
+          logicFailStats[t.logicFailReason].cost += Number(t.pnl);
         }
       });
 
@@ -1140,27 +1248,47 @@
       barFill.style.width = `${disciplineRate}%`;
       barFill.style.background = disciplineRate >= 80 ? 'var(--emerald)' : disciplineRate >= 50 ? '#fbbf24' : 'var(--rose)';
 
+      // Render Leaks Tracker
       const leakList = document.getElementById('leakList');
       leakList.innerHTML = '';
-
-      const keys = Object.keys(mistakeStats);
-      if (keys.length === 0) {
+      const leakKeys = Object.keys(mistakeStats);
+      if (leakKeys.length === 0) {
         leakList.innerHTML = `<span style="color: var(--text-muted); font-size: 0.8rem;">No rule violations logged</span>`;
-        return;
+      } else {
+        leakKeys.forEach(k => {
+          const item = document.createElement('div');
+          item.className = 'leak-item';
+          item.innerHTML = `
+            <div class="leak-header">
+              <span>${k}</span>
+              <span>${mistakeStats[k].count}x</span>
+            </div>
+            <div class="leak-impact">P&L Drag: ${formatCurrency(mistakeStats[k].cost)}</div>
+          `;
+          leakList.appendChild(item);
+        });
       }
 
-      keys.forEach(k => {
-        const item = document.createElement('div');
-        item.className = 'leak-item';
-        item.innerHTML = `
-          <div class="leak-header">
-            <span>${k}</span>
-            <span>${mistakeStats[k].count}x</span>
-          </div>
-          <div class="leak-impact">P&L Drag: ${formatCurrency(mistakeStats[k].cost)}</div>
-        `;
-        leakList.appendChild(item);
-      });
+      // Render Logic Fail Tracker
+      const failList = document.getElementById('logicFailList');
+      failList.innerHTML = '';
+      const failKeys = Object.keys(logicFailStats);
+      if (failKeys.length === 0) {
+        failList.innerHTML = `<span style="color: var(--text-muted); font-size: 0.8rem;">No trade logic breakdowns logged</span>`;
+      } else {
+        failKeys.forEach(k => {
+          const item = document.createElement('div');
+          item.className = 'leak-item';
+          item.innerHTML = `
+            <div class="leak-header" style="color: #f43f5e;">
+              <span>${k}</span>
+              <span>${logicFailStats[k].count}x</span>
+            </div>
+            <div class="leak-impact">P&L Drag: ${formatCurrency(logicFailStats[k].cost)}</div>
+          `;
+          failList.appendChild(item);
+        });
+      }
     }
 
     function generateMonthlyAudit() {
@@ -1183,10 +1311,11 @@
 
       const cleanTrades = monthTrades.filter(t => t.mistake === 'None');
       const mistakeTrades = monthTrades.filter(t => t.mistake !== 'None');
+      const logicFailTrades = monthTrades.filter(t => t.logicFailReason && t.logicFailReason !== 'None');
 
       const cleanPnl = cleanTrades.reduce((acc, t) => acc + Number(t.pnl), 0);
       const mistakePnl = mistakeTrades.reduce((acc, t) => acc + Number(t.pnl), 0);
-      const netPnl = cleanPnl + mistakePnl;
+      const netPnl = cleanTrades.reduce((acc, t) => acc + Number(t.pnl), 0) + mistakePnl;
 
       const mistakeMap = {};
       mistakeTrades.forEach(t => {
@@ -1221,12 +1350,10 @@
       });
 
       let summaryHeadline = "";
-      if (mistakeTrades.length === 0) {
-        summaryHeadline = `Exceptional adherence to protocol. You executed <strong>${monthTrades.length} trades</strong> with a 100% discipline score, netting <strong>${formatCurrency(netPnl)}</strong>. Your edge is functioning efficiently.`;
-      } else if (mistakePnl < 0 && cleanPnl > 0) {
-        summaryHeadline = `🚨 <strong>Capital Leak Detected:</strong> Your strategy delivered <strong>+${formatCurrency(cleanPnl)}</strong> when adhering to rules, but execution mistakes drained <strong>${formatCurrency(mistakePnl)}</strong>, settling net return at <strong>${formatCurrency(netPnl)}</strong>.`;
+      if (mistakeTrades.length === 0 && logicFailTrades.length === 0) {
+        summaryHeadline = `Exceptional adherence to protocol. You executed <strong>${monthTrades.length} trades</strong> with pristine discipline and sound structural logic, netting <strong>${formatCurrency(netPnl)}</strong>.`;
       } else {
-        summaryHeadline = `You executed <strong>${monthTrades.length} trades</strong> this month. Deviations accounted for <strong>${mistakeTrades.length} trades</strong> with a net drag of <strong>${formatCurrency(mistakePnl)}</strong>.`;
+        summaryHeadline = `You logged <strong>${monthTrades.length} trades</strong> this month. Execution leaks generated <strong>${mistakeTrades.length} rule infractions</strong> and <strong>${logicFailTrades.length} logic breakdowns</strong>.`;
       }
 
       content.innerHTML = `
@@ -1236,14 +1363,14 @@
 
         <div class="ai-grid-stats">
           <div class="ai-stat-card">
-            <div class="label">Primary Leak</div>
+            <div class="label">Primary Behavioral Leak</div>
             <div class="val" style="color:var(--rose); font-size: 1.05rem;">${worstMistake}</div>
             <small style="color:var(--text-muted);">${worstMistakeCount}x occurrences (${formatCurrency(worstMistakeCost)})</small>
           </div>
           <div class="ai-stat-card">
-            <div class="label">Disciplined P&L</div>
-            <div class="val" style="color:${cleanPnl >= 0 ? 'var(--emerald)' : 'var(--rose)'}; font-size: 1.05rem;">${formatCurrency(cleanPnl)}</div>
-            <small style="color:var(--text-muted);">P&L when plan was followed</small>
+            <div class="label">Logic Breakdowns</div>
+            <div class="val" style="color:#f43f5e; font-size: 1.05rem;">${logicFailTrades.length} Trades</div>
+            <small style="color:var(--text-muted);">Invalid trade thesis setups</small>
           </div>
           <div class="ai-stat-card">
             <div class="label">Top Playbook Setup</div>
@@ -1255,9 +1382,9 @@
         <div class="ai-section">
           <h4>Quark AI Protocol Directives</h4>
           <ul class="ai-rules-list">
-            <li><strong>Hard Filter on "${worstMistake}":</strong> This flaw cost your desk ${formatCurrency(worstMistakeCost)}. Enforce an immediate cool-off after logging this trigger.</li>
-            <li><strong>Focus on "${bestSetup.name}":</strong> Your positive expectancy is concentrated in this setup (${formatCurrency(bestSetup.pnl)} net). Prioritize these setups over lower-grade setups.</li>
-            <li><strong>Preserve Edge:</strong> Clean setups yielded a ${cleanTrades.length > 0 ? Math.round((cleanTrades.filter(t => t.pnl > 0).length / cleanTrades.length) * 100) : 0}% win rate. Protect capital by walking away after two consecutive behavioral infractions.</li>
+            <li><strong>Review Logic Fails:</strong> Inspect your attached trade screenshots for any logged Logic Fails to identify recurring structural misinterpretations.</li>
+            <li><strong>Focus on "${bestSetup.name}":</strong> Your positive expectancy is concentrated in this setup (${formatCurrency(bestSetup.pnl)} net). Prioritize these executions.</li>
+            <li><strong>Enforce Setup Filters:</strong> Avoid forcing trades during high volatility when structural bias is unclear.</li>
           </ul>
         </div>
       `;
@@ -1287,14 +1414,20 @@
         row.className = 'trade-row';
         const rDisplay = t.riskR ? ` (${(Number(t.pnl) / Number(t.riskR)).toFixed(1)}R)` : '';
         const notesDisplay = t.notes ? `<br><small style="color:var(--text-muted); font-style: italic;">"${t.notes}"</small>` : '';
+        const mistakeDisplay = t.mistake && t.mistake !== 'None' ? `<br><small style="color:#fbbf24;">⚠️ Leak: ${t.mistake}</small>` : '';
+        const logicFailDisplay = t.logicFailReason && t.logicFailReason !== 'None' ? `<br><small style="color:#f43f5e;">🚨 Logic Fail: ${t.logicFailReason}</small>` : '';
+        
+        const photoThumb = t.imageBase64 ? `<br><a class="chart-thumb-link" onclick="openLightbox('${t.imageBase64}')">📷 View Chart Photo</a>` : '';
 
         row.innerHTML = `
-          <div>
+          <div class="trade-row-info">
             <strong>${t.symbol}</strong> • <span style="font-size:0.75rem; color:var(--gold);">${t.direction || 'Long'}</span> • ${t.setup}
-            ${t.mistake && t.mistake !== 'None' ? `<br><small style="color:#fbbf24;">⚠️ ${t.mistake}</small>` : ''}
+            ${mistakeDisplay}
+            ${logicFailDisplay}
             ${notesDisplay}
+            ${photoThumb}
           </div>
-          <div style="display:flex; align-items:center;">
+          <div class="trade-row-actions">
             <span style="font-weight:700; color:${Number(t.pnl) >= 0 ? 'var(--emerald)' : 'var(--rose)'}">
               ${formatCurrency(Number(t.pnl))}${rDisplay}
             </span>
@@ -1304,6 +1437,15 @@
         container.appendChild(row);
       });
     }
+
+    function openLightbox(base64Str) {
+      lightboxImg.src = base64Str;
+      lightboxOverlay.style.display = 'flex';
+    }
+
+    lightboxOverlay.onclick = () => {
+      lightboxOverlay.style.display = 'none';
+    };
 
     function deleteTrade(id) {
       trades = trades.filter(t => t.id !== id);
@@ -1327,6 +1469,22 @@
 
     tradeForm.addEventListener('submit', (e) => {
       e.preventDefault();
+      
+      const fileInput = document.getElementById('tradeImage');
+      const file = fileInput.files[0];
+
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(uploadEvent) {
+          saveTradeRecord(uploadEvent.target.result);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        saveTradeRecord(null);
+      }
+    });
+
+    function saveTradeRecord(imageBase64) {
       const newTrade = {
         id: Date.now(),
         date: selectedDate,
@@ -1336,7 +1494,9 @@
         riskR: parseFloat(document.getElementById('riskR').value) || null,
         setup: document.getElementById('setup').value,
         mistake: document.getElementById('mistake').value,
-        notes: document.getElementById('notes').value // Fixed: Now saves notes properly
+        logicFailReason: document.getElementById('logicFailReason').value,
+        notes: document.getElementById('notes').value,
+        imageBase64: imageBase64
       };
 
       trades.push(newTrade);
@@ -1345,7 +1505,7 @@
       tradeForm.reset();
       renderModalTrades();
       renderDashboard();
-    });
+    }
 
     renderDashboard();
   </script>
