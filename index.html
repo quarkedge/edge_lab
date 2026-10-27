@@ -1016,7 +1016,7 @@
             </select>
           </div>
           <div class="form-group">
-            <label>Execution Mistake</label>
+            <label>Execution Mistake (Psychology)</label>
             <select id="mistake">
               <option value="None">None (Followed Plan)</option>
               <option value="FOMO / Chased">FOMO / Chased</option>
@@ -1033,7 +1033,7 @@
             </select>
           </div>
           <div class="form-group">
-            <label>🚨 Logic Fail Breakdown Reason</label>
+            <label>🚨 Logic Fail Reason (Independent Breakdown)</label>
             <select id="logicFailReason">
               <option value="None">None (Solid Trade Logic)</option>
               <option value="Ignored Higher Timeframe Bias">Ignored Higher Timeframe Bias</option>
@@ -1158,6 +1158,7 @@
 
         const dayTotalPnl = dayTrades.reduce((acc, t) => acc + Number(t.pnl), 0);
         const dayMistakes = dayTrades.filter(t => t.mistake && t.mistake !== 'None').length;
+        const dayFails = dayTrades.filter(t => t.logicFailReason && t.logicFailReason !== 'None').length;
 
         let pnlHtml = '';
         if (dayTrades.length > 0) {
@@ -1178,7 +1179,7 @@
           </div>
           ${pnlHtml}
           <div class="day-meta">
-            ${dayMistakes > 0 ? `<span class="mistake-badge">⚠️ ${dayMistakes} Leak</span>` : '<span></span>'}
+            ${(dayMistakes > 0 || dayFails > 0) ? `<span class="mistake-badge">⚠️ ${dayMistakes + dayFails} Flaw</span>` : '<span></span>'}
           </div>
         `;
         calendarDays.appendChild(cell);
@@ -1263,7 +1264,7 @@
               <span>${k}</span>
               <span>${mistakeStats[k].count}x</span>
             </div>
-            <div class="leak-impact">P&L Drag: ${formatCurrency(mistakeStats[k].cost)}</div>
+            <div class="leak-impact">P&L Impact: ${formatCurrency(mistakeStats[k].cost)}</div>
           `;
           leakList.appendChild(item);
         });
@@ -1284,7 +1285,7 @@
               <span>${k}</span>
               <span>${logicFailStats[k].count}x</span>
             </div>
-            <div class="leak-impact">P&L Drag: ${formatCurrency(logicFailStats[k].cost)}</div>
+            <div class="leak-impact">P&L Impact: ${formatCurrency(logicFailStats[k].cost)}</div>
           `;
           failList.appendChild(item);
         });
@@ -1313,28 +1314,7 @@
       const mistakeTrades = monthTrades.filter(t => t.mistake !== 'None');
       const logicFailTrades = monthTrades.filter(t => t.logicFailReason && t.logicFailReason !== 'None');
 
-      const cleanPnl = cleanTrades.reduce((acc, t) => acc + Number(t.pnl), 0);
-      const mistakePnl = mistakeTrades.reduce((acc, t) => acc + Number(t.pnl), 0);
-      const netPnl = cleanTrades.reduce((acc, t) => acc + Number(t.pnl), 0) + mistakePnl;
-
-      const mistakeMap = {};
-      mistakeTrades.forEach(t => {
-        if (!mistakeMap[t.mistake]) mistakeMap[t.mistake] = { count: 0, cost: 0 };
-        mistakeMap[t.mistake].count++;
-        mistakeMap[t.mistake].cost += Number(t.pnl);
-      });
-
-      let worstMistake = "None";
-      let worstMistakeCount = 0;
-      let worstMistakeCost = 0;
-
-      for (const [mName, stats] of Object.entries(mistakeMap)) {
-        if (stats.count > worstMistakeCount || (stats.count === worstMistakeCount && stats.cost < worstMistakeCost)) {
-          worstMistake = mName;
-          worstMistakeCount = stats.count;
-          worstMistakeCost = stats.cost;
-        }
-      }
+      const netPnl = monthTrades.reduce((acc, t) => acc + Number(t.pnl), 0);
 
       const setupMap = {};
       monthTrades.forEach(t => {
@@ -1349,28 +1329,21 @@
         if (s.pnl > bestSetup.pnl) bestSetup = { name: setup, pnl: s.pnl, winRate: Math.round((s.wins / s.trades) * 100) };
       });
 
-      let summaryHeadline = "";
-      if (mistakeTrades.length === 0 && logicFailTrades.length === 0) {
-        summaryHeadline = `Exceptional adherence to protocol. You executed <strong>${monthTrades.length} trades</strong> with pristine discipline and sound structural logic, netting <strong>${formatCurrency(netPnl)}</strong>.`;
-      } else {
-        summaryHeadline = `You logged <strong>${monthTrades.length} trades</strong> this month. Execution leaks generated <strong>${mistakeTrades.length} rule infractions</strong> and <strong>${logicFailTrades.length} logic breakdowns</strong>.`;
-      }
-
       content.innerHTML = `
         <div class="ai-headline-box">
-          ${summaryHeadline}
+          You logged <strong>${monthTrades.length} trades</strong> this month for a net total of <strong>${formatCurrency(netPnl)}</strong>. Your records show <strong>${mistakeTrades.length} behavioral rule leaks</strong> and <strong>${logicFailTrades.length} structural logic breakdowns</strong> (including successful trades with flawed logic).
         </div>
 
         <div class="ai-grid-stats">
           <div class="ai-stat-card">
-            <div class="label">Primary Behavioral Leak</div>
-            <div class="val" style="color:var(--rose); font-size: 1.05rem;">${worstMistake}</div>
-            <small style="color:var(--text-muted);">${worstMistakeCount}x occurrences (${formatCurrency(worstMistakeCost)})</small>
+            <div class="label">Behavioral Leaks</div>
+            <div class="val" style="color:var(--rose); font-size: 1.05rem;">${mistakeTrades.length} Trades</div>
+            <small style="color:var(--text-muted);">Rule infractions recorded</small>
           </div>
           <div class="ai-stat-card">
-            <div class="label">Logic Breakdowns</div>
+            <div class="label">Logic Fail Breakdowns</div>
             <div class="val" style="color:#f43f5e; font-size: 1.05rem;">${logicFailTrades.length} Trades</div>
-            <small style="color:var(--text-muted);">Invalid trade thesis setups</small>
+            <small style="color:var(--text-muted);">Flawed entry context / thesis</small>
           </div>
           <div class="ai-stat-card">
             <div class="label">Top Playbook Setup</div>
@@ -1382,9 +1355,9 @@
         <div class="ai-section">
           <h4>Quark AI Protocol Directives</h4>
           <ul class="ai-rules-list">
-            <li><strong>Review Logic Fails:</strong> Inspect your attached trade screenshots for any logged Logic Fails to identify recurring structural misinterpretations.</li>
-            <li><strong>Focus on "${bestSetup.name}":</strong> Your positive expectancy is concentrated in this setup (${formatCurrency(bestSetup.pnl)} net). Prioritize these executions.</li>
-            <li><strong>Enforce Setup Filters:</strong> Avoid forcing trades during high volatility when structural bias is unclear.</li>
+            <li><strong>Audit Profit-Taking Logic Fails:</strong> Even if you booked profit on trades with logged Logic Fails, review your chart photos to ensure you aren't relying on bad habits that will eventually result in larger drawdowns.</li>
+            <li><strong>Focus on "${bestSetup.name}":</strong> Your positive expectancy is concentrated here (${formatCurrency(bestSetup.pnl)} net). Prioritize these setups over lower-grade setups.</li>
+            <li><strong>Strict Structural Rules:</strong> Eliminate recurring logic failures by cross-referencing higher timeframe bias before pulling the trigger.</li>
           </ul>
         </div>
       `;
