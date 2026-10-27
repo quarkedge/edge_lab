@@ -1310,10 +1310,8 @@
         return;
       }
 
-      const cleanTrades = monthTrades.filter(t => t.mistake === 'None');
       const mistakeTrades = monthTrades.filter(t => t.mistake !== 'None');
       const logicFailTrades = monthTrades.filter(t => t.logicFailReason && t.logicFailReason !== 'None');
-
       const netPnl = monthTrades.reduce((acc, t) => acc + Number(t.pnl), 0);
 
       const setupMap = {};
@@ -1331,7 +1329,7 @@
 
       content.innerHTML = `
         <div class="ai-headline-box">
-          You logged <strong>${monthTrades.length} trades</strong> this month for a net total of <strong>${formatCurrency(netPnl)}</strong>. Your records show <strong>${mistakeTrades.length} behavioral rule leaks</strong> and <strong>${logicFailTrades.length} structural logic breakdowns</strong> (including successful trades with flawed logic).
+          You logged <strong>${monthTrades.length} trades</strong> this month for a net total of <strong>${formatCurrency(netPnl)}</strong>. Your records show <strong>${mistakeTrades.length} behavioral rule leaks</strong> and <strong>${logicFailTrades.length} structural logic breakdowns</strong>.
         </div>
 
         <div class="ai-grid-stats">
@@ -1355,7 +1353,7 @@
         <div class="ai-section">
           <h4>Quark AI Protocol Directives</h4>
           <ul class="ai-rules-list">
-            <li><strong>Audit Profit-Taking Logic Fails:</strong> Even if you booked profit on trades with logged Logic Fails, review your chart photos to ensure you aren't relying on bad habits that will eventually result in larger drawdowns.</li>
+            <li><strong>Audit Profit-Taking Logic Fails:</strong> Inspect your attached chart photos for any trades where profit was booked despite structural logic flaws to avoid repeating bad execution habits.</li>
             <li><strong>Focus on "${bestSetup.name}":</strong> Your positive expectancy is concentrated here (${formatCurrency(bestSetup.pnl)} net). Prioritize these setups over lower-grade setups.</li>
             <li><strong>Strict Structural Rules:</strong> Eliminate recurring logic failures by cross-referencing higher timeframe bias before pulling the trigger.</li>
           </ul>
@@ -1476,7 +1474,7 @@
       localStorage.setItem('quark_trades', JSON.stringify(trades));
 
       tradeForm.reset();
-      renderModalTrades();
+      tradeModalOverlay.style.display = 'none'; // Automatically closes modal on save
       renderDashboard();
     }
 
