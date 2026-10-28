@@ -10,26 +10,29 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg-base: #05070b;
-      --bg-surface: #0a0e17;
-      --bg-card: rgba(16, 22, 34, 0.7);
-      --border-subtle: rgba(255, 255, 255, 0.08);
-      --border-focus: rgba(212, 175, 55, 0.4);
+      --bg-base: #04060a;
+      --bg-surface: #090d15;
+      --bg-card: rgba(14, 20, 32, 0.75);
+      --border-subtle: rgba(255, 255, 255, 0.07);
+      --border-focus: rgba(212, 175, 55, 0.45);
       --text-main: #f8fafc;
       --text-muted: #7e8c9f;
       --gold: #d4af37;
+      --gold-soft: rgba(212, 175, 55, 0.14);
       --gold-gradient: linear-gradient(135deg, #f7df8b 0%, #d4af37 50%, #997c1f 100%);
       --emerald: #10b981;
-      --emerald-bg: rgba(16, 185, 129, 0.12);
+      --emerald-bg: linear-gradient(160deg, rgba(16, 185, 129, 0.16) 0%, rgba(16, 185, 129, 0.04) 100%);
       --emerald-border: rgba(16, 185, 129, 0.35);
       --rose: #f43f5e;
-      --rose-bg: rgba(244, 63, 94, 0.12);
+      --rose-bg: linear-gradient(160deg, rgba(244, 63, 94, 0.16) 0%, rgba(244, 63, 94, 0.04) 100%);
       --rose-border: rgba(244, 63, 94, 0.35);
+      --amber: #f59e0b;
       --sans: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      --mono: 'JetBrains Mono', monospace;
       --serif: 'Cinzel', serif;
     }
 
@@ -220,17 +223,18 @@
     }
 
     aside {
-      width: 340px;
+      width: 330px;
       background: var(--bg-surface);
       border-right: 1px solid var(--border-subtle);
-      padding: 24px 16px;
+      padding: 22px 16px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 14px;
       overflow-y: auto;
       max-height: 100vh;
       position: sticky;
       top: 0;
+      flex-shrink: 0;
     }
 
     .brand-wrap {
@@ -242,8 +246,8 @@
     }
 
     .brand-mark {
-      width: 40px;
-      height: 40px;
+      width: 38px;
+      height: 38px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -258,7 +262,7 @@
 
     .brand-text {
       font-family: var(--serif);
-      font-size: 1.35rem;
+      font-size: 1.3rem;
       font-weight: 700;
       letter-spacing: 2px;
       background: var(--gold-gradient);
@@ -267,7 +271,7 @@
     }
 
     .copilot-sidebar-card {
-      background: linear-gradient(145deg, rgba(212, 175, 55, 0.06), rgba(16, 185, 129, 0.04));
+      background: linear-gradient(145deg, rgba(212, 175, 55, 0.07), rgba(16, 185, 129, 0.03));
       border: 1px solid rgba(212, 175, 55, 0.25);
       border-radius: 12px;
       padding: 14px;
@@ -280,7 +284,7 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      font-size: 0.75rem;
+      font-size: 0.74rem;
       font-weight: 700;
       color: var(--gold);
       text-transform: uppercase;
@@ -288,7 +292,7 @@
     }
 
     .copilot-sidebar-card p {
-      font-size: 0.76rem;
+      font-size: 0.75rem;
       color: var(--text-muted);
       line-height: 1.45;
     }
@@ -299,7 +303,7 @@
       font-weight: 700;
       font-size: 0.82rem;
       border: none;
-      padding: 9px 12px;
+      padding: 9px 14px;
       border-radius: 8px;
       cursor: pointer;
       display: flex;
@@ -307,12 +311,12 @@
       justify-content: center;
       gap: 8px;
       transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-      letter-spacing: 0.5px;
+      letter-spacing: 0.4px;
     }
 
     .btn-ai-trigger:hover {
       box-shadow: 0 4px 20px rgba(212, 175, 55, 0.35);
-      transform: translateY(-2px);
+      transform: translateY(-1px);
     }
 
     .discipline-box {
@@ -323,7 +327,7 @@
     }
 
     .discipline-box h4 {
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       text-transform: uppercase;
       letter-spacing: 1px;
       color: var(--text-muted);
@@ -331,8 +335,9 @@
     }
 
     .discipline-score {
-      font-size: 1.6rem;
+      font-size: 1.55rem;
       font-weight: 800;
+      font-family: var(--mono);
     }
 
     .discipline-bar-bg {
@@ -350,17 +355,18 @@
       transition: width 0.4s ease;
     }
 
+    /* Upgraded Leak Tracker (#1) */
     .leak-tracker {
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
       border-radius: 12px;
       padding: 14px;
-      max-height: 220px;
+      max-height: 250px;
       overflow-y: auto;
     }
 
     .leak-tracker h4 {
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       text-transform: uppercase;
       letter-spacing: 1px;
       color: var(--text-muted);
@@ -370,33 +376,114 @@
     .leak-list {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
     }
 
     .leak-item {
       display: flex;
       flex-direction: column;
       font-size: 0.78rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-      padding-bottom: 6px;
+      background: rgba(8, 12, 20, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 9px 11px;
+      gap: 5px;
     }
 
     .leak-header {
       display: flex;
       justify-content: space-between;
+      align-items: center;
+      color: #f8fafc;
+      font-weight: 700;
+    }
+
+    .leak-count-pill {
+      background: rgba(244, 63, 94, 0.18);
       color: #fda4af;
+      border: 1px solid rgba(244, 63, 94, 0.3);
+      font-size: 0.68rem;
+      padding: 1px 7px;
+      border-radius: 4px;
+      font-family: var(--mono);
+    }
+
+    .leak-metrics {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      font-size: 0.71rem;
+      margin-top: 2px;
+    }
+
+    .leak-cost-loss {
+      color: var(--rose);
       font-weight: 600;
     }
 
-    .leak-impact {
+    .leak-cost-lucky {
+      color: var(--amber);
+      font-weight: 500;
+    }
+
+    /* Data Vault Backup & Restore (#3) */
+    .vault-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 14px;
+      margin-top: auto;
+    }
+
+    .vault-card h4 {
       font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
       color: var(--text-muted);
-      margin-top: 2px;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .vault-sub {
+      font-size: 0.71rem;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+
+    .vault-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .btn-vault {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      font-size: 0.74rem;
+      font-weight: 600;
+      padding: 8px 10px;
+      border-radius: 7px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      transition: all 0.2s;
+    }
+
+    .btn-vault:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: rgba(212, 175, 55, 0.08);
     }
 
     main {
       flex: 1;
-      padding: 32px 42px;
+      padding: 28px 36px;
       overflow-y: auto;
     }
 
@@ -404,25 +491,76 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 28px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .header-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
 
     .header-bar h2 {
-      font-size: 1.3rem;
-      font-weight: 600;
+      font-size: 1.35rem;
+      font-weight: 700;
       letter-spacing: -0.02em;
     }
 
-    .month-selector select {
+    .btn-today {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      padding: 7px 13px;
+      border-radius: 7px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-today:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .month-selector {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .month-nav-btn {
       background: rgba(18, 24, 38, 0.8);
       color: var(--text-main);
       border: 1px solid var(--border-subtle);
-      padding: 9px 16px;
+      width: 36px;
+      height: 36px;
       border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+
+    .month-nav-btn:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .month-selector select {
+      background: rgba(18, 24, 38, 0.85);
+      color: var(--text-main);
+      border: 1px solid var(--border-subtle);
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
       cursor: pointer;
       outline: none;
-      backdrop-filter: blur(8px);
     }
 
     .month-selector select:focus {
@@ -432,89 +570,117 @@
     .kpi-grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      gap: 16px;
-      margin-bottom: 28px;
+      gap: 14px;
+      margin-bottom: 24px;
     }
 
     .kpi-card {
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
       border-radius: 12px;
-      padding: 18px 20px;
+      padding: 16px 18px;
       backdrop-filter: blur(10px);
+      position: relative;
+      overflow: hidden;
     }
 
     .kpi-label {
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.8px;
       margin-bottom: 6px;
+      font-weight: 600;
     }
 
     .kpi-value {
-      font-size: 1.55rem;
+      font-size: 1.5rem;
       font-weight: 700;
+      font-family: var(--mono);
       letter-spacing: -0.03em;
     }
 
     .kpi-sub {
-      font-size: 0.75rem;
+      font-size: 0.73rem;
       color: var(--text-muted);
       margin-top: 5px;
     }
 
+    /* ==========================================
+       ELEGANT INSTITUTIONAL CALENDAR UPGRADE
+       ========================================== */
     .calendar-container {
-      background: var(--bg-card);
+      background: rgba(11, 15, 25, 0.8);
       border: 1px solid var(--border-subtle);
       border-radius: 16px;
-      padding: 24px;
-      backdrop-filter: blur(12px);
+      padding: 20px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
     }
 
     .calendar-weekdays {
       display: grid;
-      grid-template-columns: repeat(7, 1fr);
+      grid-template-columns: repeat(7, 1fr) 125px;
+      gap: 10px;
       text-align: center;
       color: var(--text-muted);
-      font-weight: 600;
-      font-size: 0.8rem;
+      font-weight: 700;
+      font-size: 0.73rem;
       text-transform: uppercase;
-      letter-spacing: 1px;
-      padding-bottom: 14px;
+      letter-spacing: 1.2px;
+      padding-bottom: 12px;
       border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .weekday-summary-col {
+      color: var(--gold);
     }
 
     .calendar-days {
       display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 12px;
-      margin-top: 14px;
+      grid-template-columns: repeat(7, 1fr) 125px;
+      gap: 10px;
+      margin-top: 12px;
     }
 
     .day-cell {
-      min-height: 110px;
-      background: rgba(12, 16, 23, 0.6);
-      border: 1px solid var(--border-subtle);
-      border-radius: 10px;
-      padding: 12px;
+      min-height: 118px;
+      background: rgba(14, 19, 30, 0.55);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      padding: 10px 11px;
       cursor: pointer;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .day-cell::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: transparent;
+      transition: background 0.2s;
     }
 
     .day-cell:hover {
-      border-color: var(--gold);
-      background: rgba(26, 35, 54, 0.7);
+      border-color: rgba(212, 175, 55, 0.55);
+      background: rgba(22, 30, 48, 0.8);
       transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
     }
 
     .day-cell.empty {
-      background: transparent;
-      border-color: transparent;
+      background: rgba(255, 255, 255, 0.01);
+      border-color: rgba(255, 255, 255, 0.02);
       cursor: default;
+      pointer-events: none;
     }
 
     .day-cell.profit {
@@ -522,47 +688,165 @@
       border-color: var(--emerald-border);
     }
 
+    .day-cell.profit::before {
+      background: var(--emerald);
+    }
+
     .day-cell.loss {
       background: var(--rose-bg);
       border-color: var(--rose-border);
+    }
+
+    .day-cell.loss::before {
+      background: var(--rose);
+    }
+
+    .day-cell.today-cell {
+      box-shadow: inset 0 0 0 1.5px var(--gold);
     }
 
     .day-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 0.85rem;
+    }
+
+    .day-number {
+      font-size: 0.8rem;
+      font-weight: 700;
       color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .today-pill {
+      background: var(--gold);
+      color: #05070b;
+      font-size: 0.6rem;
+      font-weight: 800;
+      padding: 1px 5px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .trade-badge {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 2px 6px;
+      border-radius: 5px;
+      color: #cbd5e1;
+      font-size: 0.68rem;
+      font-weight: 700;
+      font-family: var(--mono);
+    }
+
+    .day-body {
+      margin: 6px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
     }
 
     .day-pnl {
+      font-family: var(--mono);
       font-weight: 700;
-      font-size: 1.05rem;
-      letter-spacing: -0.02em;
-      margin-top: 4px;
+      font-size: 1.02rem;
+      letter-spacing: -0.03em;
     }
 
-    .profit .day-pnl { color: var(--emerald); }
-    .loss .day-pnl { color: var(--rose); }
+    .profit .day-pnl { color: #34d399; }
+    .loss .day-pnl { color: #fb7185; }
+
+    .day-tickers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .ticker-chip {
+      font-size: 0.63rem;
+      font-weight: 700;
+      color: #cbd5e1;
+      background: rgba(0, 0, 0, 0.35);
+      padding: 1px 5px;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .day-footer {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-top: auto;
+    }
 
     .day-meta {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 0.72rem;
-    }
-
-    .trade-badge {
-      background: rgba(255, 255, 255, 0.08);
-      padding: 2px 7px;
-      border-radius: 4px;
-      color: var(--text-muted);
-      font-weight: 500;
+      font-size: 0.68rem;
+      min-height: 16px;
     }
 
     .mistake-badge {
       color: #fbbf24;
-      font-weight: 600;
+      font-weight: 700;
+      background: rgba(245, 158, 11, 0.14);
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-size: 0.64rem;
+    }
+
+    .day-wl-bar {
+      height: 3px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 2px;
+      overflow: hidden;
+      display: flex;
+    }
+
+    .day-wl-win { background: var(--emerald); height: 100%; }
+    .day-wl-loss { background: var(--rose); height: 100%; }
+
+    /* Weekly Summary Cell on Right Column */
+    .week-summary-cell {
+      min-height: 118px;
+      background: rgba(9, 13, 22, 0.85);
+      border: 1px dashed rgba(212, 175, 55, 0.25);
+      border-radius: 12px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-end;
+      text-align: right;
+      gap: 4px;
+    }
+
+    .week-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
+    .week-pnl {
+      font-family: var(--mono);
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    .week-stats {
+      font-size: 0.68rem;
+      color: var(--text-muted);
     }
 
     /* Unified Scrollable Modal */
@@ -627,7 +911,6 @@
       border-color: var(--rose-border);
     }
 
-    /* Collapsible Form Toggle Bar */
     .btn-toggle-form {
       background: rgba(212, 175, 55, 0.1);
       border: 1px dashed rgba(212, 175, 55, 0.45);
@@ -731,7 +1014,6 @@
       background: rgba(255, 255, 255, 0.15);
     }
 
-    /* Spacious Trade Cards */
     .trade-list-header {
       font-size: 0.78rem;
       text-transform: uppercase;
@@ -818,8 +1100,9 @@
     }
 
     .trade-pnl-pill {
+      font-family: var(--mono);
       font-weight: 800;
-      font-size: 1.15rem;
+      font-size: 1.12rem;
       margin-right: 6px;
     }
 
@@ -847,10 +1130,9 @@
     .action-btn.delete:hover {
       border-color: var(--rose);
       color: var(--rose);
-      background: var(--rose-bg);
+      background: rgba(244, 63, 94, 0.15);
     }
 
-    /* Super Readable Notes Box */
     .trade-notes-card {
       padding: 16px 20px;
       background: rgba(7, 10, 16, 0.75);
@@ -906,7 +1188,7 @@
 
     .ai-grid-stats {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 14px;
     }
 
@@ -925,7 +1207,7 @@
     }
 
     .ai-stat-card .val {
-      font-size: 1.25rem;
+      font-size: 1.2rem;
       font-weight: 700;
       margin-top: 4px;
     }
@@ -1059,22 +1341,39 @@
       </div>
 
       <div class="leak-tracker">
-        <h4>Identified Leaks</h4>
+        <h4>Identified Leaks (Psychology)</h4>
         <div class="leak-list" id="leakList">
           <span style="color: var(--text-muted); font-size: 0.8rem;">No rule violations logged</span>
+        </div>
+      </div>
+
+      <!-- Data Vault (#3: Backup & Restore) -->
+      <div class="vault-card">
+        <h4>
+          <span>🛡️ Data Vault</span>
+          <span id="vaultTradeCount" style="color:var(--gold); font-family:var(--mono);">0 Trades</span>
+        </h4>
+        <div class="vault-sub">Auto-compresses chart images & exports full journal backups.</div>
+        <div class="vault-actions">
+          <button class="btn-vault" onclick="exportTradesBackup()" title="Download JSON backup">⬇️ Export</button>
+          <button class="btn-vault" onclick="document.getElementById('importFileInput').click()" title="Restore from JSON backup">⬆️ Restore</button>
+          <input type="file" id="importFileInput" accept=".json" style="display:none" onchange="importTradesBackup(event)" />
         </div>
       </div>
     </aside>
 
     <main>
       <div class="header-bar">
-        <div>
+        <div class="header-title-wrap">
           <h2>Performance Matrix</h2>
+          <button class="btn-today" onclick="jumpToToday()">Today</button>
         </div>
         <div style="display: flex; gap: 12px; align-items: center;">
           <div class="month-selector">
+            <button class="month-nav-btn" onclick="changeMonth(-1)" title="Previous Month">‹</button>
             <select id="monthSelect"></select>
             <select id="yearSelect"></select>
+            <button class="month-nav-btn" onclick="changeMonth(1)" title="Next Month">›</button>
           </div>
           <button class="btn-ai-trigger" id="topAiButton">Generate Audit</button>
         </div>
@@ -1111,6 +1410,7 @@
       <div class="calendar-container">
         <div class="calendar-weekdays">
           <div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div><div>Sun</div>
+          <div class="weekday-summary-col">Wk P&L</div>
         </div>
         <div class="calendar-days" id="calendarDays"></div>
       </div>
@@ -1136,7 +1436,6 @@
         <button class="close-btn" id="closeTradeModal">&times;</button>
       </div>
 
-      <!-- Button to show form when collapsed -->
       <button type="button" class="btn-toggle-form" id="btnShowForm" onclick="showTradeForm()">
         + Log Another Execution for This Session
       </button>
@@ -1147,7 +1446,7 @@
         <div class="form-grid">
           <div class="form-group">
             <label>Ticker / Pair</label>
-            <input type="text" id="symbol" placeholder="e.g. NQ, ES, BTC, NVDA" required />
+            <input type="text" id="symbol" placeholder="e.g. NIFTY 50, NQ, BTC, NVDA" required />
           </div>
           <div class="form-group">
             <label>Direction</label>
@@ -1195,7 +1494,7 @@
             </select>
           </div>
           <div class="form-group full">
-            <label>Trade / Chart Screenshot</label>
+            <label>Trade / Chart Screenshot (Auto-Compressed)</label>
             <input type="file" id="tradeImage" accept="image/*" />
           </div>
           <div class="form-group full">
@@ -1229,8 +1528,10 @@
       "July", "August", "September", "October", "November", "December"
     ];
 
-    const currentYear = new Date().getFullYear();
-    const currentMonth = new Date().getMonth();
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth();
+    const todayDateKey = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
 
     const monthSelect = document.getElementById('monthSelect');
     const yearSelect = document.getElementById('yearSelect');
@@ -1265,7 +1566,7 @@
       monthSelect.appendChild(opt);
     });
 
-    for (let y = currentYear - 2; y <= currentYear + 2; y++) {
+    for (let y = currentYear - 3; y <= currentYear + 3; y++) {
       const opt = document.createElement('option');
       opt.value = y;
       opt.textContent = y;
@@ -1273,7 +1574,28 @@
       yearSelect.appendChild(opt);
     }
 
+    function changeMonth(delta) {
+      let m = parseInt(monthSelect.value) + delta;
+      let y = parseInt(yearSelect.value);
+      if (m < 0) { m = 11; y--; }
+      else if (m > 11) { m = 0; y++; }
+      monthSelect.value = m;
+      yearSelect.value = y;
+      renderDashboard();
+    }
+
+    function jumpToToday() {
+      monthSelect.value = currentMonth;
+      yearSelect.value = currentYear;
+      renderDashboard();
+    }
+
     function formatCurrency(val) {
+      const sign = val < 0 ? '-' : (val > 0 ? '+' : '');
+      return `${sign}$${Math.abs(val).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    }
+
+    function formatCurrencyPlain(val) {
       const sign = val < 0 ? '-' : '';
       return `${sign}$${Math.abs(val).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     }
@@ -1287,19 +1609,39 @@
       });
     }
 
+    function appendWeekSummaryCell(weekNum, weekPnl, weekTrades) {
+      const wkCell = document.createElement('div');
+      wkCell.className = 'week-summary-cell';
+      const pnlColor = weekPnl > 0 ? 'var(--emerald)' : weekPnl < 0 ? 'var(--rose)' : 'var(--text-muted)';
+      wkCell.innerHTML = `
+        <div class="week-label">Week ${weekNum}</div>
+        <div class="week-pnl" style="color:${pnlColor}">${weekTrades > 0 ? formatCurrency(weekPnl) : '$0.00'}</div>
+        <div class="week-stats">${weekTrades} ${weekTrades === 1 ? 'trade' : 'trades'}</div>
+      `;
+      calendarDays.appendChild(wkCell);
+    }
+
     function renderDashboard() {
       const m = parseInt(monthSelect.value);
       const y = parseInt(yearSelect.value);
+
+      document.getElementById('vaultTradeCount').textContent = `${trades.length} Total`;
 
       calendarDays.innerHTML = '';
       const firstDay = new Date(y, m, 1).getDay();
       const startOffset = (firstDay + 6) % 7; 
       const totalDays = new Date(y, m + 1, 0).getDate();
 
+      let currentDayOfWeek = 0;
+      let weekNumber = 1;
+      let weekPnl = 0;
+      let weekTradeCount = 0;
+
       for (let i = 0; i < startOffset; i++) {
         const emptyCell = document.createElement('div');
         emptyCell.className = 'day-cell empty';
         calendarDays.appendChild(emptyCell);
+        currentDayOfWeek++;
       }
 
       let monthTrades = [];
@@ -1313,12 +1655,20 @@
 
         const cell = document.createElement('div');
         cell.className = 'day-cell';
+        if (dateKey === todayDateKey) cell.classList.add('today-cell');
         cell.onclick = () => openTradeModal(dateKey);
 
         const dayTotalPnl = dayTrades.reduce((acc, t) => acc + Number(t.pnl), 0);
+        const dayWins = dayTrades.filter(t => Number(t.pnl) > 0).length;
+        const dayLosses = dayTrades.filter(t => Number(t.pnl) < 0).length;
         const dayMistakes = dayTrades.filter(t => t.mistake && t.mistake !== 'None').length;
 
-        let pnlHtml = '';
+        weekPnl += dayTotalPnl;
+        weekTradeCount += dayTrades.length;
+
+        let bodyHtml = '';
+        let wlBarHtml = '';
+
         if (dayTrades.length > 0) {
           if (dayTotalPnl > 0) {
             cell.classList.add('profit');
@@ -1327,20 +1677,66 @@
             cell.classList.add('loss');
             redDays++;
           }
-          pnlHtml = `<div class="day-pnl">${formatCurrency(dayTotalPnl)}</div>`;
+
+          // Unique tickers up to 2
+          const uniqueTickers = [...new Set(dayTrades.map(t => t.symbol))];
+          const tickerTags = uniqueTickers.slice(0, 2).map(sym => `<span class="ticker-chip">${sym}</span>`).join('');
+          const moreTag = uniqueTickers.length > 2 ? `<span class="ticker-chip">+${uniqueTickers.length - 2}</span>` : '';
+
+          bodyHtml = `
+            <div class="day-body">
+              <div class="day-pnl">${formatCurrency(dayTotalPnl)}</div>
+              <div class="day-tickers">${tickerTags}${moreTag}</div>
+            </div>
+          `;
+
+          const winPct = Math.round((dayWins / dayTrades.length) * 100);
+          const lossPct = 100 - winPct;
+          wlBarHtml = `
+            <div class="day-wl-bar" title="${dayWins}W / ${dayLosses}L">
+              <div class="day-wl-win" style="width:${winPct}%"></div>
+              <div class="day-wl-loss" style="width:${lossPct}%"></div>
+            </div>
+          `;
         }
 
         cell.innerHTML = `
           <div class="day-header">
-            <span>${day}</span>
+            <span class="day-number">
+              ${day}
+              ${dateKey === todayDateKey ? '<span class="today-pill">Today</span>' : ''}
+            </span>
             ${dayTrades.length > 0 ? `<span class="trade-badge">${dayTrades.length}T</span>` : ''}
           </div>
-          ${pnlHtml}
-          <div class="day-meta">
-            ${dayMistakes > 0 ? `<span class="mistake-badge">⚠️ ${dayMistakes} Leak</span>` : '<span></span>'}
+          ${bodyHtml}
+          <div class="day-footer">
+            <div class="day-meta">
+              ${dayMistakes > 0 ? `<span class="mistake-badge">⚠️ ${dayMistakes} Leak</span>` : '<span></span>'}
+            </div>
+            ${wlBarHtml}
           </div>
         `;
         calendarDays.appendChild(cell);
+
+        currentDayOfWeek++;
+        if (currentDayOfWeek === 7) {
+          appendWeekSummaryCell(weekNumber, weekPnl, weekTradeCount);
+          currentDayOfWeek = 0;
+          weekNumber++;
+          weekPnl = 0;
+          weekTradeCount = 0;
+        }
+      }
+
+      // Fill remaining empty days in the final week
+      if (currentDayOfWeek > 0) {
+        while (currentDayOfWeek < 7) {
+          const emptyCell = document.createElement('div');
+          emptyCell.className = 'day-cell empty';
+          calendarDays.appendChild(emptyCell);
+          currentDayOfWeek++;
+        }
+        appendWeekSummaryCell(weekNumber, weekPnl, weekTradeCount);
       }
 
       const totalMonthPnl = monthTrades.reduce((acc, t) => acc + Number(t.pnl), 0);
@@ -1357,7 +1753,7 @@
       const avgLoss = losingTrades.length > 0 ? grossLoss / losingTrades.length : 0;
 
       const pnlEl = document.getElementById('totalPnl');
-      pnlEl.textContent = formatCurrency(totalMonthPnl);
+      pnlEl.textContent = formatCurrencyPlain(totalMonthPnl);
       pnlEl.style.color = totalMonthPnl > 0 ? 'var(--emerald)' : totalMonthPnl < 0 ? 'var(--rose)' : 'var(--text-main)';
       document.getElementById('pnlSub').textContent = `${monthTrades.length} logged trades`;
 
@@ -1374,6 +1770,7 @@
       renderDisciplineAndLeaks(monthTrades);
     }
 
+    // #1: Fixed P&L Drag vs Toxic Habit Reinforcement Math
     function renderDisciplineAndLeaks(monthTrades) {
       const mistakeStats = {};
       let totalMistakes = 0;
@@ -1382,10 +1779,15 @@
         if (t.mistake && t.mistake !== 'None') {
           totalMistakes++;
           if (!mistakeStats[t.mistake]) {
-            mistakeStats[t.mistake] = { count: 0, cost: 0 };
+            mistakeStats[t.mistake] = { count: 0, directLoss: 0, luckyProfit: 0 };
           }
           mistakeStats[t.mistake].count += 1;
-          mistakeStats[t.mistake].cost += Number(t.pnl);
+          const p = Number(t.pnl);
+          if (p < 0) {
+            mistakeStats[t.mistake].directLoss += p; // negative sum
+          } else if (p > 0) {
+            mistakeStats[t.mistake].luckyProfit += p; // positive sum on a rule break
+          }
         }
       });
 
@@ -1407,14 +1809,27 @@
       }
 
       keys.forEach(k => {
+        const s = mistakeStats[k];
         const item = document.createElement('div');
         item.className = 'leak-item';
+
+        let metricsHtml = '';
+        if (s.directLoss < 0) {
+          metricsHtml += `<div class="leak-cost-loss">🛑 Loss Cost: ${formatCurrencyPlain(s.directLoss)}</div>`;
+        }
+        if (s.luckyProfit > 0) {
+          metricsHtml += `<div class="leak-cost-lucky">⚠️ Toxic Reward: +$${s.luckyProfit.toFixed(2)} (Won on Leak)</div>`;
+        }
+        if (s.directLoss === 0 && s.luckyProfit === 0) {
+          metricsHtml += `<div style="color:var(--text-muted)">Breakeven ($0.00)</div>`;
+        }
+
         item.innerHTML = `
           <div class="leak-header">
             <span>${k}</span>
-            <span>${mistakeStats[k].count}x</span>
+            <span class="leak-count-pill">${s.count}x</span>
           </div>
-          <div class="leak-impact">P&L Drag: ${formatCurrency(mistakeStats[k].cost)}</div>
+          <div class="leak-metrics">${metricsHtml}</div>
         `;
         leakList.appendChild(item);
       });
@@ -1439,6 +1854,7 @@
       }
 
       const mistakeTrades = monthTrades.filter(t => t.mistake !== 'None');
+      const leakLosses = mistakeTrades.filter(t => Number(t.pnl) < 0).reduce((a, t) => a + Number(t.pnl), 0);
       const netPnl = monthTrades.reduce((acc, t) => acc + Number(t.pnl), 0);
 
       const setupMap = {};
@@ -1456,27 +1872,32 @@
 
       content.innerHTML = `
         <div class="ai-headline-box">
-          You logged <strong>${monthTrades.length} trades</strong> this month for a net total of <strong>${formatCurrency(netPnl)}</strong>. Your records show <strong>${mistakeTrades.length} execution leaks</strong>.
+          You logged <strong>${monthTrades.length} trades</strong> this month for a net total of <strong>${formatCurrencyPlain(netPnl)}</strong>. Your records show <strong>${mistakeTrades.length} behavioral leaks</strong> costing <strong>${formatCurrencyPlain(leakLosses)}</strong> in direct losses.
         </div>
 
         <div class="ai-grid-stats">
           <div class="ai-stat-card">
             <div class="label">Behavioral Leaks</div>
-            <div class="val" style="color:var(--rose); font-size: 1.05rem;">${mistakeTrades.length} Trades</div>
-            <small style="color:var(--text-muted);">Rule infractions recorded</small>
+            <div class="val" style="color:var(--rose);">${mistakeTrades.length} Trades</div>
+            <small style="color:var(--text-muted);">Direct Cost: ${formatCurrencyPlain(leakLosses)}</small>
           </div>
           <div class="ai-stat-card">
             <div class="label">Top Playbook Setup</div>
-            <div class="val" style="color:var(--gold); font-size: 1.05rem;">${bestSetup.name}</div>
-            <small style="color:var(--text-muted);">${formatCurrency(bestSetup.pnl)} (${bestSetup.winRate}% WR)</small>
+            <div class="val" style="color:var(--gold);">${bestSetup.name}</div>
+            <small style="color:var(--text-muted);">${formatCurrencyPlain(bestSetup.pnl)} (${bestSetup.winRate}% WR)</small>
+          </div>
+          <div class="ai-stat-card">
+            <div class="label">Clean Execution P&L</div>
+            <div class="val" style="color:var(--emerald);">${formatCurrencyPlain(monthTrades.filter(t => t.mistake === 'None').reduce((a, t) => a + Number(t.pnl), 0))}</div>
+            <small style="color:var(--text-muted);">Followed plan 100%</small>
           </div>
         </div>
 
         <div class="ai-section">
           <h4>Quark AI Protocol Directives</h4>
           <ul class="ai-rules-list">
-            <li><strong>Focus on "${bestSetup.name}":</strong> Your positive expectancy is concentrated here (${formatCurrency(bestSetup.pnl)} net). Prioritize these setups over lower-grade setups.</li>
-            <li><strong>Preserve Edge:</strong> Protect your capital by strictly respecting your risk boundaries and trade management playbook.</li>
+            <li><strong>Focus on "${bestSetup.name}":</strong> Your positive expectancy is concentrated here (${formatCurrencyPlain(bestSetup.pnl)} net). Prioritize these setups over lower-grade setups.</li>
+            <li><strong>Eliminate Toxic Habits:</strong> Even when a rule violation (like FOMO or Early Exit) results in a green trade, it degrades long-term statistical edge.</li>
           </ul>
         </div>
       `;
@@ -1492,7 +1913,6 @@
       const dayTrades = trades.filter(t => t.date === selectedDate);
       resetFormState();
 
-      // If trades already exist on this date, collapse the form so trades are easy to read immediately
       if (dayTrades.length > 0) {
         tradeForm.style.display = 'none';
         btnShowForm.style.display = 'flex';
@@ -1555,15 +1975,9 @@
       if (cleaned.startsWith('"') && cleaned.endsWith('"')) {
         cleaned = cleaned.slice(1, -1);
       }
-      // Escape HTML entities for safety before formatting
       cleaned = cleaned.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-      
-      // Convert **bold** to strong tags
       let formatted = cleaned.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-      
-      // Format bullet points cleanly
       formatted = formatted.replace(/(?:^|\n)\s*[\*\-]\s+/g, '\n<span style="color: var(--gold); font-weight: bold;">• </span>');
-      
       return formatted.trim();
     }
 
@@ -1642,6 +2056,69 @@
       renderDashboard();
     }
 
+    // #3: Auto-Compress Uploaded Chart Images via Canvas so localStorage never fills up
+    function compressImageFile(file, callback) {
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const img = new Image();
+        img.onload = function() {
+          const maxWidth = 1280;
+          let width = img.width;
+          let height = img.height;
+          if (width > maxWidth) {
+            height = Math.round((height * maxWidth) / width);
+            width = maxWidth;
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.75);
+          callback(compressedDataUrl);
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // #3: Export & Restore JSON Backup
+    function exportTradesBackup() {
+      const dataStr = JSON.stringify(trades, null, 2);
+      const blob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Quark_Journal_Backup_${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function importTradesBackup(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const imported = JSON.parse(e.target.result);
+          if (Array.isArray(imported)) {
+            trades = imported;
+            localStorage.setItem('quark_trades', JSON.stringify(trades));
+            renderDashboard();
+            alert(`Successfully restored ${trades.length} trades into Quark!`);
+          } else {
+            alert('Invalid backup file format.');
+          }
+        } catch (err) {
+          alert('Error reading backup file.');
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = '';
+    }
+
     closeTradeModal.onclick = () => {
       tradeModalOverlay.style.display = 'none';
       resetFormState();
@@ -1668,11 +2145,9 @@
       const file = fileInput.files[0];
 
       if (file) {
-        const reader = new FileReader();
-        reader.onload = function(uploadEvent) {
-          saveTradeRecord(uploadEvent.target.result);
-        };
-        reader.readAsDataURL(file);
+        compressImageFile(file, (compressedBase64) => {
+          saveTradeRecord(compressedBase64);
+        });
       } else {
         let existingImg = null;
         if (editTradeId.value) {
