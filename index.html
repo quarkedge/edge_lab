@@ -739,6 +739,25 @@
       width: 100%;
     }
 
+    .btn-cancel-edit {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+      font-weight: 600;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border-subtle);
+      cursor: pointer;
+      margin-top: 8px;
+      width: 100%;
+      display: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-cancel-edit:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+    }
+
     .trade-list-container {
       margin-top: 20px;
       max-height: 350px;
@@ -786,7 +805,7 @@
     .trade-row-actions {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     .chart-thumb-link {
@@ -806,12 +825,27 @@
       background: rgba(212, 175, 55, 0.2);
     }
 
+    .edit-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s;
+    }
+
+    .edit-btn:hover { color: var(--gold); }
+
     .delete-btn {
       background: none;
       border: none;
       color: var(--text-muted);
       cursor: pointer;
-      font-size: 1.25rem;
+      font-size: 1.35rem;
+      line-height: 1;
       transition: color 0.2s;
     }
 
@@ -989,6 +1023,9 @@
       </div>
 
       <form id="tradeForm">
+        <!-- Hidden input for edit trade ID -->
+        <input type="hidden" id="editTradeId" value="" />
+
         <div class="form-grid">
           <div class="form-group">
             <label>Ticker / Pair</label>
@@ -1048,7 +1085,8 @@
             <textarea id="notes" rows="3" placeholder="Impatience? Distraction? Execution mindset checklist?"></textarea>
           </div>
         </div>
-        <button type="submit" class="btn-save">Record Execution</button>
+        <button type="submit" class="btn-save" id="btnSubmitForm">Record Execution</button>
+        <button type="button" class="btn-cancel-edit" id="btnCancelEdit" onclick="resetFormToNew()">Cancel Edit</button>
       </form>
 
       <div class="trade-list-container" id="modalTradeList"></div>
@@ -1083,6 +1121,9 @@
     const openAiReportBtn = document.getElementById('openAiReportBtn');
     const topAiButton = document.getElementById('topAiButton');
     const tradeForm = document.getElementById('tradeForm');
+    const btnSubmitForm = document.getElementById('btnSubmitForm');
+    const btnCancelEdit = document.getElementById('btnCancelEdit');
+    const editTradeId = document.getElementById('editTradeId');
     const slideDownBtn = document.getElementById('slideDownBtn');
     const lightboxOverlay = document.getElementById('lightboxOverlay');
     const lightboxImg = document.getElementById('lightboxImg');
@@ -1323,24 +1364,47 @@
     function openTradeModal(dateKey) {
       selectedDate = dateKey;
       document.getElementById('modalDateTitle').textContent = `Journal — ${dateKey}`;
+      resetFormToNew();
       tradeModalOverlay.style.display = 'flex';
       renderModalTrades();
     }
 
+    function resetFormToNew() {
+      tradeForm.reset();
+      editTradeId.value = '';
+      btnSubmitForm.textContent = 'Record Execution';
+      btnCancelEdit.style.display = 'none';
+    }
+
+    function startEditTrade(id) {
+      const trade = trades.find(t => t.id === id);
+      if (!trade) return;
+
+      editTradeId.value = trade.id;
+      document.getElementById('symbol').value = trade.symbol || '';
+      document.getElementById('direction').value = trade.direction || 'Long';
+      document.getElementById('pnl').value = trade.pnl;
+      document.getElementById('riskR').value = trade.riskR || '';
+      document.getElementById('setup').value = trade.setup;
+      document.getElementById('mistake').value = trade.mistake || 'None';
+      document.getElementById('notes').value = trade.notes || '';
+      document.getElementById('tradeImage').value = '';
+
+      btnSubmitForm.textContent = 'Update Execution';
+      btnCancelEdit.style.display = 'block';
+
+      // Scroll modal form smoothly into view
+      document.querySelector('.modal').scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
     function formatTradeNotes(text) {
       if (!text) return '';
-      // Strip outer wrapping quotes if pasted directly
       let cleaned = text.trim();
       if (cleaned.startsWith('"') && cleaned.endsWith('"')) {
         cleaned = cleaned.slice(1, -1);
       }
-      
-      // Convert Markdown bold (**text**) to bright white bold text
       let formatted = cleaned.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-      
-      // Convert bullet points (* or -) into clean line items with gold bullets
       formatted = formatted.replace(/(?:^|\s)\*\s+/g, '<br><span style="color: var(--gold); margin-right: 6px;">•</span>');
-      
       return formatted;
     }
 
@@ -1377,6 +1441,7 @@
             <span style="font-weight:700; font-size: 1rem; color:${Number(t.pnl) >= 0 ? 'var(--emerald)' : 'var(--rose)'}">
               ${formatCurrency(Number(t.pnl))}${rDisplay}
             </span>
+            <button class="edit-btn" onclick="startEditTrade(${t.id})" title="Edit entry">✏️</button>
             <button class="delete-btn" onclick="deleteTrade(${t.id})" title="Delete entry">&times;</button>
           </div>
         `;
@@ -1394,19 +1459,28 @@
     };
 
     function deleteTrade(id) {
+      if (editTradeId.value == id) {
+        resetFormToNew();
+      }
       trades = trades.filter(t => t.id !== id);
       localStorage.setItem('quark_trades', JSON.stringify(trades));
       renderModalTrades();
       renderDashboard();
     }
 
-    closeTradeModal.onclick = () => tradeModalOverlay.style.display = 'none';
+    closeTradeModal.onclick = () => {
+      tradeModalOverlay.style.display = 'none';
+      resetFormToNew();
+    };
     closeAiModal.onclick = () => aiModalOverlay.style.display = 'none';
     openAiReportBtn.onclick = generateMonthlyAudit;
     topAiButton.onclick = generateMonthlyAudit;
 
     window.onclick = (e) => { 
-      if (e.target === tradeModalOverlay) tradeModalOverlay.style.display = 'none'; 
+      if (e.target === tradeModalOverlay) {
+        tradeModalOverlay.style.display = 'none';
+        resetFormToNew();
+      }
       if (e.target === aiModalOverlay) aiModalOverlay.style.display = 'none'; 
     };
 
@@ -1426,29 +1500,53 @@
         };
         reader.readAsDataURL(file);
       } else {
-        saveTradeRecord(null);
+        // If editing and no new file was chosen, retain original photo
+        let existingImg = null;
+        if (editTradeId.value) {
+          const oldTrade = trades.find(t => t.id == editTradeId.value);
+          if (oldTrade) existingImg = oldTrade.imageBase64;
+        }
+        saveTradeRecord(existingImg);
       }
     });
 
     function saveTradeRecord(imageBase64) {
-      const newTrade = {
-        id: Date.now(),
-        date: selectedDate,
-        symbol: document.getElementById('symbol').value.toUpperCase(),
-        direction: document.getElementById('direction').value,
-        pnl: parseFloat(document.getElementById('pnl').value),
-        riskR: parseFloat(document.getElementById('riskR').value) || null,
-        setup: document.getElementById('setup').value,
-        mistake: document.getElementById('mistake').value,
-        notes: document.getElementById('notes').value,
-        imageBase64: imageBase64
-      };
+      const isEditing = Boolean(editTradeId.value);
 
-      trades.push(newTrade);
+      if (isEditing) {
+        const index = trades.findIndex(t => t.id == editTradeId.value);
+        if (index !== -1) {
+          trades[index].symbol = document.getElementById('symbol').value.toUpperCase();
+          trades[index].direction = document.getElementById('direction').value;
+          trades[index].pnl = parseFloat(document.getElementById('pnl').value);
+          trades[index].riskR = parseFloat(document.getElementById('riskR').value) || null;
+          trades[index].setup = document.getElementById('setup').value;
+          trades[index].mistake = document.getElementById('mistake').value;
+          trades[index].notes = document.getElementById('notes').value;
+          if (imageBase64 !== undefined) {
+            trades[index].imageBase64 = imageBase64;
+          }
+        }
+      } else {
+        const newTrade = {
+          id: Date.now(),
+          date: selectedDate,
+          symbol: document.getElementById('symbol').value.toUpperCase(),
+          direction: document.getElementById('direction').value,
+          pnl: parseFloat(document.getElementById('pnl').value),
+          riskR: parseFloat(document.getElementById('riskR').value) || null,
+          setup: document.getElementById('setup').value,
+          mistake: document.getElementById('mistake').value,
+          notes: document.getElementById('notes').value,
+          imageBase64: imageBase64
+        };
+        trades.push(newTrade);
+      }
+
       localStorage.setItem('quark_trades', JSON.stringify(trades));
 
-      tradeForm.reset();
-      tradeModalOverlay.style.display = 'none';
+      resetFormToNew();
+      renderModalTrades();
       renderDashboard();
     }
 
