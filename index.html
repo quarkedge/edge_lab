@@ -565,6 +565,7 @@
       font-weight: 600;
     }
 
+    /* Unified Scrollable Modal */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -574,41 +575,321 @@
       align-items: center;
       justify-content: center;
       z-index: 1000;
+      padding: 20px;
     }
 
     .modal {
       background: #0f141f;
       border: 1px solid var(--border-focus);
       border-radius: 16px;
-      width: 90%;
-      max-width: 650px;
+      width: 100%;
+      max-width: 860px;
       padding: 28px;
       max-height: 90vh;
+      overflow-y: auto;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75);
     }
-
-    .modal.modal-large { max-width: 820px; }
 
     .modal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border-subtle);
+      position: sticky;
+      top: -28px;
+      background: #0f141f;
+      z-index: 10;
+      padding-top: 6px;
     }
 
     .close-btn {
-      background: transparent;
-      border: none;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      font-size: 1.3rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .close-btn:hover {
+      background: var(--rose-bg);
+      color: var(--rose);
+      border-color: var(--rose-border);
+    }
+
+    /* Collapsible Form Toggle Bar */
+    .btn-toggle-form {
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px dashed rgba(212, 175, 55, 0.45);
+      color: var(--gold);
+      font-weight: 600;
+      font-size: 0.88rem;
+      padding: 12px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-bottom: 18px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-toggle-form:hover {
+      background: rgba(212, 175, 55, 0.18);
+    }
+
+    #tradeForm {
+      background: rgba(8, 11, 18, 0.6);
+      border: 1px solid var(--border-subtle);
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 24px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group.full { grid-column: span 2; }
+
+    label {
+      font-size: 0.72rem;
       color: var(--text-muted);
-      font-size: 1.6rem;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    input, select, textarea {
+      background: var(--bg-base);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 11px;
+      color: var(--text-main);
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    input[type="file"] {
+      padding: 8px;
       cursor: pointer;
     }
 
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--gold);
+    }
+
+    .form-buttons-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .btn-save {
+      background: var(--gold-gradient);
+      color: #06080d;
+      font-weight: 700;
+      padding: 12px 20px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      flex: 1;
+      font-size: 0.92rem;
+    }
+
+    .btn-cancel-edit {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+      font-weight: 600;
+      padding: 12px 20px;
+      border-radius: 8px;
+      border: 1px solid var(--border-subtle);
+      cursor: pointer;
+      display: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-cancel-edit:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    /* Spacious Trade Cards */
+    .trade-list-header {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+
+    .trade-list-container {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .trade-row {
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      background: rgba(16, 22, 35, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 12px;
+      gap: 14px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+    }
+
+    .trade-row-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .trade-title-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .trade-symbol {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: 0.3px;
+    }
+
+    .trade-dir-badge {
+      font-size: 0.75rem;
+      padding: 3px 9px;
+      border-radius: 5px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .trade-dir-badge.long {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--emerald);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .trade-dir-badge.short {
+      background: rgba(244, 63, 94, 0.15);
+      color: var(--rose);
+      border: 1px solid rgba(244, 63, 94, 0.3);
+    }
+
+    .trade-setup-tag {
+      color: var(--gold);
+      font-size: 0.84rem;
+      font-weight: 600;
+      background: rgba(212, 175, 55, 0.1);
+      padding: 3px 10px;
+      border-radius: 5px;
+    }
+
+    .trade-row-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .trade-pnl-pill {
+      font-weight: 800;
+      font-size: 1.15rem;
+      margin-right: 6px;
+    }
+
+    .action-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-main);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s;
+    }
+
+    .action-btn.edit:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: rgba(212, 175, 55, 0.12);
+    }
+
+    .action-btn.delete:hover {
+      border-color: var(--rose);
+      color: var(--rose);
+      background: var(--rose-bg);
+    }
+
+    /* Super Readable Notes Box */
+    .trade-notes-card {
+      padding: 16px 20px;
+      background: rgba(7, 10, 16, 0.75);
+      border-left: 4px solid var(--gold);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      line-height: 1.75;
+      color: #e2e8f0;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .trade-notes-card strong {
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    .chart-thumb-link {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--gold);
+      text-decoration: none;
+      background: rgba(212, 175, 55, 0.1);
+      padding: 7px 14px;
+      border-radius: 6px;
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      align-self: flex-start;
+    }
+
+    .chart-thumb-link:hover {
+      background: rgba(212, 175, 55, 0.2);
+    }
+
+    /* AI Modal */
     .ai-report-body {
-      overflow-y: auto;
-      padding-right: 6px;
       display: flex;
       flex-direction: column;
       gap: 16px;
@@ -625,7 +906,7 @@
 
     .ai-grid-stats {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 14px;
     }
 
@@ -684,178 +965,11 @@
       color: var(--gold);
     }
 
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      max-height: 55vh;
-      overflow-y: auto;
-      padding-right: 4px;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .form-group.full { grid-column: span 2; }
-
-    label {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      font-weight: 600;
-    }
-
-    input, select, textarea {
-      background: var(--bg-base);
-      border: 1px solid var(--border-subtle);
-      border-radius: 8px;
-      padding: 11px;
-      color: var(--text-main);
-      font-size: 0.9rem;
-      outline: none;
-    }
-
-    input[type="file"] {
-      padding: 8px;
-      cursor: pointer;
-    }
-
-    input:focus, select:focus, textarea:focus {
-      border-color: var(--gold);
-    }
-
-    .btn-save {
-      background: var(--gold-gradient);
-      color: #06080d;
-      font-weight: 700;
-      padding: 13px;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      margin-top: 18px;
-      width: 100%;
-    }
-
-    .btn-cancel-edit {
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--text-muted);
-      font-weight: 600;
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid var(--border-subtle);
-      cursor: pointer;
-      margin-top: 8px;
-      width: 100%;
-      display: none;
-      transition: all 0.2s ease;
-    }
-
-    .btn-cancel-edit:hover {
-      background: rgba(255, 255, 255, 0.15);
-      color: #fff;
-    }
-
-    .trade-list-container {
-      margin-top: 20px;
-      max-height: 350px;
-      overflow-y: auto;
-      border-top: 1px solid var(--border-subtle);
-      padding-top: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .trade-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      font-size: 0.88rem;
-      padding: 14px;
-      background: rgba(14, 19, 30, 0.65);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 8px;
-      gap: 14px;
-    }
-
-    .trade-row-info {
-      flex: 1;
-    }
-
-    .trade-notes-card {
-      margin-top: 10px;
-      padding: 10px 14px;
-      background: rgba(255, 255, 255, 0.035);
-      border-left: 3px solid var(--gold);
-      border-radius: 4px;
-      font-size: 0.84rem;
-      line-height: 1.6;
-      color: #cbd5e1;
-      letter-spacing: 0.2px;
-    }
-
-    .trade-notes-card strong {
-      color: #ffffff;
-      font-weight: 600;
-    }
-
-    .trade-row-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .chart-thumb-link {
-      font-size: 0.72rem;
-      color: var(--gold);
-      text-decoration: none;
-      background: rgba(212, 175, 55, 0.1);
-      padding: 4px 9px;
-      border-radius: 4px;
-      border: 1px solid rgba(212, 175, 55, 0.3);
-      cursor: pointer;
-      display: inline-block;
-      margin-top: 8px;
-    }
-
-    .chart-thumb-link:hover {
-      background: rgba(212, 175, 55, 0.2);
-    }
-
-    .edit-btn {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      cursor: pointer;
-      font-size: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: color 0.2s;
-    }
-
-    .edit-btn:hover { color: var(--gold); }
-
-    .delete-btn {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      cursor: pointer;
-      font-size: 1.35rem;
-      line-height: 1;
-      transition: color 0.2s;
-    }
-
-    .delete-btn:hover { color: var(--rose); }
-
     /* Image Lightbox Modal */
     .lightbox-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.9);
+      background: rgba(0, 0, 0, 0.92);
       display: none;
       align-items: center;
       justify-content: center;
@@ -864,8 +978,8 @@
     }
 
     .lightbox-content {
-      max-width: 90vw;
-      max-height: 90vh;
+      max-width: 92vw;
+      max-height: 92vh;
       border-radius: 8px;
       border: 1px solid var(--border-focus);
       object-fit: contain;
@@ -1005,7 +1119,7 @@
 
   <!-- AI Modal -->
   <div class="modal-overlay" id="aiModalOverlay">
-    <div class="modal modal-large">
+    <div class="modal">
       <div class="modal-header">
         <h3 id="aiModalTitle">✨ Quark AI Execution Audit</h3>
         <button class="close-btn" id="closeAiModal">&times;</button>
@@ -1016,14 +1130,18 @@
 
   <!-- Trade Logging Modal -->
   <div class="modal-overlay" id="tradeModalOverlay">
-    <div class="modal modal-large">
+    <div class="modal" id="tradeModalBox">
       <div class="modal-header">
         <h3 id="modalDateTitle">Log Execution</h3>
         <button class="close-btn" id="closeTradeModal">&times;</button>
       </div>
 
+      <!-- Button to show form when collapsed -->
+      <button type="button" class="btn-toggle-form" id="btnShowForm" onclick="showTradeForm()">
+        + Log Another Execution for This Session
+      </button>
+
       <form id="tradeForm">
-        <!-- Hidden input for edit trade ID -->
         <input type="hidden" id="editTradeId" value="" />
 
         <div class="form-grid">
@@ -1076,19 +1194,23 @@
               <option value="Premature Entry">Premature Entry (Jumped Trigger)</option>
             </select>
           </div>
-          <div class="form-group">
+          <div class="form-group full">
             <label>Trade / Chart Screenshot</label>
             <input type="file" id="tradeImage" accept="image/*" />
           </div>
           <div class="form-group full">
             <label>Psychology & Session Context Notes</label>
-            <textarea id="notes" rows="3" placeholder="Impatience? Distraction? Execution mindset checklist?"></textarea>
+            <textarea id="notes" rows="4" placeholder="Impatience? Distraction? Execution mindset checklist?"></textarea>
           </div>
         </div>
-        <button type="submit" class="btn-save" id="btnSubmitForm">Record Execution</button>
-        <button type="button" class="btn-cancel-edit" id="btnCancelEdit" onclick="resetFormToNew()">Cancel Edit</button>
+
+        <div class="form-buttons-row">
+          <button type="submit" class="btn-save" id="btnSubmitForm">Record Execution</button>
+          <button type="button" class="btn-cancel-edit" id="btnCancelEdit" onclick="cancelEditOrCollapse()">Cancel</button>
+        </div>
       </form>
 
+      <div class="trade-list-header" id="tradeListHeader">Recorded Session Executions</div>
       <div class="trade-list-container" id="modalTradeList"></div>
     </div>
   </div>
@@ -1115,12 +1237,14 @@
     const calendarDays = document.getElementById('calendarDays');
     
     const tradeModalOverlay = document.getElementById('tradeModalOverlay');
+    const tradeModalBox = document.getElementById('tradeModalBox');
     const closeTradeModal = document.getElementById('closeTradeModal');
     const aiModalOverlay = document.getElementById('aiModalOverlay');
     const closeAiModal = document.getElementById('closeAiModal');
     const openAiReportBtn = document.getElementById('openAiReportBtn');
     const topAiButton = document.getElementById('topAiButton');
     const tradeForm = document.getElementById('tradeForm');
+    const btnShowForm = document.getElementById('btnShowForm');
     const btnSubmitForm = document.getElementById('btnSubmitForm');
     const btnCancelEdit = document.getElementById('btnCancelEdit');
     const editTradeId = document.getElementById('editTradeId');
@@ -1314,7 +1438,6 @@
         return;
       }
 
-      const cleanTrades = monthTrades.filter(t => t.mistake === 'None');
       const mistakeTrades = monthTrades.filter(t => t.mistake !== 'None');
       const netPnl = monthTrades.reduce((acc, t) => acc + Number(t.pnl), 0);
 
@@ -1364,12 +1487,39 @@
     function openTradeModal(dateKey) {
       selectedDate = dateKey;
       document.getElementById('modalDateTitle').textContent = `Journal — ${dateKey}`;
-      resetFormToNew();
       tradeModalOverlay.style.display = 'flex';
+      
+      const dayTrades = trades.filter(t => t.date === selectedDate);
+      resetFormState();
+
+      // If trades already exist on this date, collapse the form so trades are easy to read immediately
+      if (dayTrades.length > 0) {
+        tradeForm.style.display = 'none';
+        btnShowForm.style.display = 'flex';
+      } else {
+        tradeForm.style.display = 'block';
+        btnShowForm.style.display = 'none';
+      }
+
       renderModalTrades();
     }
 
-    function resetFormToNew() {
+    function showTradeForm() {
+      tradeForm.style.display = 'block';
+      btnShowForm.style.display = 'none';
+      btnCancelEdit.style.display = 'inline-block';
+    }
+
+    function cancelEditOrCollapse() {
+      resetFormState();
+      const dayTrades = trades.filter(t => t.date === selectedDate);
+      if (dayTrades.length > 0) {
+        tradeForm.style.display = 'none';
+        btnShowForm.style.display = 'flex';
+      }
+    }
+
+    function resetFormState() {
       tradeForm.reset();
       editTradeId.value = '';
       btnSubmitForm.textContent = 'Record Execution';
@@ -1379,6 +1529,9 @@
     function startEditTrade(id) {
       const trade = trades.find(t => t.id === id);
       if (!trade) return;
+
+      tradeForm.style.display = 'block';
+      btnShowForm.style.display = 'none';
 
       editTradeId.value = trade.id;
       document.getElementById('symbol').value = trade.symbol || '';
@@ -1391,10 +1544,9 @@
       document.getElementById('tradeImage').value = '';
 
       btnSubmitForm.textContent = 'Update Execution';
-      btnCancelEdit.style.display = 'block';
+      btnCancelEdit.style.display = 'inline-block';
 
-      // Scroll modal form smoothly into view
-      document.querySelector('.modal').scrollTo({ top: 0, behavior: 'smooth' });
+      tradeModalBox.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function formatTradeNotes(text) {
@@ -1403,47 +1555,62 @@
       if (cleaned.startsWith('"') && cleaned.endsWith('"')) {
         cleaned = cleaned.slice(1, -1);
       }
+      // Escape HTML entities for safety before formatting
+      cleaned = cleaned.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      
+      // Convert **bold** to strong tags
       let formatted = cleaned.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-      formatted = formatted.replace(/(?:^|\s)\*\s+/g, '<br><span style="color: var(--gold); margin-right: 6px;">•</span>');
-      return formatted;
+      
+      // Format bullet points cleanly
+      formatted = formatted.replace(/(?:^|\n)\s*[\*\-]\s+/g, '\n<span style="color: var(--gold); font-weight: bold;">• </span>');
+      
+      return formatted.trim();
     }
 
     function renderModalTrades() {
       const container = document.getElementById('modalTradeList');
+      const header = document.getElementById('tradeListHeader');
       container.innerHTML = '';
       const dayTrades = trades.filter(t => t.date === selectedDate);
 
       if (dayTrades.length === 0) {
-        container.innerHTML = `<div style="font-size:0.8rem; color:var(--text-muted); padding: 8px 0;">No trades recorded for this session.</div>`;
+        header.style.display = 'none';
+        container.innerHTML = `<div style="font-size:0.85rem; color:var(--text-muted); text-align:center; padding: 12px 0;">No trades recorded for this session yet.</div>`;
         return;
       }
+
+      header.style.display = 'block';
+      header.textContent = `Recorded Session Executions (${dayTrades.length})`;
 
       dayTrades.forEach(t => {
         const row = document.createElement('div');
         row.className = 'trade-row';
         const rDisplay = t.riskR ? ` (${(Number(t.pnl) / Number(t.riskR)).toFixed(1)}R)` : '';
-        const mistakeDisplay = t.mistake && t.mistake !== 'None' ? `<div style="color:#fbbf24; font-size:0.75rem; margin-top:3px;">⚠️ Leak: ${t.mistake}</div>` : '';
+        const isLong = (t.direction || 'Long') === 'Long';
+        const mistakeDisplay = t.mistake && t.mistake !== 'None' 
+          ? `<div style="color:#fbbf24; font-size:0.82rem; font-weight:600; background:rgba(251, 191, 36, 0.1); padding: 6px 10px; border-radius:6px; display:inline-block; align-self:flex-start;">⚠️ Execution Leak: ${t.mistake}</div>` 
+          : '';
         const notesDisplay = t.notes ? `<div class="trade-notes-card">${formatTradeNotes(t.notes)}</div>` : '';
-        const photoThumb = t.imageBase64 ? `<a class="chart-thumb-link" onclick="openLightbox('${t.imageBase64}')">📷 View Chart Photo</a>` : '';
+        const photoThumb = t.imageBase64 ? `<a class="chart-thumb-link" onclick="openLightbox('${t.imageBase64}')">📷 View Attached Chart Screenshot</a>` : '';
 
         row.innerHTML = `
-          <div class="trade-row-info">
-            <div style="display:flex; align-items:center; gap:8px;">
-              <strong style="font-size: 0.95rem; color: #fff;">${t.symbol}</strong>
-              <span style="font-size:0.75rem; color:var(--gold); font-weight: 600;">${t.direction || 'Long'}</span>
-              <span style="color: var(--text-muted); font-size:0.82rem;">• ${t.setup}</span>
+          <div class="trade-row-top">
+            <div class="trade-title-group">
+              <span class="trade-symbol">${t.symbol}</span>
+              <span class="trade-dir-badge ${isLong ? 'long' : 'short'}">${t.direction || 'Long'}</span>
+              <span class="trade-setup-tag">${t.setup}</span>
             </div>
-            ${mistakeDisplay}
-            ${notesDisplay}
-            ${photoThumb}
+            <div class="trade-row-actions">
+              <span class="trade-pnl-pill" style="color:${Number(t.pnl) >= 0 ? 'var(--emerald)' : 'var(--rose)'}">
+                ${formatCurrency(Number(t.pnl))}${rDisplay}
+              </span>
+              <button class="action-btn edit" onclick="startEditTrade(${t.id})" title="Edit entry">✏️ Edit</button>
+              <button class="action-btn delete" onclick="deleteTrade(${t.id})" title="Delete entry">🗑️</button>
+            </div>
           </div>
-          <div class="trade-row-actions">
-            <span style="font-weight:700; font-size: 1rem; color:${Number(t.pnl) >= 0 ? 'var(--emerald)' : 'var(--rose)'}">
-              ${formatCurrency(Number(t.pnl))}${rDisplay}
-            </span>
-            <button class="edit-btn" onclick="startEditTrade(${t.id})" title="Edit entry">✏️</button>
-            <button class="delete-btn" onclick="deleteTrade(${t.id})" title="Delete entry">&times;</button>
-          </div>
+          ${mistakeDisplay}
+          ${notesDisplay}
+          ${photoThumb}
         `;
         container.appendChild(row);
       });
@@ -1460,17 +1627,24 @@
 
     function deleteTrade(id) {
       if (editTradeId.value == id) {
-        resetFormToNew();
+        resetFormState();
       }
       trades = trades.filter(t => t.id !== id);
       localStorage.setItem('quark_trades', JSON.stringify(trades));
+      
+      const dayTrades = trades.filter(t => t.date === selectedDate);
+      if (dayTrades.length === 0) {
+        tradeForm.style.display = 'block';
+        btnShowForm.style.display = 'none';
+      }
+      
       renderModalTrades();
       renderDashboard();
     }
 
     closeTradeModal.onclick = () => {
       tradeModalOverlay.style.display = 'none';
-      resetFormToNew();
+      resetFormState();
     };
     closeAiModal.onclick = () => aiModalOverlay.style.display = 'none';
     openAiReportBtn.onclick = generateMonthlyAudit;
@@ -1479,7 +1653,7 @@
     window.onclick = (e) => { 
       if (e.target === tradeModalOverlay) {
         tradeModalOverlay.style.display = 'none';
-        resetFormToNew();
+        resetFormState();
       }
       if (e.target === aiModalOverlay) aiModalOverlay.style.display = 'none'; 
     };
@@ -1500,7 +1674,6 @@
         };
         reader.readAsDataURL(file);
       } else {
-        // If editing and no new file was chosen, retain original photo
         let existingImg = null;
         if (editTradeId.value) {
           const oldTrade = trades.find(t => t.id == editTradeId.value);
@@ -1545,7 +1718,9 @@
 
       localStorage.setItem('quark_trades', JSON.stringify(trades));
 
-      resetFormToNew();
+      resetFormState();
+      tradeForm.style.display = 'none';
+      btnShowForm.style.display = 'flex';
       renderModalTrades();
       renderDashboard();
     }
