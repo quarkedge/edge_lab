@@ -74,24 +74,25 @@
 
     .auth-card {
       background: var(--bg-surface); border: 1px solid var(--border-focus); border-radius: 18px;
-      width: 100%; max-width: 440px; padding: 32px 28px;
+      width: 100%; max-width: 440px; padding: 28px 26px;
       box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 40px rgba(212, 175, 55, 0.12);
-      display: flex; flex-direction: column; gap: 18px; text-align: center; position: relative;
+      display: flex; flex-direction: column; gap: 15px; text-align: center; position: relative;
+      max-height: 92vh; overflow-y: auto;
     }
 
     .auth-close-btn {
-      position: absolute; top: 16px; right: 16px; background: rgba(255, 255, 255, 0.06);
+      position: absolute; top: 16px; right: 16px; background: rgba(120, 120, 120, 0.1);
       border: 1px solid var(--border-subtle); color: var(--text-muted); width: 32px; height: 32px;
       border-radius: 8px; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;
     }
     .auth-close-btn:hover { background: var(--rose-bg); color: var(--rose); border-color: var(--rose-border); }
 
-    .auth-logo { width: 58px; height: 58px; margin: 0 auto; filter: drop-shadow(0 0 16px rgba(212, 175, 55, 0.4)); }
+    .auth-logo { width: 52px; height: 52px; margin: 0 auto; filter: drop-shadow(0 0 16px rgba(212, 175, 55, 0.4)); }
     .auth-title {
-      font-family: var(--serif); font-size: 1.55rem; letter-spacing: 3px;
+      font-family: var(--serif); font-size: 1.45rem; letter-spacing: 3px;
       background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800;
     }
-    .auth-sub { font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; }
+    .auth-sub { font-size: 0.78rem; color: var(--text-muted); line-height: 1.5; }
 
     .auth-tabs {
       display: grid; grid-template-columns: 1fr 1fr; background: rgba(120, 120, 120, 0.08);
@@ -103,7 +104,29 @@
     }
     .auth-tab.active { background: rgba(212, 175, 55, 0.16); color: var(--gold); border: 1px solid rgba(212, 175, 55, 0.35); }
 
-    .auth-form { display: flex; flex-direction: column; gap: 13px; text-align: left; }
+    /* Social OAuth Buttons (Google & Apple) */
+    .social-auth-group {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+    }
+    .btn-social {
+      background: rgba(120, 120, 120, 0.06); border: 1px solid var(--border-subtle); color: var(--text-main);
+      padding: 10px 12px; border-radius: 9px; font-size: 0.78rem; font-weight: 700; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s;
+    }
+    .btn-social:hover {
+      background: rgba(212, 175, 55, 0.1); border-color: var(--border-focus); transform: translateY(-1px);
+    }
+    .btn-social svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+    .auth-divider {
+      display: flex; align-items: center; gap: 10px; color: var(--text-muted); font-size: 0.68rem;
+      text-transform: uppercase; letter-spacing: 1px; font-weight: 700;
+    }
+    .auth-divider::before, .auth-divider::after {
+      content: ""; flex: 1; height: 1px; background: var(--border-subtle);
+    }
+
+    .auth-form { display: flex; flex-direction: column; gap: 12px; text-align: left; }
     .password-input-wrapper { position: relative; display: flex; align-items: center; }
     .password-input-wrapper input { width: 100%; padding-right: 42px; }
     .password-eye-btn {
@@ -121,9 +144,12 @@
       border: 1px solid rgba(16, 185, 129, 0.3); padding: 8px 10px; border-radius: 8px; display: none; text-align: center;
     }
 
+    .forgot-password-row {
+      display: flex; justify-content: space-between; align-items: center; margin-top: -4px;
+    }
     .forgot-password-link {
-      background: none; border: none; color: var(--gold); font-size: 0.75rem; font-weight: 600;
-      cursor: pointer; text-align: right; margin-top: -6px; padding: 0;
+      background: none; border: none; color: var(--gold); font-size: 0.74rem; font-weight: 600;
+      cursor: pointer; padding: 0;
     }
     .forgot-password-link:hover { text-decoration: underline; }
 
@@ -134,7 +160,7 @@
 
     .user-profile-bar {
       display: flex; align-items: center; justify-content: space-between;
-      background: rgba(212, 175, 55, 0.06); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 12px; padding: 12px 14px;
+      background: rgba(212, 175, 55, 0.06); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 12px; padding: 11px 14px;
       cursor: pointer; transition: all 0.2s;
     }
     .user-profile-bar:hover {
@@ -145,8 +171,8 @@
     
     .user-avatar-container {
       position: relative;
-      width: 36px;
-      height: 36px;
+      width: 34px;
+      height: 34px;
       border-radius: 50%;
       flex-shrink: 0;
     }
@@ -157,7 +183,7 @@
       background: var(--gold-gradient);
       color: #05070b;
       font-weight: 800;
-      font-size: 0.88rem;
+      font-size: 0.86rem;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -171,21 +197,20 @@
     }
 
     .user-details { display: flex; flex-direction: column; overflow: hidden; text-align: left; }
-    .user-name { font-size: 0.85rem; font-weight: 700; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .sync-status-dot { font-size: 0.65rem; color: var(--emerald); display: flex; align-items: center; gap: 4px; }
+    .user-name { font-size: 0.86rem; font-weight: 700; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-    /* Dropdown menu popup opening downwards with smooth display */
+    /* Dropdown menu popup opening downwards */
     .profile-dropdown {
       position: absolute; top: calc(100% + 8px); left: 0; right: 0;
       background: var(--bg-surface); border: 1px solid var(--border-focus); border-radius: 12px;
       padding: 8px; display: none; flex-direction: column; gap: 6px; z-index: 100;
-      box-shadow: 0 15px 40px rgba(0,0,0,0.35);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.45);
     }
     .profile-dropdown.open { display: flex; }
     .dropdown-arrow {
-      font-size: 0.75rem; color: var(--gold); transition: transform 0.2s;
+      font-size: 0.72rem; color: var(--gold); transition: transform 0.2s;
     }
-    .profile-dropdown.open ~ .user-profile-bar .dropdown-arrow {
+    .user-profile-wrapper.open .dropdown-arrow {
       transform: rotate(180deg);
     }
 
@@ -389,8 +414,6 @@
     .ai-stat-card { background: var(--bg-base); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 14px; }
     .ai-stat-card .label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600; }
     .ai-stat-card .val { font-size: 1.2rem; font-weight: 700; margin-top: 4px; }
-    .ai-section { background: var(--bg-base); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 18px; }
-    .ai-section h4 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--gold); margin-bottom: 12px; }
 
     .lightbox-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.92); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 20px; }
     .lightbox-content { max-width: 92vw; max-height: 92vh; border-radius: 8px; border: 1px solid var(--border-focus); object-fit: contain; }
@@ -409,8 +432,8 @@
         <circle cx="50" cy="46" r="3" fill="#ffffff"/>
       </svg>
       <div>
-        <div class="auth-title">QUARK VAULT</div>
-        <p class="auth-sub" id="authSubText">Sign in to unlock your institutional trading journal & sync your data.</p>
+        <div class="auth-title">QUARK TERMINAL</div>
+        <p class="auth-sub" id="authSubText">Sign in with Google, Apple ID, or your Trader credentials.</p>
       </div>
 
       <div class="auth-tabs" id="authTabsContainer">
@@ -418,23 +441,62 @@
         <button type="button" class="auth-tab" id="tabSignup" onclick="switchAuthTab('signup')">Create Account</button>
       </div>
 
+      <!-- One-Click Google & Apple Sign In -->
+      <div class="social-auth-group" id="socialAuthGroup">
+        <button type="button" class="btn-social" onclick="handleSocialLogin('Google')">
+          <svg viewBox="0 0 24 24">
+            <path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.7l3.1-3.1C17.3 1.8 14.8 1 12 1 7.4 1 3.5 3.6 1.6 7.4l3.7 2.8C6.2 7.2 8.9 5 12 5z"/>
+            <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.6l3.7 2.9c2.2-2 3.7-5 3.7-8.7z"/>
+            <path fill="#FBBC05" d="M5.3 14.8c-.2-.8-.4-1.6-.4-2.5s.2-1.7.4-2.5L1.6 7C.6 9 0 11.2 0 13.5s.6 4.5 1.6 6.5l3.7-2.9z"/>
+            <path fill="#34A853" d="M12 24c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3.1 0-5.8-2.1-6.7-5l-3.7 2.8C3.5 20.9 7.4 24 12 24z"/>
+          </svg>
+          Google
+        </button>
+        <button type="button" class="btn-social" onclick="handleSocialLogin('Apple')">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+          </svg>
+          Apple ID
+        </button>
+      </div>
+
+      <div class="auth-divider" id="authDivider">or use trader credentials</div>
+
       <div class="auth-error" id="authErrorBox"></div>
       <div class="auth-success" id="authSuccessBox"></div>
 
       <form class="auth-form" id="authForm">
         <div class="form-group">
-          <label>Trader ID / Email</label>
+          <label id="usernameLabel">Trader ID / Email</label>
           <input type="text" id="authUsername" placeholder="e.g. trader@quark.io" required />
         </div>
+
+        <!-- Current Password (shown only when changing password) -->
+        <div class="form-group" id="currentPasswordGroup" style="display:none;">
+          <label>Current Password</label>
+          <input type="password" id="authCurrentPassword" placeholder="Enter current password" />
+        </div>
+
+        <!-- Recovery PIN (shown on Signup & Forgot Password) -->
+        <div class="form-group" id="recoveryPinGroup" style="display:none;">
+          <label id="recoveryPinLabel">4-Digit Recovery PIN (For Password Reset)</label>
+          <input type="text" id="authRecoveryPin" maxlength="8" placeholder="e.g. 1998" />
+        </div>
+
         <div class="form-group" id="passwordGroup">
-          <label>Vault Password / PIN</label>
+          <label id="passwordLabel">Password</label>
           <div class="password-input-wrapper">
             <input type="password" id="authPassword" placeholder="••••••••" required />
             <button type="button" class="password-eye-btn" onclick="togglePasswordVisibility()" title="Show/Hide Password">👁️</button>
           </div>
-          <button type="button" class="forgot-password-link" id="forgotPassBtn" onclick="switchAuthTab('forgot')">Forgot Password?</button>
+          <div class="forgot-password-row" id="forgotPassRow">
+            <span></span>
+            <button type="button" class="forgot-password-link" id="forgotPassBtn" onclick="switchAuthTab('forgot')">Forgot Password?</button>
+          </div>
         </div>
-        <button type="submit" class="btn-save" id="authSubmitBtn" style="margin-top:6px;">Unlock Terminal →</button>
+
+        <button type="submit" class="btn-save" id="authSubmitBtn" style="margin-top:4px;">Unlock Terminal →</button>
+        <button type="button" class="btn-cancel-edit" id="backToLoginBtn" style="display:none; text-align:center;" onclick="switchAuthTab('login')">← Back to Login</button>
       </form>
     </div>
   </div>
@@ -478,8 +540,8 @@
         </div>
       </div>
 
-      <!-- Profile & Logout Dropdown Section (No Photo Icon, Clean Sync Status) -->
-      <div class="user-profile-wrapper">
+      <!-- Clean Profile & Dropdown Section -->
+      <div class="user-profile-wrapper" id="profileWrapper">
         <div class="user-profile-bar" onclick="toggleProfileMenu()">
           <div class="user-info">
             <div class="user-avatar-container">
@@ -487,7 +549,6 @@
             </div>
             <div class="user-details">
               <span class="user-name" id="displayUsername">Guest Visitor</span>
-              <span class="sync-status-dot" id="syncStatusLabel">● Session Active</span>
             </div>
           </div>
           <span class="dropdown-arrow">▼</span>
@@ -495,8 +556,9 @@
         
         <div class="profile-dropdown" id="profileDropdown">
           <button class="dropdown-btn" onclick="triggerAvatarUpload()">📷 Change Profile Photo</button>
+          <button class="dropdown-btn" onclick="openChangePasswordModal()">🔑 Change Password</button>
           <button class="dropdown-btn" onclick="toggleDarkMode()">🌓 <span id="themeToggleLabel">Switch to Light Mode</span></button>
-          <button class="dropdown-btn" onclick="openLoginModalFromProfile()">🔑 Switch / Sign In Account</button>
+          <button class="dropdown-btn" onclick="openLoginModalFromProfile()">👤 Switch / Sign In Account</button>
           <button class="dropdown-btn danger" onclick="logoutTerminal()">🔒 Logout Terminal</button>
         </div>
         <input type="file" id="avatarFileInput" accept="image/*" style="display:none" onchange="handleAvatarUpload(event)" />
@@ -660,7 +722,7 @@
         localStorage.setItem('quark_theme', 'light');
         document.getElementById('themeToggleLabel').textContent = 'Switch to Dark Mode';
       }
-      document.getElementById('profileDropdown').classList.remove('open');
+      closeProfileDropdown();
     }
 
     function cleanUserKey(username) {
@@ -677,34 +739,111 @@
       }
     }
 
+    // One-Click Google & Apple Sign In Handler
+    async function handleSocialLogin(provider) {
+      authErrorBox.style.display = 'none';
+      authSuccessBox.style.display = 'none';
+
+      const emailPrompt = prompt(`Sign in with ${provider}\nEnter your ${provider} Email / Apple ID:`);
+      if (!emailPrompt || !emailPrompt.trim()) return;
+
+      const rawEmail = emailPrompt.trim();
+      const userKey = cleanUserKey(`${provider}_${rawEmail}`);
+      const displayLabel = rawEmail.includes('@') ? rawEmail.split('@')[0] : rawEmail;
+
+      try {
+        const checkRes = await fetch(`${MASTER_FIREBASE_URL}/quark_vault/users/${userKey}.json`);
+        const userData = await checkRes.json();
+
+        if (!userData) {
+          const newSocialRecord = {
+            displayName: `${displayLabel} (${provider})`,
+            authProvider: provider,
+            passwordHash: btoa(`oauth_${provider}_${userKey}`),
+            recoveryPin: "0000",
+            createdAt: Date.now(),
+            trades: [],
+            avatar: null
+          };
+          await fetch(`${MASTER_FIREBASE_URL}/quark_vault/users/${userKey}.json`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newSocialRecord)
+          });
+          loadUserProfileAndTrades(userKey, newSocialRecord.displayName, [], null);
+        } else {
+          loadUserProfileAndTrades(userKey, userData.displayName || displayLabel, userData.trades || [], userData.avatar || null);
+        }
+      } catch (err) {
+        showAuthError(`Unable to connect ${provider} login right now.`);
+      }
+    }
+
     function switchAuthTab(mode) {
       authMode = mode;
       authErrorBox.style.display = 'none';
       authSuccessBox.style.display = 'none';
+
+      const isLoginOrSignup = mode === 'login' || mode === 'signup';
+      document.getElementById('authTabsContainer').style.display = isLoginOrSignup ? 'grid' : 'none';
+      document.getElementById('socialAuthGroup').style.display = isLoginOrSignup ? 'grid' : 'none';
+      document.getElementById('authDivider').style.display = isLoginOrSignup ? 'flex' : 'none';
       document.getElementById('tabLogin').classList.toggle('active', mode === 'login');
       document.getElementById('tabSignup').classList.toggle('active', mode === 'signup');
-      document.getElementById('tabLogin').style.display = mode === 'forgot' ? 'none' : 'block';
-      document.getElementById('tabSignup').style.display = mode === 'forgot' ? 'none' : 'block';
 
-      const passGroup = document.getElementById('passwordGroup');
-      const forgotBtn = document.getElementById('forgotPassBtn');
+      const currentPassGroup = document.getElementById('currentPasswordGroup');
+      const recoveryPinGroup = document.getElementById('recoveryPinGroup');
+      const forgotPassRow = document.getElementById('forgotPassRow');
+      const backToLoginBtn = document.getElementById('backToLoginBtn');
+      const passLabel = document.getElementById('passwordLabel');
+      const usernameInput = document.getElementById('authUsername');
 
-      if (mode === 'forgot') {
-        document.getElementById('authSubText').textContent = "Enter your Trader ID and a new password to reset your account credentials.";
-        document.getElementById('authSubmitBtn').textContent = "Reset Password →";
-        forgotBtn.style.display = 'none';
-        passGroup.querySelector('label').textContent = "New Vault Password / PIN";
-      } else if (mode === 'login') {
-        document.getElementById('authSubText').textContent = "Sign in to unlock your institutional trading journal & sync your data.";
+      currentPassGroup.style.display = 'none';
+      recoveryPinGroup.style.display = 'none';
+      backToLoginBtn.style.display = 'none';
+      usernameInput.readOnly = false;
+
+      if (mode === 'login') {
+        document.getElementById('authSubText').textContent = "Sign in with Google, Apple ID, or your Trader credentials.";
         document.getElementById('authSubmitBtn').textContent = "Unlock Terminal →";
-        forgotBtn.style.display = 'block';
-        passGroup.querySelector('label').textContent = "Vault Password / PIN";
-      } else {
-        document.getElementById('authSubText').textContent = "Create an account to protect and sync your institutional trading journal.";
-        document.getElementById('authSubmitBtn').textContent = "Create Vault Account →";
-        forgotBtn.style.display = 'block';
-        passGroup.querySelector('label').textContent = "Vault Password / PIN";
+        passLabel.textContent = "Password";
+        forgotPassRow.style.display = 'flex';
+      } else if (mode === 'signup') {
+        document.getElementById('authSubText').textContent = "Create an account with a 4-digit Recovery PIN so you can reset your password anytime.";
+        document.getElementById('authSubmitBtn').textContent = "Create Account →";
+        passLabel.textContent = "Create Password";
+        recoveryPinGroup.style.display = 'flex';
+        document.getElementById('recoveryPinLabel').textContent = "Set 4-Digit Recovery PIN (For Password Reset)";
+        forgotPassRow.style.display = 'none';
+      } else if (mode === 'forgot') {
+        document.getElementById('authSubText').textContent = "Enter your Trader ID and Recovery PIN (if set) to choose a new password.";
+        document.getElementById('authSubmitBtn').textContent = "Save New Password →";
+        passLabel.textContent = "New Password";
+        recoveryPinGroup.style.display = 'flex';
+        document.getElementById('recoveryPinLabel').textContent = "Recovery PIN (Leave blank if not set)";
+        forgotPassRow.style.display = 'none';
+        backToLoginBtn.style.display = 'block';
+      } else if (mode === 'change_password') {
+        document.getElementById('authSubText').textContent = "Update your account password below.";
+        document.getElementById('authSubmitBtn').textContent = "Update Password →";
+        currentPassGroup.style.display = 'flex';
+        passLabel.textContent = "New Password";
+        forgotPassRow.style.display = 'none';
+        backToLoginBtn.style.display = 'block';
+        if (currentSessionUser) {
+          usernameInput.value = document.getElementById('displayUsername').textContent;
+        }
       }
+    }
+
+    function openChangePasswordModal() {
+      closeProfileDropdown();
+      if (!currentSessionUser) {
+        openLoginModalFromProfile();
+        return;
+      }
+      switchAuthTab('change_password');
+      authGateOverlay.style.display = 'flex';
     }
 
     function togglePasswordVisibility() {
@@ -717,14 +856,21 @@
     }
 
     function openLoginModalFromProfile() {
-      document.getElementById('profileDropdown').classList.remove('open');
+      closeProfileDropdown();
       switchAuthTab('login');
       authGateOverlay.style.display = 'flex';
     }
 
     function toggleProfileMenu() {
       const dropdown = document.getElementById('profileDropdown');
+      const wrapper = document.getElementById('profileWrapper');
       dropdown.classList.toggle('open');
+      wrapper.classList.toggle('open');
+    }
+
+    function closeProfileDropdown() {
+      document.getElementById('profileDropdown').classList.remove('open');
+      document.getElementById('profileWrapper').classList.remove('open');
     }
 
     function triggerAvatarUpload() {
@@ -733,7 +879,7 @@
         openLoginModalFromProfile();
         return;
       }
-      document.getElementById('profileDropdown').classList.remove('open');
+      closeProfileDropdown();
       document.getElementById('avatarFileInput').click();
     }
 
@@ -752,7 +898,7 @@
           applyAvatarToUI(base64Img);
           alert("Profile photo updated successfully!");
         } catch(err) {
-          alert("Failed to save avatar to cloud.");
+          alert("Failed to save avatar.");
         }
       };
       reader.readAsDataURL(file);
@@ -772,8 +918,10 @@
     authForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const rawUser = document.getElementById('authUsername').value.trim();
-      const userKey = cleanUserKey(rawUser);
+      const userKey = (authMode === 'change_password' && currentSessionUser) ? currentSessionUser : cleanUserKey(rawUser);
       const pass = document.getElementById('authPassword').value;
+      const recoveryPin = document.getElementById('authRecoveryPin').value.trim();
+      const currentPass = document.getElementById('authCurrentPassword').value;
       const btn = document.getElementById('authSubmitBtn');
 
       if (!userKey) {
@@ -787,11 +935,15 @@
         const checkRes = await fetch(`${MASTER_FIREBASE_URL}/quark_vault/users/${userKey}.json`);
         const userData = await checkRes.json();
 
-        if (authMode === 'forgot') {
-          if (!userData || !userData.passwordHash) {
-            showAuthError("Trader ID not found. Cannot reset password.");
+        if (authMode === 'change_password') {
+          if (!userData) {
+            showAuthError("Account record not found.");
             btn.disabled = false;
-            btn.textContent = "Reset Password →";
+            return;
+          }
+          if (userData.passwordHash && userData.passwordHash !== btoa(currentPass) && !userData.authProvider) {
+            showAuthError("Current password is incorrect.");
+            btn.disabled = false;
             return;
           }
           await fetch(`${MASTER_FIREBASE_URL}/quark_vault/users/${userKey}/passwordHash.json`, {
@@ -799,23 +951,43 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(btoa(pass))
           });
-          showAuthSuccess("Password reset successfully! You can now log in.");
-          setTimeout(() => switchAuthTab('login'), 1500);
-          btn.disabled = false;
+          showAuthSuccess("Password updated! Closing window...");
+          setTimeout(() => { closeAuthModal(); btn.disabled = false; }, 1200);
+          return;
+        }
+
+        if (authMode === 'forgot') {
+          if (!userData || !userData.passwordHash) {
+            showAuthError("Trader ID not found.");
+            btn.disabled = false;
+            return;
+          }
+          if (userData.recoveryPin && userData.recoveryPin !== recoveryPin) {
+            showAuthError("Invalid Recovery PIN. Please enter the PIN set during signup.");
+            btn.disabled = false;
+            return;
+          }
+          await fetch(`${MASTER_FIREBASE_URL}/quark_vault/users/${userKey}/passwordHash.json`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(btoa(pass))
+          });
+          showAuthSuccess("Password reset successfully! Switching to login...");
+          setTimeout(() => { switchAuthTab('login'); btn.disabled = false; }, 1400);
           return;
         }
 
         if (authMode === 'signup') {
           if (userData && userData.passwordHash) {
-            showAuthError("This Trader ID already exists! Please switch to 'Login Terminal' to sign in.");
+            showAuthError("This Trader ID already exists! Switch to 'Login Terminal' to sign in.");
             btn.disabled = false;
-            btn.textContent = "Create Vault Account →";
             return;
           }
 
           const newUserRecord = {
             displayName: rawUser,
             passwordHash: btoa(pass),
+            recoveryPin: recoveryPin || null,
             createdAt: Date.now(),
             trades: [],
             avatar: null
@@ -832,24 +1004,22 @@
           if (!userData || !userData.passwordHash) {
             showAuthError("Trader ID not found. Switch to 'Create Account' to register.");
             btn.disabled = false;
-            btn.textContent = "Unlock Terminal →";
             return;
           }
 
           if (userData.passwordHash !== btoa(pass)) {
-            showAuthError("Invalid Vault Password / PIN.");
+            showAuthError("Invalid Password. Click 'Forgot Password?' if you need to reset it.");
             btn.disabled = false;
-            btn.textContent = "Unlock Terminal →";
             return;
           }
 
           loadUserProfileAndTrades(userKey, userData.displayName || rawUser, userData.trades || [], userData.avatar || null);
         }
       } catch (err) {
-        showAuthError("Cloud connection error. Verify your Firebase database rules.");
+        showAuthError("Connection error. Please try again.");
         console.error(err);
       } finally {
-        if (authMode !== 'forgot') btn.disabled = false;
+        if (authMode === 'login' || authMode === 'signup') btn.disabled = false;
       }
     });
 
@@ -888,16 +1058,14 @@
 
       trades = Array.isArray(initialTrades) ? initialTrades : Object.values(initialTrades || {});
       renderDashboard();
-      document.getElementById('syncStatusLabel').textContent = "● Synced";
     }
 
     function logoutTerminal() {
       localStorage.removeItem('quark_active_user');
       currentSessionUser = null;
-      document.getElementById('profileDropdown').classList.remove('open');
+      closeProfileDropdown();
       document.getElementById('displayUsername').textContent = "Guest Visitor";
       applyAvatarToUI(null);
-      document.getElementById('syncStatusLabel').textContent = "● Session Active";
       document.getElementById('topAuthBtn').style.display = 'flex';
       trades = [];
       renderDashboard();
@@ -907,16 +1075,14 @@
 
     async function persistAllTradeData() {
       if (!currentSessionUser) return;
-      document.getElementById('syncStatusLabel').textContent = "● Syncing...";
       try {
         await fetch(`${MASTER_FIREBASE_URL}/quark_vault/users/${currentSessionUser}/trades.json`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(trades)
         });
-        document.getElementById('syncStatusLabel').textContent = "● Synced";
       } catch (e) {
-        document.getElementById('syncStatusLabel').textContent = "● Offline";
+        console.error("Failed to sync trades", e);
       }
     }
 
