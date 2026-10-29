@@ -3,2625 +3,463 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Quark — The Institutional Trading Terminal</title>
-  
-  <!-- Custom Favicon using your gold logo design -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22 fill=%22none%22><circle cx=%2250%22 cy=%2250%22 r=%2244%22 stroke=%22%23d4af37%22 stroke-width=%223%22 stroke-opacity=%220.5%22 stroke-dasharray=%224 4%22/><circle cx=%2250%22 cy=%2246%22 r=%2232%22 stroke=%22%23d4af37%22 stroke-width=%228%22/><path d=%22M56 52 L78 78%22 stroke=%22%23d4af37%22 stroke-width=%229%22 stroke-linecap=%22round%22/><circle cx=%2250%22 cy=%2246%22 r=%229%22 fill=%22%23d4af37%22/><circle cx=%2250%22 cy=%2246%22 r=%223.5%22 fill=%22%23ffffff%22/></svg>">
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
+  <title>Quark Trading Vault & Journal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    :root {
-      --bg-base: #04060a;
-      --bg-surface: #090d15;
-      --bg-card: rgba(14, 20, 32, 0.75);
-      --border-subtle: rgba(255, 255, 255, 0.07);
-      --border-focus: rgba(212, 175, 55, 0.45);
-      --text-main: #f8fafc;
-      --text-muted: #7e8c9f;
-      --gold: #d4af37;
-      --gold-soft: rgba(212, 175, 55, 0.14);
-      --gold-gradient: linear-gradient(135deg, #f7df8b 0%, #d4af37 50%, #997c1f 100%);
-      --emerald: #10b981;
-      --emerald-bg: linear-gradient(160deg, rgba(16, 185, 129, 0.16) 0%, rgba(16, 185, 129, 0.04) 100%);
-      --emerald-border: rgba(16, 185, 129, 0.35);
-      --rose: #f43f5e;
-      --rose-bg: linear-gradient(160deg, rgba(244, 63, 94, 0.16) 0%, rgba(244, 63, 94, 0.04) 100%);
-      --rose-border: rgba(244, 63, 94, 0.35);
-      --amber: #f59e0b;
-      --sans: 'Plus Jakarta Sans', -apple-system, sans-serif;
-      --mono: 'JetBrains Mono', monospace;
-      --serif: 'Cinzel', serif;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: var(--sans);
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
     body {
-      background-color: var(--bg-base);
-      color: var(--text-main);
-      overflow-x: hidden;
-      background-image: 
-        radial-gradient(circle at 10% 15%, rgba(212, 175, 55, 0.04) 0%, transparent 50%),
-        radial-gradient(circle at 90% 85%, rgba(56, 189, 248, 0.03) 0%, transparent 50%);
-    }
-
-    /* ==========================================
-       AUTHENTICATION & CLOUD LOGIN GATE
-       ========================================== */
-    .auth-gate-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(4, 6, 10, 0.94);
-      backdrop-filter: blur(20px);
-      z-index: 5000;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .auth-card {
-      background: #090d15;
-      border: 1px solid var(--border-focus);
-      border-radius: 18px;
-      width: 100%;
-      max-width: 440px;
-      padding: 32px 28px;
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 40px rgba(212, 175, 55, 0.12);
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-      text-align: center;
-    }
-
-    .auth-logo {
-      width: 58px;
-      height: 58px;
-      margin: 0 auto;
-      filter: drop-shadow(0 0 16px rgba(212, 175, 55, 0.4));
-    }
-
-    .auth-title {
-      font-family: var(--serif);
-      font-size: 1.55rem;
-      letter-spacing: 3px;
-      background: var(--gold-gradient);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      font-weight: 800;
-    }
-
-    .auth-sub {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      line-height: 1.5;
-    }
-
-    .auth-tabs {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      background: rgba(255, 255, 255, 0.04);
-      padding: 4px;
-      border-radius: 10px;
-      border: 1px solid var(--border-subtle);
-    }
-
-    .auth-tab {
-      padding: 8px;
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      background: transparent;
-      border: none;
-      border-radius: 7px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .auth-tab.active {
-      background: rgba(212, 175, 55, 0.16);
-      color: var(--gold);
-      border: 1px solid rgba(212, 175, 55, 0.35);
-    }
-
-    .auth-form {
-      display: flex;
-      flex-direction: column;
-      gap: 13px;
-      text-align: left;
-    }
-
-    .auth-error {
-      color: var(--rose);
-      font-size: 0.76rem;
-      background: rgba(244, 63, 94, 0.12);
-      border: 1px solid rgba(244, 63, 94, 0.3);
-      padding: 8px 10px;
-      border-radius: 8px;
-      display: none;
-      text-align: center;
-    }
-
-    /* User Profile Bar in Sidebar */
-    .user-profile-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: rgba(212, 175, 55, 0.06);
-      border: 1px solid rgba(212, 175, 55, 0.2);
-      border-radius: 10px;
-      padding: 9px 12px;
-    }
-
-    .user-info {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      overflow: hidden;
-    }
-
-    .user-avatar {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background: var(--gold-gradient);
-      color: #05070b;
-      font-weight: 800;
-      font-size: 0.78rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .user-details {
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
-    .user-name {
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: var(--text-main);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .sync-status-dot {
-      font-size: 0.65rem;
-      color: var(--emerald);
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .btn-lock {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid var(--border-subtle);
-      color: var(--text-muted);
-      padding: 5px 9px;
-      border-radius: 6px;
-      font-size: 0.72rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .btn-lock:hover {
-      border-color: var(--rose);
-      color: var(--rose);
-    }
-
-    .hero-section {
-      height: 100vh;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-      text-align: center;
-      padding: 0 20px;
-      overflow: hidden;
-    }
-
-    .hero-glow {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 600px;
-      height: 600px;
-      background: radial-gradient(circle, rgba(212, 175, 55, 0.12) 0%, transparent 70%);
-      filter: blur(80px);
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 2;
-      max-width: 820px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 18px;
-      animation: fadeInHero 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-
-    .hero-logo-wrapper {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 4px;
-    }
-
-    .hero-logo-svg {
-      width: 88px;
-      height: 88px;
-      filter: drop-shadow(0 0 24px rgba(212, 175, 55, 0.45));
-      transition: transform 0.4s ease;
-    }
-
-    .hero-logo-wrapper:hover .hero-logo-svg {
-      transform: scale(1.06) rotate(4deg);
-    }
-
-    .quark-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(212, 175, 55, 0.08);
-      border: 1px solid rgba(212, 175, 55, 0.25);
-      padding: 6px 14px;
-      border-radius: 50px;
-      font-size: 0.78rem;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--gold);
-      font-weight: 700;
-    }
-
-    .hero-title {
-      font-family: var(--serif);
-      font-size: clamp(3.2rem, 7vw, 5.5rem);
-      font-weight: 800;
-      letter-spacing: 6px;
-      background: var(--gold-gradient);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-transform: uppercase;
-      line-height: 1.1;
-      filter: drop-shadow(0 10px 25px rgba(212, 175, 55, 0.25));
-    }
-
-    .hero-subtitle {
-      font-size: 1.15rem;
-      color: var(--text-muted);
-      max-width: 600px;
-      line-height: 1.6;
-      font-weight: 300;
-    }
-
-    .hero-actions {
-      margin-top: 18px;
-      display: flex;
-      gap: 16px;
-    }
-
-    .btn-enter {
-      background: var(--gold-gradient);
-      color: #05070b;
-      font-weight: 700;
-      font-size: 0.95rem;
-      padding: 15px 36px;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      text-decoration: none;
-      letter-spacing: 1px;
-      box-shadow: 0 4px 25px rgba(212, 175, 55, 0.35);
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .btn-enter:hover {
-      transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 8px 35px rgba(212, 175, 55, 0.5);
-    }
-
-    .scroll-down-indicator {
-      position: absolute;
-      bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      color: var(--text-muted);
-      font-size: 0.72rem;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      cursor: pointer;
-      z-index: 2;
-      animation: bounce 2s infinite ease-in-out;
-      text-decoration: none;
-    }
-
-    .scroll-down-indicator span {
-      width: 20px;
-      height: 20px;
-      border-right: 2px solid var(--gold);
-      border-bottom: 2px solid var(--gold);
-      transform: rotate(45deg);
-    }
-
-    @keyframes bounce {
-      0%, 20%, 50%, 80%, 100% { transform: translateY(0) translateX(-50%); }
-      40% { transform: translateY(-10px) translateX(-50%); }
-      60% { transform: translateY(-5px) translateX(-50%); }
-    }
-
-    @keyframes fadeInHero {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .app-workspace {
-      min-height: 100vh;
-      display: flex;
-      border-top: 1px solid var(--border-subtle);
-      background-color: var(--bg-base);
-    }
-
-    aside {
-      width: 340px;
-      background: var(--bg-surface);
-      border-right: 1px solid var(--border-subtle);
-      padding: 20px 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      overflow-y: auto;
-      max-height: 100vh;
-      position: sticky;
-      top: 0;
-      flex-shrink: 0;
-    }
-
-    .brand-wrap {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border-subtle);
-    }
-
-    .brand-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .brand-mark {
-      width: 34px;
-      height: 34px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .brand-mark svg {
-      width: 100%;
-      height: 100%;
-      filter: drop-shadow(0 2px 8px rgba(212, 175, 55, 0.3));
-    }
-
-    .brand-text {
-      font-family: var(--serif);
-      font-size: 1.25rem;
-      font-weight: 700;
-      letter-spacing: 2px;
-      background: var(--gold-gradient);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .copilot-sidebar-card {
-      background: linear-gradient(145deg, rgba(212, 175, 55, 0.07), rgba(16, 185, 129, 0.03));
-      border: 1px solid rgba(212, 175, 55, 0.25);
-      border-radius: 12px;
-      padding: 13px;
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
-    }
-
-    .copilot-badge {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.72rem;
-      font-weight: 700;
-      color: var(--gold);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .copilot-sidebar-card p {
-      font-size: 0.73rem;
-      color: var(--text-muted);
-      line-height: 1.4;
-    }
-
-    .btn-ai-trigger {
-      background: var(--gold-gradient);
-      color: #06080d;
-      font-weight: 700;
-      font-size: 0.8rem;
-      border: none;
-      padding: 8px 14px;
-      border-radius: 8px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-      letter-spacing: 0.4px;
-    }
-
-    .btn-ai-trigger:hover {
-      box-shadow: 0 4px 20px rgba(212, 175, 55, 0.35);
-      transform: translateY(-1px);
-    }
-
-    .discipline-box {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: 12px;
-      padding: 13px;
-    }
-
-    .discipline-box h4 {
-      font-size: 0.68rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--text-muted);
-      margin-bottom: 4px;
-    }
-
-    .discipline-score {
-      font-size: 1.45rem;
-      font-weight: 800;
-      font-family: var(--mono);
-    }
-
-    .discipline-bar-bg {
-      height: 5px;
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: 3px;
-      overflow: hidden;
-      margin-top: 6px;
-    }
-
-    .discipline-bar-fill {
-      height: 100%;
-      background: var(--emerald);
-      width: 100%;
-      transition: width 0.4s ease;
-    }
-
-    .leak-tracker {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: 12px;
-      padding: 13px;
-      max-height: 210px;
-      overflow-y: auto;
-    }
-
-    .leak-tracker h4 {
-      font-size: 0.68rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--text-muted);
-      margin-bottom: 8px;
-    }
-
-    .leak-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .leak-item {
-      display: flex;
-      flex-direction: column;
-      font-size: 0.76rem;
-      background: rgba(8, 12, 20, 0.6);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: 8px;
-      padding: 8px 10px;
-      gap: 4px;
-    }
-
-    .leak-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      color: #f8fafc;
-      font-weight: 700;
-    }
-
-    .leak-count-pill {
-      background: rgba(244, 63, 94, 0.18);
-      color: #fda4af;
-      border: 1px solid rgba(244, 63, 94, 0.3);
-      font-size: 0.66rem;
-      padding: 1px 6px;
-      border-radius: 4px;
-      font-family: var(--mono);
-    }
-
-    .leak-metrics {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      font-size: 0.69rem;
-    }
-
-    .leak-cost-loss { color: var(--rose); font-weight: 600; }
-    .leak-cost-lucky { color: var(--amber); font-weight: 500; }
-
-    /* Upgraded Data Vault + Cloud Sync */
-    .vault-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: 12px;
-      padding: 13px;
-      margin-top: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .vault-card h4 {
-      font-size: 0.68rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--text-muted);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .vault-sub {
-      font-size: 0.69rem;
-      color: var(--text-muted);
-      line-height: 1.35;
-    }
-
-    .vault-actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6px;
-    }
-
-    .btn-vault {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--border-subtle);
-      color: var(--text-main);
-      font-size: 0.72rem;
-      font-weight: 600;
-      padding: 7px 8px;
-      border-radius: 7px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-      transition: all 0.2s;
-    }
-
-    .btn-vault:hover {
-      border-color: var(--gold);
-      color: var(--gold);
-      background: rgba(212, 175, 55, 0.08);
-    }
-
-    .btn-vault.full-span {
-      grid-column: span 2;
-    }
-
-    .btn-vault.active-sync {
-      border-color: var(--emerald-border);
-      background: rgba(16, 185, 129, 0.1);
-      color: #34d399;
-    }
-
-    main {
-      flex: 1;
-      padding: 28px 36px;
-      overflow-y: auto;
-    }
-
-    .header-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
-      gap: 14px;
-    }
-
-    .header-title-wrap {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .header-bar h2 {
-      font-size: 1.35rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-    }
-
-    .btn-today {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--border-subtle);
-      color: var(--text-main);
-      padding: 7px 13px;
-      border-radius: 7px;
-      font-size: 0.78rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .btn-today:hover {
-      border-color: var(--gold);
-      color: var(--gold);
-    }
-
-    .month-selector {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .month-nav-btn {
-      background: rgba(18, 24, 38, 0.8);
-      color: var(--text-main);
-      border: 1px solid var(--border-subtle);
-      width: 36px;
-      height: 36px;
-      border-radius: 8px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.9rem;
-      transition: all 0.2s;
-    }
-
-    .month-nav-btn:hover {
-      border-color: var(--gold);
-      color: var(--gold);
-    }
-
-    .month-selector select {
-      background: rgba(18, 24, 38, 0.85);
-      color: var(--text-main);
-      border: 1px solid var(--border-subtle);
-      padding: 8px 14px;
-      border-radius: 8px;
-      font-size: 0.88rem;
-      font-weight: 600;
-      cursor: pointer;
-      outline: none;
-    }
-
-    .kpi-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 14px;
-      margin-bottom: 24px;
-    }
-
-    .kpi-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: 12px;
-      padding: 16px 18px;
-      backdrop-filter: blur(10px);
-    }
-
-    .kpi-label {
-      font-size: 0.7rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      margin-bottom: 6px;
-      font-weight: 600;
-    }
-
-    .kpi-value {
-      font-size: 1.5rem;
-      font-weight: 700;
-      font-family: var(--mono);
-      letter-spacing: -0.03em;
-    }
-
-    .kpi-sub {
-      font-size: 0.73rem;
-      color: var(--text-muted);
-      margin-top: 5px;
-    }
-
-    .calendar-container {
-      background: rgba(11, 15, 25, 0.8);
-      border: 1px solid var(--border-subtle);
-      border-radius: 16px;
-      padding: 20px;
-      backdrop-filter: blur(16px);
-      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
-    }
-
-    .calendar-weekdays {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr) 125px;
-      gap: 10px;
-      text-align: center;
-      color: var(--text-muted);
-      font-weight: 700;
-      font-size: 0.73rem;
-      text-transform: uppercase;
-      letter-spacing: 1.2px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border-subtle);
-    }
-
-    .weekday-summary-col { color: var(--gold); }
-
-    .calendar-days {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr) 125px;
-      gap: 10px;
-      margin-top: 12px;
-    }
-
-    .day-cell {
-      min-height: 118px;
-      background: rgba(14, 19, 30, 0.55);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 12px;
-      padding: 10px 11px;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      position: relative;
-      overflow: hidden;
-      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .day-cell::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: transparent;
-    }
-
-    .day-cell:hover {
-      border-color: rgba(212, 175, 55, 0.55);
-      background: rgba(22, 30, 48, 0.8);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
-    }
-
-    .day-cell.empty {
-      background: rgba(255, 255, 255, 0.01);
-      border-color: rgba(255, 255, 255, 0.02);
-      cursor: default;
-      pointer-events: none;
-    }
-
-    .day-cell.profit { background: var(--emerald-bg); border-color: var(--emerald-border); }
-    .day-cell.profit::before { background: var(--emerald); }
-    .day-cell.loss { background: var(--rose-bg); border-color: var(--rose-border); }
-    .day-cell.loss::before { background: var(--rose); }
-    .day-cell.today-cell { box-shadow: inset 0 0 0 1.5px var(--gold); }
-
-    .day-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .day-number {
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .today-pill {
-      background: var(--gold);
-      color: #05070b;
-      font-size: 0.6rem;
-      font-weight: 800;
-      padding: 1px 5px;
-      border-radius: 4px;
-      text-transform: uppercase;
-    }
-
-    .trade-badge {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 2px 6px;
-      border-radius: 5px;
-      color: #cbd5e1;
-      font-size: 0.68rem;
-      font-weight: 700;
-      font-family: var(--mono);
-    }
-
-    .day-body {
-      margin: 6px 0;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .day-pnl {
-      font-family: var(--mono);
-      font-weight: 700;
-      font-size: 1.02rem;
-    }
-
-    .profit .day-pnl { color: #34d399; }
-    .loss .day-pnl { color: #fb7185; }
-
-    .day-tickers {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 4px;
-    }
-
-    .ticker-chip {
-      font-size: 0.63rem;
-      font-weight: 700;
-      color: #cbd5e1;
-      background: rgba(0, 0, 0, 0.35);
-      padding: 1px 5px;
-      border-radius: 4px;
-      border: 1px solid rgba(255, 255, 255, 0.07);
-    }
-
-    .day-footer {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-      margin-top: auto;
-    }
-
-    .day-meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.68rem;
-      min-height: 16px;
-    }
-
-    .mistake-badge {
-      color: #fbbf24;
-      font-weight: 700;
-      background: rgba(245, 158, 11, 0.14);
-      padding: 1px 6px;
-      border-radius: 4px;
-      font-size: 0.64rem;
-    }
-
-    .day-wl-bar {
-      height: 3px;
-      width: 100%;
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: 2px;
-      overflow: hidden;
-      display: flex;
-    }
-
-    .day-wl-win { background: var(--emerald); height: 100%; }
-    .day-wl-loss { background: var(--rose); height: 100%; }
-
-    .week-summary-cell {
-      min-height: 118px;
-      background: rgba(9, 13, 22, 0.85);
-      border: 1px dashed rgba(212, 175, 55, 0.25);
-      border-radius: 12px;
-      padding: 10px 12px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: flex-end;
-      text-align: right;
-      gap: 4px;
-    }
-
-    .week-label {
-      font-size: 0.65rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--text-muted);
-      font-weight: 700;
-    }
-
-    .week-pnl {
-      font-family: var(--mono);
-      font-size: 0.95rem;
-      font-weight: 700;
-    }
-
-    .week-stats {
-      font-size: 0.68rem;
-      color: var(--text-muted);
-    }
-
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(3, 5, 8, 0.85);
-      backdrop-filter: blur(8px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      padding: 20px;
-    }
-
-    .modal {
-      background: #0f141f;
-      border: 1px solid var(--border-focus);
-      border-radius: 16px;
-      width: 100%;
-      max-width: 860px;
-      padding: 28px;
-      max-height: 90vh;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75);
-    }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 18px;
-      padding-bottom: 14px;
-      border-bottom: 1px solid var(--border-subtle);
-      position: sticky;
-      top: -28px;
-      background: #0f141f;
-      z-index: 10;
-      padding-top: 6px;
-    }
-
-    .close-btn {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid var(--border-subtle);
-      color: var(--text-main);
-      width: 34px;
-      height: 34px;
-      border-radius: 8px;
-      font-size: 1.3rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .close-btn:hover {
-      background: var(--rose-bg);
-      color: var(--rose);
-      border-color: var(--rose-border);
-    }
-
-    .btn-toggle-form {
-      background: rgba(212, 175, 55, 0.1);
-      border: 1px dashed rgba(212, 175, 55, 0.45);
-      color: var(--gold);
-      font-weight: 600;
-      font-size: 0.88rem;
-      padding: 12px 18px;
-      border-radius: 10px;
-      cursor: pointer;
-      margin-bottom: 18px;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    #tradeForm {
-      background: rgba(8, 11, 18, 0.6);
-      border: 1px solid var(--border-subtle);
-      padding: 20px;
-      border-radius: 12px;
-      margin-bottom: 24px;
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .form-group.full { grid-column: span 2; }
-
-    label {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      font-weight: 600;
-    }
-
-    input, select, textarea {
-      background: var(--bg-base);
-      border: 1px solid var(--border-subtle);
-      border-radius: 8px;
-      padding: 11px;
-      color: var(--text-main);
-      font-size: 0.9rem;
-      outline: none;
-    }
-
-    input:focus, select:focus, textarea:focus {
-      border-color: var(--gold);
-    }
-
-    .form-buttons-row {
-      display: flex;
-      gap: 12px;
-      margin-top: 16px;
-    }
-
-    .btn-save {
-      background: var(--gold-gradient);
-      color: #06080d;
-      font-weight: 700;
-      padding: 12px 20px;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      flex: 1;
-      font-size: 0.92rem;
-    }
-
-    .btn-cancel-edit {
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--text-main);
-      font-weight: 600;
-      padding: 12px 20px;
-      border-radius: 8px;
-      border: 1px solid var(--border-subtle);
-      cursor: pointer;
-      display: none;
-    }
-
-    .trade-list-header {
-      font-size: 0.78rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--text-muted);
-      margin-bottom: 12px;
-      font-weight: 700;
-    }
-
-    .trade-list-container {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .trade-row {
-      display: flex;
-      flex-direction: column;
-      padding: 20px;
-      background: rgba(16, 22, 35, 0.85);
-      border: 1px solid rgba(255, 255, 255, 0.09);
-      border-radius: 12px;
-      gap: 14px;
-    }
-
-    .trade-row-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 12px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    }
-
-    .trade-title-group {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .trade-symbol {
-      font-size: 1.15rem;
-      font-weight: 800;
-      color: #ffffff;
-    }
-
-    .trade-dir-badge {
-      font-size: 0.75rem;
-      padding: 3px 9px;
-      border-radius: 5px;
-      font-weight: 700;
-      text-transform: uppercase;
-    }
-
-    .trade-dir-badge.long {
-      background: rgba(16, 185, 129, 0.15);
-      color: var(--emerald);
-      border: 1px solid rgba(16, 185, 129, 0.3);
-    }
-
-    .trade-dir-badge.short {
-      background: rgba(244, 63, 94, 0.15);
-      color: var(--rose);
-      border: 1px solid rgba(244, 63, 94, 0.3);
-    }
-
-    .trade-setup-tag {
-      color: var(--gold);
-      font-size: 0.84rem;
-      font-weight: 600;
-      background: rgba(212, 175, 55, 0.1);
-      padding: 3px 10px;
-      border-radius: 5px;
-    }
-
-    .trade-row-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .trade-pnl-pill {
-      font-family: var(--mono);
-      font-weight: 800;
-      font-size: 1.12rem;
-      margin-right: 6px;
-    }
-
-    .action-btn {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: var(--text-main);
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 0.78rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .trade-notes-card {
-      padding: 16px 20px;
-      background: rgba(7, 10, 16, 0.75);
-      border-left: 4px solid var(--gold);
-      border-radius: 8px;
-      font-size: 0.95rem;
-      line-height: 1.75;
+      font-family: 'Inter', sans-serif;
+      background-color: #080a0f;
       color: #e2e8f0;
-      white-space: pre-wrap;
     }
-
-    .chart-thumb-link {
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: var(--gold);
-      text-decoration: none;
-      background: rgba(212, 175, 55, 0.1);
-      padding: 7px 14px;
-      border-radius: 6px;
-      border: 1px solid rgba(212, 175, 55, 0.3);
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      align-self: flex-start;
+    .gold-active {
+      background-color: #2b2312;
+      border: 1px solid #856725;
+      color: #e5b949;
     }
-
-    .ai-report-body {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .ai-headline-box {
-      background: rgba(212, 175, 55, 0.07);
-      border-left: 3px solid var(--gold);
-      padding: 16px;
-      border-radius: 6px;
-      font-size: 0.92rem;
-      line-height: 1.6;
-    }
-
-    .ai-grid-stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-    }
-
-    .ai-stat-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: 10px;
-      padding: 14px;
-    }
-
-    .ai-stat-card .label {
-      font-size: 0.7rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      font-weight: 600;
-    }
-
-    .ai-stat-card .val {
-      font-size: 1.2rem;
+    .gold-btn {
+      background: linear-gradient(135deg, #d4a537 0%, #b0821e 100%);
+      color: #080a0f;
       font-weight: 700;
-      margin-top: 4px;
     }
-
-    .ai-section {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: 10px;
-      padding: 18px;
+    .gold-btn:hover {
+      filter: brightness(1.1);
     }
-
-    .ai-section h4 {
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--gold);
-      margin-bottom: 12px;
+    .input-dark {
+      background-color: #0b0d13;
+      border: 1px solid #1e2330;
+      color: #f8fafc;
     }
-
-    .ai-rules-list {
-      list-style-type: none;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .ai-rules-list li {
-      font-size: 0.86rem;
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      line-height: 1.5;
-    }
-
-    .ai-rules-list li::before {
-      content: "✦";
-      color: var(--gold);
-    }
-
-    .lightbox-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.92);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 2000;
-      padding: 20px;
-    }
-
-    .lightbox-content {
-      max-width: 92vw;
-      max-height: 92vh;
-      border-radius: 8px;
-      border: 1px solid var(--border-focus);
-      object-fit: contain;
+    .input-dark:focus {
+      outline: none;
+      border-color: #d4a537;
     }
   </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col">
 
-  <!-- ==========================================
-       TERMINAL LOGIN & VAULT PROTECTION GATE
-       ========================================== -->
-  <div class="auth-gate-overlay" id="authGateOverlay">
-    <div class="auth-card">
-      <svg class="auth-logo" viewBox="0 0 100 100" fill="none">
-        <circle cx="50" cy="46" r="32" stroke="#d4af37" stroke-width="6.5"/>
-        <path d="M56 52 L78 78" stroke="#d4af37" stroke-width="7" stroke-linecap="round"/>
-        <circle cx="50" cy="46" r="8" fill="#d4af37"/>
-        <circle cx="50" cy="46" r="3" fill="#ffffff"/>
-      </svg>
+  <!-- AUTHENTICATION MODAL / SCREEN -->
+  <div id="auth-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-[#080a0f] px-4">
+    <div class="w-full max-w-md bg-[#0d1017] border border-[#1c212e] rounded-2xl p-8 shadow-2xl">
+      
+      <div class="text-center mb-6">
+        <h1 class="text-2xl font-bold text-white tracking-tight mb-2">QUARK TRADING VAULT</h1>
+        <p id="auth-subtitle" class="text-sm text-slate-400">
+          Create your master account to lock & protect your existing trading data.
+        </p>
+      </div>
+
+      <!-- Mode Switcher -->
+      <div class="grid grid-cols-2 gap-2 p-1.5 bg-[#11151f] border border-[#1f2433] rounded-xl mb-6">
+        <button id="tab-login" onclick="switchAuthMode('login')" class="py-2.5 text-sm font-semibold rounded-lg text-slate-400 transition">
+          Login Terminal
+        </button>
+        <button id="tab-register" onclick="switchAuthMode('register')" class="py-2.5 text-sm font-semibold rounded-lg gold-active transition">
+          Create Account
+        </button>
+      </div>
+
+      <!-- Error / Status Box -->
+      <div id="auth-alert" class="hidden mb-4 p-3 rounded-lg text-xs font-medium"></div>
+
+      <!-- Form -->
+      <form id="auth-form" onsubmit="handleAuth(event)" class="space-y-5">
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
+            TRADER ID / EMAIL
+          </label>
+          <input
+            type="text"
+            id="trader-id"
+            required
+            placeholder="e.g. trader@quark.io"
+            class="w-full px-4 py-3.5 rounded-xl input-dark text-sm"
+          />
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
+            VAULT PASSWORD / PIN
+          </label>
+          <input
+            type="password"
+            id="vault-pin"
+            required
+            placeholder="••••••••"
+            class="w-full px-4 py-3.5 rounded-xl input-dark text-sm"
+          />
+        </div>
+
+        <!-- Hardcoded Firebase Cloud Sync (Hidden from Users) -->
+        <input
+          type="hidden"
+          id="firebase-url"
+          value="https://quark-journal-default-rtdb.firebaseio.com"
+        />
+
+        <button
+          type="submit"
+          id="auth-submit-btn"
+          class="w-full py-3.5 rounded-xl gold-btn text-sm uppercase tracking-wider transition shadow-lg"
+        >
+          Initialize Master Vault
+        </button>
+      </form>
+
+      <div class="mt-5 flex items-center justify-center gap-2 text-xs text-emerald-400/80">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span>Cloud Sync Active (Quark Realtime DB)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN TRADING JOURNAL DASHBOARD -->
+  <div id="app-dashboard" class="hidden flex-1 flex flex-col max-w-6xl w-full mx-auto px-4 py-8">
+    <!-- Top Bar -->
+    <header class="flex flex-wrap items-center justify-between gap-4 pb-6 mb-8 border-b border-[#1c212e]">
       <div>
-        <div class="auth-title">QUARK VAULT</div>
-        <p class="auth-sub" id="authSubText">Sign in to unlock your institutional trading journal & sync your backup vault.</p>
+        <h2 class="text-xl font-bold text-white flex items-center gap-2">
+          <span>QUARK TERMINAL</span>
+          <span id="sync-badge" class="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            Synced
+          </span>
+        </h2>
+        <p class="text-xs text-slate-400 mt-0.5">
+          Logged in as: <span id="active-trader-display" class="text-amber-400 font-medium"></span>
+        </p>
       </div>
 
-      <div class="auth-tabs">
-        <button type="button" class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Login Terminal</button>
-        <button type="button" class="auth-tab" id="tabSignup" onclick="switchAuthTab('signup')">Create Account</button>
+      <div class="flex items-center gap-3">
+        <button onclick="syncFromCloud()" class="px-3.5 py-2 rounded-lg bg-[#131824] border border-[#232a3d] text-xs font-medium text-slate-300 hover:text-white transition">
+          Refresh Cloud
+        </button>
+        <button onclick="logout()" class="px-3.5 py-2 rounded-lg bg-rose-500/10 border border-rose-500/20 text-xs font-medium text-rose-400 hover:bg-rose-500/20 transition">
+          Lock Vault
+        </button>
       </div>
+    </header>
 
-      <div class="auth-error" id="authErrorBox"></div>
-
-      <form class="auth-form" id="authForm">
-        <div class="form-group">
-          <label>Trader ID / Email</label>
-          <input type="text" id="authUsername" placeholder="e.g. trader@quark.io" required />
-        </div>
-        <div class="form-group">
-          <label>Vault Password / PIN</label>
-          <input type="password" id="authPassword" placeholder="••••••••" required />
-        </div>
-        <div class="form-group" id="cloudUrlGroup" style="display:none;">
-          <label>Optional Free Cloud Sync URL (Firebase DB)</label>
-          <input type="url" id="authCloudUrl" placeholder="https://your-project-default-rtdb.firebaseio.com" />
-        </div>
-        <button type="submit" class="btn-save" id="authSubmitBtn" style="margin-top:6px;">Unlock Terminal →</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- Cloud Sync Setup Modal -->
-  <div class="modal-overlay" id="cloudModalOverlay">
-    <div class="modal" style="max-width: 560px;">
-      <div class="modal-header">
-        <h3>☁️ Free Cloud & Hard-Drive Auto-Sync</h3>
-        <button class="close-btn" onclick="document.getElementById('cloudModalOverlay').style.display='none'">&times;</button>
+    <!-- Stats Row -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+      <div class="bg-[#0d1017] border border-[#1c212e] p-5 rounded-xl">
+        <p class="text-xs uppercase tracking-wider text-slate-400">Total Net P&L</p>
+        <p id="stat-pnl" class="text-2xl font-bold mt-1 text-white">$0.00</p>
       </div>
-      <div style="display:flex; flex-direction:column; gap:16px; font-size:0.86rem; line-height:1.6; color:var(--text-muted);">
-        <div style="background:rgba(212,175,55,0.08); border-left:3px solid var(--gold); padding:12px 14px; border-radius:6px; color:var(--text-main);">
-          <strong>Option 1: Free Cloud Sync Across Devices (Firebase)</strong><br>
-          1. Go to <a href="https://console.firebase.google.com" target="_blank" style="color:var(--gold);">console.firebase.google.com</a> (Free) → Create a Project → Build → <strong>Realtime Database</strong> (Start in Test Mode).<br>
-          2. Copy your Database URL (e.g. <code>https://my-quark-default-rtdb.firebaseio.com</code>) and paste it below. Your trades will sync to the cloud automatically!
-        </div>
-
-        <div class="form-group">
-          <label>Firebase Realtime Database URL</label>
-          <input type="url" id="cloudSyncUrlInput" placeholder="https://your-db-name.firebaseio.com" />
-        </div>
-
-        <div style="display:flex; gap:10px;">
-          <button class="btn-save" onclick="saveCloudConfig()">Save & Sync Now</button>
-          <button class="btn-vault" onclick="pullFromCloud(true)" style="padding:12px 16px;">⬇️ Pull Cloud Backup</button>
-        </div>
-
-        <hr style="border:none; border-top:1px solid var(--border-subtle); margin: 4px 0;">
-
-        <div style="background:rgba(16,185,129,0.08); border-left:3px solid var(--emerald); padding:12px 14px; border-radius:6px; color:var(--text-main);">
-          <strong>Option 2: Automatic Computer Hard-Drive Sync (Zero Cloud Needed)</strong><br>
-          Click <strong>"🔗 Link Local Auto-Save File"</strong> in the sidebar. Every trade you log or edit will immediately save directly to a `.json` file on your computer's hard drive or Google Drive folder so clearing your browser cache can never erase it.
-        </div>
+      <div class="bg-[#0d1017] border border-[#1c212e] p-5 rounded-xl">
+        <p class="text-xs uppercase tracking-wider text-slate-400">Win Rate</p>
+        <p id="stat-winrate" class="text-2xl font-bold mt-1 text-white">0%</p>
       </div>
-    </div>
-  </div>
-
-  <section class="hero-section">
-    <div class="hero-glow"></div>
-    <div class="hero-content">
-      <div class="hero-logo-wrapper" title="Quark: Singular Precision Edge">
-        <svg class="hero-logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="logoGoldGrad" x1="10%" y1="10%" x2="90%" y2="90%">
-              <stop offset="0%" stop-color="#fdf3c6" />
-              <stop offset="45%" stop-color="#d4af37" />
-              <stop offset="100%" stop-color="#7d5c0e" />
-            </linearGradient>
-            <filter id="coreGlow" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="3" result="blur" />
-              <feComposite in="SourceGraphic" in2="blur" operator="over" />
-            </filter>
-          </defs>
-          <circle cx="50" cy="50" r="44" stroke="url(#logoGoldGrad)" stroke-width="1.2" stroke-opacity="0.35" stroke-dasharray="3 3"/>
-          <circle cx="50" cy="46" r="32" stroke="url(#logoGoldGrad)" stroke-width="4.5" stroke-linecap="round"/>
-          <path d="M56 52 L78 78" stroke="url(#logoGoldGrad)" stroke-width="5" stroke-linecap="round"/>
-          <circle cx="50" cy="46" r="6" fill="url(#logoGoldGrad)" filter="url(#coreGlow)"/>
-          <circle cx="50" cy="46" r="2.5" fill="#ffffff"/>
-        </svg>
-      </div>
-
-      <div class="quark-badge">⚡ Precision Execution Terminal</div>
-      <h1 class="hero-title">QUARK</h1>
-      <p class="hero-subtitle">
-        Eliminate discretionary leaks. Master your behavioral psychology and calculate your exact statistical edge with institutional calendar tracking and autonomous AI audits.
-      </p>
-      <div class="hero-actions">
-        <a href="#workspace" class="btn-enter" id="slideDownBtn">
-          Launch Terminal <span>↓</span>
-        </a>
+      <div class="bg-[#0d1017] border border-[#1c212e] p-5 rounded-xl">
+        <p class="text-xs uppercase tracking-wider text-slate-400">Total Trades</p>
+        <p id="stat-total" class="text-2xl font-bold mt-1 text-white">0</p>
       </div>
     </div>
 
-    <a href="#workspace" class="scroll-down-indicator">
-      ENTER ARCHIVE
-      <span></span>
-    </a>
-  </section>
-
-  <div class="app-workspace" id="workspace">
-    <aside>
-      <div class="brand-wrap">
-        <div class="brand-left">
-          <div class="brand-mark">
-            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="50" cy="46" r="32" stroke="url(#logoGoldGrad)" stroke-width="6.5" stroke-linecap="round"/>
-              <path d="M56 52 L78 78" stroke="url(#logoGoldGrad)" stroke-width="7" stroke-linecap="round"/>
-              <circle cx="50" cy="46" r="8" fill="url(#logoGoldGrad)"/>
-              <circle cx="50" cy="46" r="3" fill="#ffffff"/>
-            </svg>
+    <!-- Log New Trade & Trade History -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Trade Entry Form -->
+      <div class="bg-[#0d1017] border border-[#1c212e] p-6 rounded-xl h-fit">
+        <h3 class="text-sm font-bold uppercase tracking-wider text-amber-400 mb-4">Log New Trade</h3>
+        <form id="trade-form" onsubmit="addTrade(event)" class="space-y-4">
+          <div>
+            <label class="block text-xs text-slate-400 mb-1">Symbol / Pair</label>
+            <input type="text" id="t-symbol" required placeholder="e.g. BTCUSDT, XAUUSD, NVDA" class="w-full px-3.5 py-2.5 rounded-lg input-dark text-sm uppercase" />
           </div>
-          <div class="brand-text">QUARK</div>
-        </div>
-      </div>
-
-      <!-- Logged-in Trader Bar -->
-      <div class="user-profile-bar">
-        <div class="user-info">
-          <div class="user-avatar" id="userAvatar">T</div>
-          <div class="user-details">
-            <span class="user-name" id="displayUsername">Trader</span>
-            <span class="sync-status-dot" id="syncStatusLabel">● Persistent Vault Active</span>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">Direction</label>
+              <select id="t-side" class="w-full px-3.5 py-2.5 rounded-lg input-dark text-sm">
+                <option value="LONG">LONG</option>
+                <option value="SHORT">SHORT</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs text-slate-400 mb-1">Net P&L ($)</label>
+              <input type="number" step="any" id="t-pnl" required placeholder="e.g. 250 or -100" class="w-full px-3.5 py-2.5 rounded-lg input-dark text-sm" />
+            </div>
           </div>
-        </div>
-        <button class="btn-lock" onclick="logoutTerminal()" title="Lock Terminal / Switch Account">🔒 Lock</button>
-      </div>
-
-      <div class="copilot-sidebar-card">
-        <div class="copilot-badge">✨ AI Edge Audit</div>
-        <p>Autonomous scan of execution leaks, playbook expectancy, and discipline score.</p>
-        <button class="btn-ai-trigger" id="openAiReportBtn">Generate Audit</button>
-      </div>
-
-      <div class="discipline-box">
-        <h4>Discipline Rate</h4>
-        <div class="discipline-score" id="disciplineScore">100%</div>
-        <div class="discipline-bar-bg">
-          <div class="discipline-bar-fill" id="disciplineBar"></div>
-        </div>
-      </div>
-
-      <div class="leak-tracker">
-        <h4>Identified Leaks (Psychology)</h4>
-        <div class="leak-list" id="leakList">
-          <span style="color: var(--text-muted); font-size: 0.8rem;">No rule violations logged</span>
-        </div>
-      </div>
-
-      <!-- Upgraded Data Vault with Auto-File & Cloud Sync -->
-      <div class="vault-card">
-        <h4>
-          <span>🛡️ Data Vault</span>
-          <span id="vaultTradeCount" style="color:var(--gold); font-family:var(--mono);">0 Total</span>
-        </h4>
-        <div class="vault-sub">Protected by account lock, browser persistence, cloud sync & local disk link.</div>
-        <div class="vault-actions">
-          <button class="btn-vault full-span" id="btnAutoFileSync" onclick="linkLocalAutoSaveFile()" title="Automatically writes every trade to a file on your PC">
-            🔗 Link Local Auto-Save File
+          <div>
+            <label class="block text-xs text-slate-400 mb-1">Setup / Notes</label>
+            <textarea id="t-notes" rows="2" placeholder="Breakout retest, followed plan..." class="w-full px-3.5 py-2.5 rounded-lg input-dark text-sm"></textarea>
+          </div>
+          <button type="submit" class="w-full py-3 rounded-lg gold-btn text-xs uppercase tracking-wider">
+            Save & Sync Trade
           </button>
-          <button class="btn-vault full-span" id="btnCloudConfig" onclick="openCloudModal()">
-            ☁️ Configure Free Cloud Sync
-          </button>
-          <button class="btn-vault" onclick="exportTradesBackup()" title="Download JSON backup">⬇️ Export</button>
-          <button class="btn-vault" onclick="document.getElementById('importFileInput').click()" title="Restore from JSON backup">⬆️ Restore</button>
-          <input type="file" id="importFileInput" accept=".json" style="display:none" onchange="importTradesBackup(event)" />
-        </div>
-      </div>
-    </aside>
-
-    <main>
-      <div class="header-bar">
-        <div class="header-title-wrap">
-          <h2>Performance Matrix</h2>
-          <button class="btn-today" onclick="jumpToToday()">Today</button>
-        </div>
-        <div style="display: flex; gap: 12px; align-items: center;">
-          <div class="month-selector">
-            <button class="month-nav-btn" onclick="changeMonth(-1)" title="Previous Month">‹</button>
-            <select id="monthSelect"></select>
-            <select id="yearSelect"></select>
-            <button class="month-nav-btn" onclick="changeMonth(1)" title="Next Month">›</button>
-          </div>
-          <button class="btn-ai-trigger" id="topAiButton">Generate Audit</button>
-        </div>
+        </form>
       </div>
 
-      <div class="kpi-grid">
-        <div class="kpi-card">
-          <div class="kpi-label">Month Net P&L</div>
-          <div class="kpi-value" id="totalPnl">$0.00</div>
-          <div class="kpi-sub" id="pnlSub">0 logged trades</div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-label">Win Rate</div>
-          <div class="kpi-value" id="winRate">0%</div>
-          <div class="kpi-sub" id="winLossCount">0W / 0L</div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-label">Profit Factor</div>
-          <div class="kpi-value" id="profitFactor">0.00</div>
-          <div class="kpi-sub" id="grossWinsLosses">$0 / $0</div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-label">Avg Win / Loss</div>
-          <div class="kpi-value" id="avgWinLoss">$0 / $0</div>
-          <div class="kpi-sub" id="riskRewardRatio">Ratio: 0.00R</div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-label">Green / Red Days</div>
-          <div class="kpi-value" id="greenRedDays">0 / 0</div>
-          <div class="kpi-sub" id="activeDaysCount">0 active sessions</div>
+      <!-- Trade History Table -->
+      <div class="lg:col-span-2 bg-[#0d1017] border border-[#1c212e] p-6 rounded-xl">
+        <h3 class="text-sm font-bold uppercase tracking-wider text-slate-300 mb-4">Cloud Trade Ledger</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b border-[#1c212e] text-xs text-slate-400 uppercase">
+                <th class="py-3 px-2">Date</th>
+                <th class="py-3 px-2">Pair</th>
+                <th class="py-3 px-2">Side</th>
+                <th class="py-3 px-2">P&L</th>
+                <th class="py-3 px-2">Notes</th>
+                <th class="py-3 px-2 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody id="trade-list" class="text-sm divide-y divide-[#151924]"></tbody>
+          </table>
         </div>
       </div>
-
-      <div class="calendar-container">
-        <div class="calendar-weekdays">
-          <div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div><div>Sun</div>
-          <div class="weekday-summary-col">Wk P&L</div>
-        </div>
-        <div class="calendar-days" id="calendarDays"></div>
-      </div>
-    </main>
-  </div>
-
-  <!-- AI Modal -->
-  <div class="modal-overlay" id="aiModalOverlay">
-    <div class="modal">
-      <div class="modal-header">
-        <h3 id="aiModalTitle">✨ Quark AI Execution Audit</h3>
-        <button class="close-btn" id="closeAiModal">&times;</button>
-      </div>
-      <div class="ai-report-body" id="aiReportContent"></div>
     </div>
-  </div>
-
-  <!-- Trade Logging Modal -->
-  <div class="modal-overlay" id="tradeModalOverlay">
-    <div class="modal" id="tradeModalBox">
-      <div class="modal-header">
-        <h3 id="modalDateTitle">Log Execution</h3>
-        <button class="close-btn" id="closeTradeModal">&times;</button>
-      </div>
-
-      <button type="button" class="btn-toggle-form" id="btnShowForm" onclick="showTradeForm()">
-        + Log Another Execution for This Session
-      </button>
-
-      <form id="tradeForm">
-        <input type="hidden" id="editTradeId" value="" />
-
-        <div class="form-grid">
-          <div class="form-group">
-            <label>Ticker / Pair</label>
-            <input type="text" id="symbol" placeholder="e.g. NIFTY 50, NQ, BTC, NVDA" required />
-          </div>
-          <div class="form-group">
-            <label>Direction</label>
-            <select id="direction">
-              <option value="Long">Long ↗</option>
-              <option value="Short">Short ↘</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Net P&L ($)</label>
-            <input type="number" step="0.01" id="pnl" placeholder="e.g. 450 or -200" required />
-          </div>
-          <div class="form-group">
-            <label>Planned Risk 1R ($ optional)</label>
-            <input type="number" step="0.01" id="riskR" placeholder="e.g. 150" />
-          </div>
-          <div class="form-group">
-            <label>Playbook Setup</label>
-            <select id="setup">
-              <option value="Liquidity Sweep">Liquidity Sweep</option>
-              <option value="Fair Value Gap">Fair Value Gap</option>
-              <option value="Break & Retest">Break & Retest</option>
-              <option value="Opening Range Breakout">Opening Range Breakout</option>
-              <option value="Trend Continuation">Trend Continuation</option>
-              <option value="Break of Structure (BOS)">Break of Structure (BOS)</option>
-              <option value="Supply/Demand Flip">Supply/Demand Flip</option>
-              <option value="VWAP Reversal">VWAP Reversal</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Execution Mistake (Psychology)</label>
-            <select id="mistake">
-              <option value="None">None (Followed Plan)</option>
-              <option value="FOMO / Chased">FOMO / Chased</option>
-              <option value="Moved Stop Loss">Moved Stop Loss</option>
-              <option value="Oversized Position">Oversized Position</option>
-              <option value="Revenge Trading">Revenge Trading</option>
-              <option value="Early Exit (Cut Winner)">Early Exit (Cut Winner)</option>
-              <option value="No Stop Loss / Wide Stop">No Stop Loss / Wide Stop</option>
-              <option value="Late Entry">Late Entry</option>
-              <option value="Traded News / High Vol">Traded News / High Vol</option>
-              <option value="Overtrading (Boredom)">Overtrading (Boredom)</option>
-              <option value="Hesitation / Missed Entry">Hesitation / Missed Entry</option>
-              <option value="Premature Entry">Premature Entry (Jumped Trigger)</option>
-            </select>
-          </div>
-          <div class="form-group full">
-            <label>Trade / Chart Screenshot (Auto-Compressed)</label>
-            <input type="file" id="tradeImage" accept="image/*" />
-          </div>
-          <div class="form-group full">
-            <label>Psychology & Session Context Notes</label>
-            <textarea id="notes" rows="4" placeholder="Impatience? Distraction? Execution mindset checklist?"></textarea>
-          </div>
-        </div>
-
-        <div class="form-buttons-row">
-          <button type="submit" class="btn-save" id="btnSubmitForm">Record Execution</button>
-          <button type="button" class="btn-cancel-edit" id="btnCancelEdit" onclick="cancelEditOrCollapse()">Cancel</button>
-        </div>
-      </form>
-
-      <div class="trade-list-header" id="tradeListHeader">Recorded Session Executions</div>
-      <div class="trade-list-container" id="modalTradeList"></div>
-    </div>
-  </div>
-
-  <!-- Lightbox Modal for Chart Images -->
-  <div class="lightbox-overlay" id="lightboxOverlay">
-    <img class="lightbox-content" id="lightboxImg" alt="Trade Chart Full View" />
   </div>
 
   <script>
-    // Request browser never to auto-delete local storage
-    if (navigator.storage && navigator.storage.persist) {
-      navigator.storage.persist();
-    }
+    // ============================================================================
+    // HARDCODED FIREBASE CONFIGURATION (Automatic for all users)
+    // ============================================================================
+    const FIREBASE_DB_URL = "https://quark-journal-default-rtdb.firebaseio.com";
 
-    // ==========================================
-    // ACCOUNT AUTHENTICATION & STORAGE ENGINE
-    // ==========================================
-    let usersDB = JSON.parse(localStorage.getItem('quark_users_db')) || {};
-    let currentSessionUser = localStorage.getItem('quark_active_user') || null;
-    let authMode = 'login';
-    let localFileHandle = null; // For PC Hard-Drive live auto-save
+    let authMode = "register";
+    let currentUser = null;
     let trades = [];
-    let selectedDate = null;
 
-    const authGateOverlay = document.getElementById('authGateOverlay');
-    const authForm = document.getElementById('authForm');
-    const authErrorBox = document.getElementById('authErrorBox');
-
-    function getStorageKeyForUser(username) {
-      return `quark_trades_${username.toLowerCase().replace(/[^a-z0-9]/g, '_')}`;
+    // Sanitize Trader ID / Email so it works cleanly as a Firebase JSON key
+    function cleanKey(id) {
+      return id.trim().toLowerCase().replace(/[.#$\[\]@\/]/g, "_");
     }
 
-    function initAuthSystem() {
-      const existingUsers = Object.keys(usersDB);
-      if (existingUsers.length === 0) {
-        switchAuthTab('signup');
-        document.getElementById('authSubText').textContent = 
-          "Create your master account to lock & protect your existing trading data.";
-      } else {
-        switchAuthTab('login');
-      }
-
-      if (currentSessionUser && usersDB[currentSessionUser]) {
-        unlockTerminalForUser(currentSessionUser);
-      } else {
-        authGateOverlay.style.display = 'flex';
-      }
-    }
-
-    function switchAuthTab(mode) {
+    function switchAuthMode(mode) {
       authMode = mode;
-      authErrorBox.style.display = 'none';
-      document.getElementById('tabLogin').classList.toggle('active', mode === 'login');
-      document.getElementById('tabSignup').classList.toggle('active', mode === 'signup');
-      document.getElementById('cloudUrlGroup').style.display = mode === 'signup' ? 'flex' : 'none';
-      document.getElementById('authSubmitBtn').textContent = mode === 'login' ? 'Unlock Terminal →' : 'Create Vault Account →';
+      const loginTab = document.getElementById("tab-login");
+      const registerTab = document.getElementById("tab-register");
+      const submitBtn = document.getElementById("auth-submit-btn");
+      const subtitle = document.getElementById("auth-subtitle");
+      hideAlert();
+
+      if (mode === "login") {
+        loginTab.className = "py-2.5 text-sm font-semibold rounded-lg gold-active transition";
+        registerTab.className = "py-2.5 text-sm font-semibold rounded-lg text-slate-400 transition";
+        submitBtn.textContent = "Unlock Trading Vault";
+        subtitle.textContent = "Sign in with your Trader ID to sync your cloud trading data.";
+      } else {
+        registerTab.className = "py-2.5 text-sm font-semibold rounded-lg gold-active transition";
+        loginTab.className = "py-2.5 text-sm font-semibold rounded-lg text-slate-400 transition";
+        submitBtn.textContent = "Create Account";
+        subtitle.textContent = "Create your master account to lock & protect your existing trading data.";
+      }
     }
 
-    authForm.addEventListener('submit', async (e) => {
+    function showAlert(msg, isError = true) {
+      const box = document.getElementById("auth-alert");
+      box.textContent = msg;
+      box.className = `mb-4 p-3 rounded-lg text-xs font-medium ${
+        isError
+          ? "bg-rose-500/10 border border-rose-500/30 text-rose-400"
+          : "bg-emerald-500/10 border border-emerald-500/30 text-emerald-400"
+      }`;
+      box.classList.remove("hidden");
+    }
+
+    function hideAlert() {
+      document.getElementById("auth-alert").classList.add("hidden");
+    }
+
+    async function handleAuth(e) {
       e.preventDefault();
-      const rawUser = document.getElementById('authUsername').value.trim();
-      const usernameKey = rawUser.toLowerCase();
-      const pass = document.getElementById('authPassword').value;
-      const cloudUrl = document.getElementById('authCloudUrl').value.trim();
+      hideAlert();
 
-      if (authMode === 'signup') {
-        if (usersDB[usernameKey]) {
-          showAuthError("Account already exists. Please switch to Login.");
-          return;
-        }
-        usersDB[usernameKey] = {
-          displayName: rawUser,
-          passwordHash: btoa(pass),
-          cloudUrl: cloudUrl || ''
-        };
-        localStorage.setItem('quark_users_db', JSON.stringify(usersDB));
+      const rawId = document.getElementById("trader-id").value.trim();
+      const pin = document.getElementById("vault-pin").value.trim();
+      const userKey = cleanKey(rawId);
+      const btn = document.getElementById("auth-submit-btn");
 
-        // Migrate any pre-existing unauthenticated trades into this first account so zero data is lost
-        const legacyTrades = JSON.parse(localStorage.getItem('quark_trades')) || [];
-        const userKey = getStorageKeyForUser(usernameKey);
-        if (legacyTrades.length > 0 && !localStorage.getItem(userKey)) {
-          localStorage.setItem(userKey, JSON.stringify(legacyTrades));
-        }
+      btn.disabled = true;
+      btn.textContent = "Connecting to Cloud Vault...";
 
-        unlockTerminalForUser(usernameKey);
-      } else {
-        const userRecord = usersDB[usernameKey];
-        if (!userRecord || userRecord.passwordHash !== btoa(pass)) {
-          showAuthError("Invalid Trader ID or Vault Password.");
-          return;
-        }
-        unlockTerminalForUser(usernameKey);
-      }
-    });
-
-    function showAuthError(msg) {
-      authErrorBox.textContent = msg;
-      authErrorBox.style.display = 'block';
-    }
-
-    async function unlockTerminalForUser(usernameKey) {
-      currentSessionUser = usernameKey;
-      localStorage.setItem('quark_active_user', usernameKey);
-      authGateOverlay.style.display = 'none';
-
-      const userObj = usersDB[usernameKey];
-      document.getElementById('displayUsername').textContent = userObj.displayName;
-      document.getElementById('userAvatar').textContent = userObj.displayName.charAt(0).toUpperCase();
-
-      const userStorageKey = getStorageKeyForUser(usernameKey);
-      const savedUserTrades = JSON.parse(localStorage.getItem(userStorageKey));
-      const legacyTrades = JSON.parse(localStorage.getItem('quark_trades')) || [];
-
-      if (savedUserTrades && savedUserTrades.length > 0) {
-        trades = savedUserTrades;
-      } else if (legacyTrades.length > 0) {
-        trades = legacyTrades;
-        localStorage.setItem(userStorageKey, JSON.stringify(trades));
-      } else {
-        trades = [];
-      }
-
-      renderDashboard();
-
-      // If Cloud URL is configured, pull or sync automatically
-      if (userObj.cloudUrl) {
-        document.getElementById('syncStatusLabel').textContent = "☁️ Cloud Sync Connected";
-        await pullFromCloud(false);
-      }
-    }
-
-    function logoutTerminal() {
-      localStorage.removeItem('quark_active_user');
-      currentSessionUser = null;
-      document.getElementById('authPassword').value = '';
-      authGateOverlay.style.display = 'flex';
-    }
-
-    // Master Save Function: Saves to User LocalStorage + Legacy Key + Hard Drive File + Cloud DB
-    async function persistAllTradeData() {
-      localStorage.setItem('quark_trades', JSON.stringify(trades));
-      if (currentSessionUser) {
-        localStorage.setItem(getStorageKeyForUser(currentSessionUser), JSON.stringify(trades));
-      }
-
-      // 1. Auto-save to linked PC File if active
-      if (localFileHandle) {
-        try {
-          const writable = await localFileHandle.createWritable();
-          await writable.write(JSON.stringify(trades, null, 2));
-          await writable.close();
-          document.getElementById('syncStatusLabel').textContent = "💾 Saved to PC Hard Drive";
-        } catch (err) {
-          console.warn("Auto-file write skipped:", err);
-        }
-      }
-
-      // 2. Auto-save to Cloud if configured
-      if (currentSessionUser && usersDB[currentSessionUser]?.cloudUrl) {
-        pushToCloud();
-      }
-    }
-
-    // ==========================================
-    // HARD DRIVE AUTO-SAVE & CLOUD SYNC
-    // ==========================================
-    async function linkLocalAutoSaveFile() {
-      if (!window.showSaveFilePicker) {
-        alert("Your browser doesn't support direct File System linking. Use Chrome, Edge, or Brave on Desktop, or use the Export button.");
-        return;
-      }
       try {
-        localFileHandle = await window.showSaveFilePicker({
-          suggestedName: `Quark_AutoVault_${currentSessionUser || 'Master'}.json`,
-          types: [{ description: 'Quark JSON Vault', accept: { 'application/json': ['.json'] } }]
-        });
-        const btn = document.getElementById('btnAutoFileSync');
-        btn.classList.add('active-sync');
-        btn.innerHTML = "✅ Linked to PC File (Auto-Saving)";
-        await persistAllTradeData();
+        const res = await fetch(`${FIREBASE_DB_URL}/traders/${userKey}.json`);
+        const existingUser = await res.json();
+
+        if (authMode === "register") {
+          if (existingUser && existingUser.pin) {
+            showAlert("This Trader ID already exists! Switch to 'Login Terminal' to sign in.");
+            btn.disabled = false;
+            btn.textContent = "Create Account";
+            return;
+          }
+
+          const payload = {
+            traderId: rawId,
+            pin: pin,
+            createdAt: new Date().toISOString(),
+            trades: []
+          };
+
+          await fetch(`${FIREBASE_DB_URL}/traders/${userKey}.json`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          });
+
+          completeLogin(rawId, userKey, []);
+        } else {
+          // LOGIN MODE
+          if (!existingUser || !existingUser.pin) {
+            showAlert("Trader ID not found. Switch to 'Create Account' to register.");
+            btn.disabled = false;
+            btn.textContent = "Unlock Trading Vault";
+            return;
+          }
+
+          if (existingUser.pin !== pin) {
+            showAlert("Invalid Vault Password / PIN.");
+            btn.disabled = false;
+            btn.textContent = "Unlock Trading Vault";
+            return;
+          }
+
+          completeLogin(existingUser.traderId || rawId, userKey, existingUser.trades || []);
+        }
       } catch (err) {
-        // User cancelled picker
+        showAlert("Cloud error: Make sure your Firebase Rules are published as true.");
+        console.error(err);
+      } finally {
+        btn.disabled = false;
       }
     }
 
-    function openCloudModal() {
-      const currentUrl = (currentSessionUser && usersDB[currentSessionUser]?.cloudUrl) || '';
-      document.getElementById('cloudSyncUrlInput').value = currentUrl;
-      document.getElementById('cloudModalOverlay').style.display = 'flex';
+    function completeLogin(traderId, userKey, userTrades) {
+      currentUser = { traderId, userKey };
+      trades = Array.isArray(userTrades) ? userTrades : Object.values(userTrades || {});
+      localStorage.setItem("quark_active_user", JSON.stringify(currentUser));
+
+      document.getElementById("auth-screen").classList.add("hidden");
+      document.getElementById("app-dashboard").classList.remove("hidden");
+      document.getElementById("active-trader-display").textContent = traderId;
+      renderTrades();
     }
 
-    async function saveCloudConfig() {
-      if (!currentSessionUser) return;
-      let url = document.getElementById('cloudSyncUrlInput').value.trim();
-      if (url.endsWith('/')) url = url.slice(0, -1);
-      usersDB[currentSessionUser].cloudUrl = url;
-      localStorage.setItem('quark_users_db', JSON.stringify(usersDB));
-      if (url) {
-        await pushToCloud();
-        alert("Cloud Sync URL saved & current trades backed up to the cloud!");
-      }
-      document.getElementById('cloudModalOverlay').style.display = 'none';
-    }
+    async function saveTradesToCloud() {
+      if (!currentUser) return;
+      const badge = document.getElementById("sync-badge");
+      badge.textContent = "Syncing...";
 
-    async function pushToCloud() {
-      const url = usersDB[currentSessionUser]?.cloudUrl;
-      if (!url) return;
       try {
-        const endpoint = `${url}/quark_vault/${currentSessionUser}.json`;
-        await fetch(endpoint, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ updatedAt: Date.now(), trades })
+        await fetch(`${FIREBASE_DB_URL}/traders/${currentUser.userKey}/trades.json`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(trades)
         });
-        document.getElementById('syncStatusLabel').textContent = "☁️ Synced to Cloud";
+        badge.textContent = "Synced";
       } catch (e) {
-        document.getElementById('syncStatusLabel').textContent = "⚠️ Cloud Offline (Saved Locally)";
+        badge.textContent = "Sync Error";
+        console.error(e);
       }
     }
 
-    async function pullFromCloud(notifyUser = false) {
-      const url = usersDB[currentSessionUser]?.cloudUrl;
-      if (!url) {
-        if (notifyUser) alert("Please enter a Firebase Realtime Database URL first.");
-        return;
-      }
+    async function syncFromCloud() {
+      if (!currentUser) return;
+      const badge = document.getElementById("sync-badge");
+      badge.textContent = "Fetching...";
       try {
-        const endpoint = `${url}/quark_vault/${currentSessionUser}.json`;
-        const res = await fetch(endpoint);
+        const res = await fetch(`${FIREBASE_DB_URL}/traders/${currentUser.userKey}/trades.json`);
         const data = await res.json();
-        if (data && Array.isArray(data.trades)) {
-          if (data.trades.length >= trades.length || notifyUser) {
-            trades = data.trades;
-            localStorage.setItem('quark_trades', JSON.stringify(trades));
-            localStorage.setItem(getStorageKeyForUser(currentSessionUser), JSON.stringify(trades));
-            renderDashboard();
-            if (notifyUser) alert(`Restored ${trades.length} trades from your Cloud Vault!`);
-          }
-        } else if (notifyUser) {
-          alert("No cloud backup found at this URL yet. Clicking 'Save & Sync Now' will upload your current trades.");
-        }
+        trades = Array.isArray(data) ? data : Object.values(data || {});
+        renderTrades();
+        badge.textContent = "Synced";
       } catch (e) {
-        if (notifyUser) alert("Could not connect to Cloud URL. Check your URL and Firebase rules.");
+        badge.textContent = "Offline";
       }
     }
 
-    // ==========================================
-    // CALENDAR & JOURNAL LOGIC
-    // ==========================================
-    const months = [
-      "January", "February", "March", "April", "May", "June", 
-      "July", "August", "September", "October", "November", "December"
-    ];
-
-    const now = new Date();
-    const currentYear = now.getFullYear();
-    const currentMonth = now.getMonth();
-    const todayDateKey = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
-
-    const monthSelect = document.getElementById('monthSelect');
-    const yearSelect = document.getElementById('yearSelect');
-    const calendarDays = document.getElementById('calendarDays');
-    
-    const tradeModalOverlay = document.getElementById('tradeModalOverlay');
-    const tradeModalBox = document.getElementById('tradeModalBox');
-    const closeTradeModal = document.getElementById('closeTradeModal');
-    const aiModalOverlay = document.getElementById('aiModalOverlay');
-    const closeAiModal = document.getElementById('closeAiModal');
-    const openAiReportBtn = document.getElementById('openAiReportBtn');
-    const topAiButton = document.getElementById('topAiButton');
-    const tradeForm = document.getElementById('tradeForm');
-    const btnShowForm = document.getElementById('btnShowForm');
-    const btnSubmitForm = document.getElementById('btnSubmitForm');
-    const btnCancelEdit = document.getElementById('btnCancelEdit');
-    const editTradeId = document.getElementById('editTradeId');
-    const slideDownBtn = document.getElementById('slideDownBtn');
-    const lightboxOverlay = document.getElementById('lightboxOverlay');
-    const lightboxImg = document.getElementById('lightboxImg');
-
-    slideDownBtn.addEventListener('click', (e) => {
+    async function addTrade(e) {
       e.preventDefault();
-      document.getElementById('workspace').scrollIntoView({ behavior: 'smooth' });
-    });
+      const symbol = document.getElementById("t-symbol").value.trim().toUpperCase();
+      const side = document.getElementById("t-side").value;
+      const pnl = parseFloat(document.getElementById("t-pnl").value);
+      const notes = document.getElementById("t-notes").value.trim();
 
-    months.forEach((m, idx) => {
-      const opt = document.createElement('option');
-      opt.value = idx;
-      opt.textContent = m;
-      if (idx === currentMonth) opt.selected = true;
-      monthSelect.appendChild(opt);
-    });
+      const newTrade = {
+        id: Date.now(),
+        date: new Date().toLocaleDateString(),
+        symbol,
+        side,
+        pnl,
+        notes
+      };
 
-    for (let y = currentYear - 3; y <= currentYear + 3; y++) {
-      const opt = document.createElement('option');
-      opt.value = y;
-      opt.textContent = y;
-      if (y === currentYear) opt.selected = true;
-      yearSelect.appendChild(opt);
+      trades.unshift(newTrade);
+      document.getElementById("trade-form").reset();
+      renderTrades();
+      await saveTradesToCloud();
     }
-
-    function changeMonth(delta) {
-      let m = parseInt(monthSelect.value) + delta;
-      let y = parseInt(yearSelect.value);
-      if (m < 0) { m = 11; y--; }
-      else if (m > 11) { m = 0; y++; }
-      monthSelect.value = m;
-      yearSelect.value = y;
-      renderDashboard();
-    }
-
-    function jumpToToday() {
-      monthSelect.value = currentMonth;
-      yearSelect.value = currentYear;
-      renderDashboard();
-    }
-
-    function formatCurrency(val) {
-      const sign = val < 0 ? '-' : (val > 0 ? '+' : '');
-      return `${sign}$${Math.abs(val).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-    }
-
-    function formatCurrencyPlain(val) {
-      const sign = val < 0 ? '-' : '';
-      return `${sign}$${Math.abs(val).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-    }
-
-    function getSelectedMonthTrades() {
-      const m = parseInt(monthSelect.value);
-      const y = parseInt(yearSelect.value);
-      return trades.filter(t => {
-        const [tY, tM] = t.date.split('-').map(Number);
-        return tY === y && (tM - 1) === m;
-      });
-    }
-
-    function appendWeekSummaryCell(weekNum, weekPnl, weekTrades) {
-      const wkCell = document.createElement('div');
-      wkCell.className = 'week-summary-cell';
-      const pnlColor = weekPnl > 0 ? 'var(--emerald)' : weekPnl < 0 ? 'var(--rose)' : 'var(--text-muted)';
-      wkCell.innerHTML = `
-        <div class="week-label">Week ${weekNum}</div>
-        <div class="week-pnl" style="color:${pnlColor}">${weekTrades > 0 ? formatCurrency(weekPnl) : '$0.00'}</div>
-        <div class="week-stats">${weekTrades} ${weekTrades === 1 ? 'trade' : 'trades'}</div>
-      `;
-      calendarDays.appendChild(wkCell);
-    }
-
-    function renderDashboard() {
-      const m = parseInt(monthSelect.value);
-      const y = parseInt(yearSelect.value);
-
-      document.getElementById('vaultTradeCount').textContent = `${trades.length} Total`;
-
-      calendarDays.innerHTML = '';
-      const firstDay = new Date(y, m, 1).getDay();
-      const startOffset = (firstDay + 6) % 7; 
-      const totalDays = new Date(y, m + 1, 0).getDate();
-
-      let currentDayOfWeek = 0;
-      let weekNumber = 1;
-      let weekPnl = 0;
-      let weekTradeCount = 0;
-
-      for (let i = 0; i < startOffset; i++) {
-        const emptyCell = document.createElement('div');
-        emptyCell.className = 'day-cell empty';
-        calendarDays.appendChild(emptyCell);
-        currentDayOfWeek++;
-      }
-
-      let monthTrades = [];
-      let greenDays = 0;
-      let redDays = 0;
-
-      for (let day = 1; day <= totalDays; day++) {
-        const dateKey = `${y}-${String(m + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-        const dayTrades = trades.filter(t => t.date === dateKey);
-        monthTrades = monthTrades.concat(dayTrades);
-
-        const cell = document.createElement('div');
-        cell.className = 'day-cell';
-        if (dateKey === todayDateKey) cell.classList.add('today-cell');
-        cell.onclick = () => openTradeModal(dateKey);
-
-        const dayTotalPnl = dayTrades.reduce((acc, t) => acc + Number(t.pnl), 0);
-        const dayWins = dayTrades.filter(t => Number(t.pnl) > 0).length;
-        const dayLosses = dayTrades.filter(t => Number(t.pnl) < 0).length;
-        const dayMistakes = dayTrades.filter(t => t.mistake && t.mistake !== 'None').length;
-
-        weekPnl += dayTotalPnl;
-        weekTradeCount += dayTrades.length;
-
-        let bodyHtml = '';
-        let wlBarHtml = '';
-
-        if (dayTrades.length > 0) {
-          if (dayTotalPnl > 0) {
-            cell.classList.add('profit');
-            greenDays++;
-          } else if (dayTotalPnl < 0) {
-            cell.classList.add('loss');
-            redDays++;
-          }
-
-          const uniqueTickers = [...new Set(dayTrades.map(t => t.symbol))];
-          const tickerTags = uniqueTickers.slice(0, 2).map(sym => `<span class="ticker-chip">${sym}</span>`).join('');
-          const moreTag = uniqueTickers.length > 2 ? `<span class="ticker-chip">+${uniqueTickers.length - 2}</span>` : '';
-
-          bodyHtml = `
-            <div class="day-body">
-              <div class="day-pnl">${formatCurrency(dayTotalPnl)}</div>
-              <div class="day-tickers">${tickerTags}${moreTag}</div>
-            </div>
-          `;
-
-          const winPct = Math.round((dayWins / dayTrades.length) * 100);
-          const lossPct = 100 - winPct;
-          wlBarHtml = `
-            <div class="day-wl-bar" title="${dayWins}W / ${dayLosses}L">
-              <div class="day-wl-win" style="width:${winPct}%"></div>
-              <div class="day-wl-loss" style="width:${lossPct}%"></div>
-            </div>
-          `;
-        }
-
-        cell.innerHTML = `
-          <div class="day-header">
-            <span class="day-number">
-              ${day}
-              ${dateKey === todayDateKey ? '<span class="today-pill">Today</span>' : ''}
-            </span>
-            ${dayTrades.length > 0 ? `<span class="trade-badge">${dayTrades.length}T</span>` : ''}
-          </div>
-          ${bodyHtml}
-          <div class="day-footer">
-            <div class="day-meta">
-              ${dayMistakes > 0 ? `<span class="mistake-badge">⚠️ ${dayMistakes} Leak</span>` : '<span></span>'}
-            </div>
-            ${wlBarHtml}
-          </div>
-        `;
-        calendarDays.appendChild(cell);
-
-        currentDayOfWeek++;
-        if (currentDayOfWeek === 7) {
-          appendWeekSummaryCell(weekNumber, weekPnl, weekTradeCount);
-          currentDayOfWeek = 0;
-          weekNumber++;
-          weekPnl = 0;
-          weekTradeCount = 0;
-        }
-      }
-
-      if (currentDayOfWeek > 0) {
-        while (currentDayOfWeek < 7) {
-          const emptyCell = document.createElement('div');
-          emptyCell.className = 'day-cell empty';
-          calendarDays.appendChild(emptyCell);
-          currentDayOfWeek++;
-        }
-        appendWeekSummaryCell(weekNumber, weekPnl, weekTradeCount);
-      }
-
-      const totalMonthPnl = monthTrades.reduce((acc, t) => acc + Number(t.pnl), 0);
-      const winningTrades = monthTrades.filter(t => Number(t.pnl) > 0);
-      const losingTrades = monthTrades.filter(t => Number(t.pnl) < 0);
-
-      const grossProfit = winningTrades.reduce((acc, t) => acc + Number(t.pnl), 0);
-      const grossLoss = Math.abs(losingTrades.reduce((acc, t) => acc + Number(t.pnl), 0));
-
-      const winRate = monthTrades.length > 0 ? ((winningTrades.length / monthTrades.length) * 100).toFixed(1) : 0;
-      const profitFactor = grossLoss > 0 ? (grossProfit / grossLoss).toFixed(2) : (grossProfit > 0 ? '∞' : '0.00');
-
-      const avgWin = winningTrades.length > 0 ? grossProfit / winningTrades.length : 0;
-      const avgLoss = losingTrades.length > 0 ? grossLoss / losingTrades.length : 0;
-
-      const pnlEl = document.getElementById('totalPnl');
-      pnlEl.textContent = formatCurrencyPlain(totalMonthPnl);
-      pnlEl.style.color = totalMonthPnl > 0 ? 'var(--emerald)' : totalMonthPnl < 0 ? 'var(--rose)' : 'var(--text-main)';
-      document.getElementById('pnlSub').textContent = `${monthTrades.length} logged trades`;
-
-      document.getElementById('winRate').textContent = `${winRate}%`;
-      document.getElementById('winLossCount').textContent = `${winningTrades.length}W / ${losingTrades.length}L`;
-      document.getElementById('profitFactor').textContent = profitFactor;
-      document.getElementById('grossWinsLosses').textContent = `+$${Math.round(grossProfit)} / -$${Math.round(grossLoss)}`;
-
-      document.getElementById('avgWinLoss').textContent = `$${Math.round(avgWin)} / $${Math.round(avgLoss)}`;
-      document.getElementById('riskRewardRatio').textContent = `Ratio: ${(avgLoss > 0 ? (avgWin / avgLoss).toFixed(2) : '0.00')}R`;
-      document.getElementById('greenRedDays').textContent = `${greenDays} / ${redDays}`;
-      document.getElementById('activeDaysCount').textContent = `${greenDays + redDays} active sessions`;
-
-      renderDisciplineAndLeaks(monthTrades);
-    }
-
-    function renderDisciplineAndLeaks(monthTrades) {
-      const mistakeStats = {};
-      let totalMistakes = 0;
-
-      monthTrades.forEach(t => {
-        if (t.mistake && t.mistake !== 'None') {
-          totalMistakes++;
-          if (!mistakeStats[t.mistake]) {
-            mistakeStats[t.mistake] = { count: 0, directLoss: 0, luckyProfit: 0 };
-          }
-          mistakeStats[t.mistake].count += 1;
-          const p = Number(t.pnl);
-          if (p < 0) mistakeStats[t.mistake].directLoss += p;
-          else if (p > 0) mistakeStats[t.mistake].luckyProfit += p;
-        }
-      });
-
-      const totalTrades = monthTrades.length;
-      const disciplinedTrades = totalTrades - totalMistakes;
-      const disciplineRate = totalTrades > 0 ? Math.round((disciplinedTrades / totalTrades) * 100) : 100;
-
-      document.getElementById('disciplineScore').textContent = `${disciplineRate}%`;
-      const barFill = document.getElementById('disciplineBar');
-      barFill.style.width = `${disciplineRate}%`;
-      barFill.style.background = disciplineRate >= 80 ? 'var(--emerald)' : disciplineRate >= 50 ? '#fbbf24' : 'var(--rose)';
-
-      const leakList = document.getElementById('leakList');
-      leakList.innerHTML = '';
-      const keys = Object.keys(mistakeStats);
-      if (keys.length === 0) {
-        leakList.innerHTML = `<span style="color: var(--text-muted); font-size: 0.8rem;">No rule violations logged</span>`;
-        return;
-      }
-
-      keys.forEach(k => {
-        const s = mistakeStats[k];
-        const item = document.createElement('div');
-        item.className = 'leak-item';
-
-        let metricsHtml = '';
-        if (s.directLoss < 0) {
-          metricsHtml += `<div class="leak-cost-loss">🛑 Loss Cost: ${formatCurrencyPlain(s.directLoss)}</div>`;
-        }
-        if (s.luckyProfit > 0) {
-          metricsHtml += `<div class="leak-cost-lucky">⚠️ Toxic Reward: +$${s.luckyProfit.toFixed(2)} (Won on Leak)</div>`;
-        }
-        if (s.directLoss === 0 && s.luckyProfit === 0) {
-          metricsHtml += `<div style="color:var(--text-muted)">Breakeven ($0.00)</div>`;
-        }
-
-        item.innerHTML = `
-          <div class="leak-header">
-            <span>${k}</span>
-            <span class="leak-count-pill">${s.count}x</span>
-          </div>
-          <div class="leak-metrics">${metricsHtml}</div>
-        `;
-        leakList.appendChild(item);
-      });
-    }
-
-    function generateMonthlyAudit() {
-      const monthName = months[monthSelect.value];
-      const yearName = yearSelect.value;
-      const monthTrades = getSelectedMonthTrades();
-      const content = document.getElementById('aiReportContent');
-
-      document.getElementById('aiModalTitle').textContent = `✨ Quark AI Execution Audit — ${monthName} ${yearName}`;
-
-      if (monthTrades.length === 0) {
-        content.innerHTML = `
-          <div class="ai-headline-box">
-            No executions logged for <strong>${monthName} ${yearName}</strong>. Log trades to activate Quark's behavioral audit engine.
-          </div>
-        `;
-        aiModalOverlay.style.display = 'flex';
-        return;
-      }
-
-      const mistakeTrades = monthTrades.filter(t => t.mistake !== 'None');
-      const leakLosses = mistakeTrades.filter(t => Number(t.pnl) < 0).reduce((a, t) => a + Number(t.pnl), 0);
-      const netPnl = monthTrades.reduce((acc, t) => acc + Number(t.pnl), 0);
-
-      const setupMap = {};
-      monthTrades.forEach(t => {
-        if (!setupMap[t.setup]) setupMap[t.setup] = { trades: 0, pnl: 0, wins: 0 };
-        setupMap[t.setup].trades++;
-        setupMap[t.setup].pnl += Number(t.pnl);
-        if (Number(t.pnl) > 0) setupMap[t.setup].wins++;
-      });
-
-      let bestSetup = { name: "N/A", pnl: -Infinity, winRate: 0 };
-      Object.entries(setupMap).forEach(([setup, s]) => {
-        if (s.pnl > bestSetup.pnl) bestSetup = { name: setup, pnl: s.pnl, winRate: Math.round((s.wins / s.trades) * 100) };
-      });
-
-      content.innerHTML = `
-        <div class="ai-headline-box">
-          You logged <strong>${monthTrades.length} trades</strong> this month for a net total of <strong>${formatCurrencyPlain(netPnl)}</strong>. Your records show <strong>${mistakeTrades.length} behavioral leaks</strong> costing <strong>${formatCurrencyPlain(leakLosses)}</strong> in direct losses.
-        </div>
-
-        <div class="ai-grid-stats">
-          <div class="ai-stat-card">
-            <div class="label">Behavioral Leaks</div>
-            <div class="val" style="color:var(--rose);">${mistakeTrades.length} Trades</div>
-            <small style="color:var(--text-muted);">Direct Cost: ${formatCurrencyPlain(leakLosses)}</small>
-          </div>
-          <div class="ai-stat-card">
-            <div class="label">Top Playbook Setup</div>
-            <div class="val" style="color:var(--gold);">${bestSetup.name}</div>
-            <small style="color:var(--text-muted);">${formatCurrencyPlain(bestSetup.pnl)} (${bestSetup.winRate}% WR)</small>
-          </div>
-          <div class="ai-stat-card">
-            <div class="label">Clean Execution P&L</div>
-            <div class="val" style="color:var(--emerald);">${formatCurrencyPlain(monthTrades.filter(t => t.mistake === 'None').reduce((a, t) => a + Number(t.pnl), 0))}</div>
-            <small style="color:var(--text-muted);">Followed plan 100%</small>
-          </div>
-        </div>
-
-        <div class="ai-section">
-          <h4>Quark AI Protocol Directives</h4>
-          <ul class="ai-rules-list">
-            <li><strong>Focus on "${bestSetup.name}":</strong> Your positive expectancy is concentrated here (${formatCurrencyPlain(bestSetup.pnl)} net). Prioritize these setups over lower-grade setups.</li>
-            <li><strong>Eliminate Toxic Habits:</strong> Even when a rule violation (like FOMO or Early Exit) results in a green trade, it degrades long-term statistical edge.</li>
-          </ul>
-        </div>
-      `;
-
-      aiModalOverlay.style.display = 'flex';
-    }
-
-    function openTradeModal(dateKey) {
-      selectedDate = dateKey;
-      document.getElementById('modalDateTitle').textContent = `Journal — ${dateKey}`;
-      tradeModalOverlay.style.display = 'flex';
-      
-      const dayTrades = trades.filter(t => t.date === selectedDate);
-      resetFormState();
-
-      if (dayTrades.length > 0) {
-        tradeForm.style.display = 'none';
-        btnShowForm.style.display = 'flex';
-      } else {
-        tradeForm.style.display = 'block';
-        btnShowForm.style.display = 'none';
-      }
-
-      renderModalTrades();
-    }
-
-    function showTradeForm() {
-      tradeForm.style.display = 'block';
-      btnShowForm.style.display = 'none';
-      btnCancelEdit.style.display = 'inline-block';
-    }
-
-    function cancelEditOrCollapse() {
-      resetFormState();
-      const dayTrades = trades.filter(t => t.date === selectedDate);
-      if (dayTrades.length > 0) {
-        tradeForm.style.display = 'none';
-        btnShowForm.style.display = 'flex';
-      }
-    }
-
-    function resetFormState() {
-      tradeForm.reset();
-      editTradeId.value = '';
-      btnSubmitForm.textContent = 'Record Execution';
-      btnCancelEdit.style.display = 'none';
-    }
-
-    function startEditTrade(id) {
-      const trade = trades.find(t => t.id === id);
-      if (!trade) return;
-
-      tradeForm.style.display = 'block';
-      btnShowForm.style.display = 'none';
-
-      editTradeId.value = trade.id;
-      document.getElementById('symbol').value = trade.symbol || '';
-      document.getElementById('direction').value = trade.direction || 'Long';
-      document.getElementById('pnl').value = trade.pnl;
-      document.getElementById('riskR').value = trade.riskR || '';
-      document.getElementById('setup').value = trade.setup;
-      document.getElementById('mistake').value = trade.mistake || 'None';
-      document.getElementById('notes').value = trade.notes || '';
-      document.getElementById('tradeImage').value = '';
-
-      btnSubmitForm.textContent = 'Update Execution';
-      btnCancelEdit.style.display = 'inline-block';
-
-      tradeModalBox.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function formatTradeNotes(text) {
-      if (!text) return '';
-      let cleaned = text.trim();
-      if (cleaned.startsWith('"') && cleaned.endsWith('"')) {
-        cleaned = cleaned.slice(1, -1);
-      }
-      cleaned = cleaned.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-      let formatted = cleaned.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-      formatted = formatted.replace(/(?:^|\n)\s*[\*\-]\s+/g, '\n<span style="color: var(--gold); font-weight: bold;">• </span>');
-      return formatted.trim();
-    }
-
-    function renderModalTrades() {
-      const container = document.getElementById('modalTradeList');
-      const header = document.getElementById('tradeListHeader');
-      container.innerHTML = '';
-      const dayTrades = trades.filter(t => t.date === selectedDate);
-
-      if (dayTrades.length === 0) {
-        header.style.display = 'none';
-        container.innerHTML = `<div style="font-size:0.85rem; color:var(--text-muted); text-align:center; padding: 12px 0;">No trades recorded for this session yet.</div>`;
-        return;
-      }
-
-      header.style.display = 'block';
-      header.textContent = `Recorded Session Executions (${dayTrades.length})`;
-
-      dayTrades.forEach(t => {
-        const row = document.createElement('div');
-        row.className = 'trade-row';
-        const rDisplay = t.riskR ? ` (${(Number(t.pnl) / Number(t.riskR)).toFixed(1)}R)` : '';
-        const isLong = (t.direction || 'Long') === 'Long';
-        const mistakeDisplay = t.mistake && t.mistake !== 'None' 
-          ? `<div style="color:#fbbf24; font-size:0.82rem; font-weight:600; background:rgba(251, 191, 36, 0.1); padding: 6px 10px; border-radius:6px; display:inline-block; align-self:flex-start;">⚠️ Execution Leak: ${t.mistake}</div>` 
-          : '';
-        const notesDisplay = t.notes ? `<div class="trade-notes-card">${formatTradeNotes(t.notes)}</div>` : '';
-        const photoThumb = t.imageBase64 ? `<a class="chart-thumb-link" onclick="openLightbox('${t.imageBase64}')">📷 View Attached Chart Screenshot</a>` : '';
-
-        row.innerHTML = `
-          <div class="trade-row-top">
-            <div class="trade-title-group">
-              <span class="trade-symbol">${t.symbol}</span>
-              <span class="trade-dir-badge ${isLong ? 'long' : 'short'}">${t.direction || 'Long'}</span>
-              <span class="trade-setup-tag">${t.setup}</span>
-            </div>
-            <div class="trade-row-actions">
-              <span class="trade-pnl-pill" style="color:${Number(t.pnl) >= 0 ? 'var(--emerald)' : 'var(--rose)'}">
-                ${formatCurrency(Number(t.pnl))}${rDisplay}
-              </span>
-              <button class="action-btn edit" onclick="startEditTrade(${t.id})" title="Edit entry">✏️ Edit</button>
-              <button class="action-btn delete" onclick="deleteTrade(${t.id})" title="Delete entry">🗑️</button>
-            </div>
-          </div>
-          ${mistakeDisplay}
-          ${notesDisplay}
-          ${photoThumb}
-        `;
-        container.appendChild(row);
-      });
-    }
-
-    function openLightbox(base64Str) {
-      lightboxImg.src = base64Str;
-      lightboxOverlay.style.display = 'flex';
-    }
-
-    lightboxOverlay.onclick = () => {
-      lightboxOverlay.style.display = 'none';
-    };
 
     async function deleteTrade(id) {
-      if (editTradeId.value == id) {
-        resetFormState();
-      }
       trades = trades.filter(t => t.id !== id);
-      await persistAllTradeData();
-      
-      const dayTrades = trades.filter(t => t.date === selectedDate);
-      if (dayTrades.length === 0) {
-        tradeForm.style.display = 'block';
-        btnShowForm.style.display = 'none';
-      }
-      
-      renderModalTrades();
-      renderDashboard();
+      renderTrades();
+      await saveTradesToCloud();
     }
 
-    function compressImageFile(file, callback) {
-      const reader = new FileReader();
-      reader.onload = function(event) {
-        const img = new Image();
-        img.onload = function() {
-          const maxWidth = 1280;
-          let width = img.width;
-          let height = img.height;
-          if (width > maxWidth) {
-            height = Math.round((height * maxWidth) / width);
-            width = maxWidth;
-          }
-          const canvas = document.createElement('canvas');
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, width, height);
-          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.75);
-          callback(compressedDataUrl);
-        };
-        img.src = event.target.result;
-      };
-      reader.readAsDataURL(file);
+    function renderTrades() {
+      const list = document.getElementById("trade-list");
+      list.innerHTML = "";
+
+      let netPnl = 0;
+      let wins = 0;
+
+      trades.forEach(t => {
+        netPnl += Number(t.pnl);
+        if (Number(t.pnl) > 0) wins++;
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td class="py-3 px-2 text-slate-400 text-xs">${t.date}</td>
+          <td class="py-3 px-2 font-semibold text-white">${t.symbol}</td>
+          <td class="py-3 px-2">
+            <span class="px-2 py-0.5 rounded text-xs font-bold ${
+              t.side === "LONG" ? "bg-emerald-500/10 text-emerald-400" : "bg-rose-500/10 text-rose-400"
+            }">${t.side}</span>
+          </td>
+          <td class="py-3 px-2 font-bold ${Number(t.pnl) >= 0 ? "text-emerald-400" : "text-rose-400"}">
+            ${Number(t.pnl) >= 0 ? "+" : ""}$${Number(t.pnl).toFixed(2)}
+          </td>
+          <td class="py-3 px-2 text-slate-400 text-xs">${t.notes || "-"}</td>
+          <td class="py-3 px-2 text-right">
+            <button onclick="deleteTrade(${t.id})" class="text-xs text-rose-400 hover:underline">Delete</button>
+          </td>
+        `;
+        list.appendChild(tr);
+      });
+
+      const pnlEl = document.getElementById("stat-pnl");
+      pnlEl.textContent = `${netPnl >= 0 ? "+" : ""}$${netPnl.toFixed(2)}`;
+      pnlEl.className = `text-2xl font-bold mt-1 ${netPnl >= 0 ? "text-emerald-400" : "text-rose-400"}`;
+
+      const winrate = trades.length ? Math.round((wins / trades.length) * 100) : 0;
+      document.getElementById("stat-winrate").textContent = `${winrate}%`;
+      document.getElementById("stat-total").textContent = trades.length;
     }
 
-    function exportTradesBackup() {
-      const dataStr = JSON.stringify(trades, null, 2);
-      const blob = new Blob([dataStr], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `Quark_Journal_Backup_${new Date().toISOString().slice(0, 10)}.json`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+    function logout() {
+      localStorage.removeItem("quark_active_user");
+      currentUser = null;
+      trades = [];
+      document.getElementById("app-dashboard").classList.add("hidden");
+      document.getElementById("auth-screen").classList.remove("hidden");
+      switchAuthMode("login");
     }
 
-    function importTradesBackup(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = async function(e) {
+    // Auto-restore session if logged in previously
+    window.addEventListener("DOMContentLoaded", () => {
+      const saved = localStorage.getItem("quark_active_user");
+      if (saved) {
         try {
-          const imported = JSON.parse(e.target.result);
-          if (Array.isArray(imported)) {
-            trades = imported;
-            await persistAllTradeData();
-            renderDashboard();
-            alert(`Successfully restored ${trades.length} trades into Quark!`);
-          } else {
-            alert('Invalid backup file format.');
-          }
-        } catch (err) {
-          alert('Error reading backup file.');
-        }
-      };
-      reader.readAsText(file);
-      event.target.value = '';
-    }
-
-    closeTradeModal.onclick = () => {
-      tradeModalOverlay.style.display = 'none';
-      resetFormState();
-    };
-    closeAiModal.onclick = () => aiModalOverlay.style.display = 'none';
-    openAiReportBtn.onclick = generateMonthlyAudit;
-    topAiButton.onclick = generateMonthlyAudit;
-
-    window.onclick = (e) => { 
-      if (e.target === tradeModalOverlay) {
-        tradeModalOverlay.style.display = 'none';
-        resetFormState();
-      }
-      if (e.target === aiModalOverlay) aiModalOverlay.style.display = 'none'; 
-    };
-
-    monthSelect.addEventListener('change', renderDashboard);
-    yearSelect.addEventListener('change', renderDashboard);
-
-    tradeForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      
-      const fileInput = document.getElementById('tradeImage');
-      const file = fileInput.files[0];
-
-      if (file) {
-        compressImageFile(file, (compressedBase64) => {
-          saveTradeRecord(compressedBase64);
-        });
-      } else {
-        let existingImg = null;
-        if (editTradeId.value) {
-          const oldTrade = trades.find(t => t.id == editTradeId.value);
-          if (oldTrade) existingImg = oldTrade.imageBase64;
-        }
-        saveTradeRecord(existingImg);
+          const parsed = JSON.parse(saved);
+          currentUser = parsed;
+          document.getElementById("auth-screen").classList.add("hidden");
+          document.getElementById("app-dashboard").classList.remove("hidden");
+          document.getElementById("active-trader-display").textContent = parsed.traderId;
+          syncFromCloud();
+        } catch (e) {}
       }
     });
-
-    async function saveTradeRecord(imageBase64) {
-      const isEditing = Boolean(editTradeId.value);
-
-      if (isEditing) {
-        const index = trades.findIndex(t => t.id == editTradeId.value);
-        if (index !== -1) {
-          trades[index].symbol = document.getElementById('symbol').value.toUpperCase();
-          trades[index].direction = document.getElementById('direction').value;
-          trades[index].pnl = parseFloat(document.getElementById('pnl').value);
-          trades[index].riskR = parseFloat(document.getElementById('riskR').value) || null;
-          trades[index].setup = document.getElementById('setup').value;
-          trades[index].mistake = document.getElementById('mistake').value;
-          trades[index].notes = document.getElementById('notes').value;
-          if (imageBase64 !== undefined) {
-            trades[index].imageBase64 = imageBase64;
-          }
-        }
-      } else {
-        const newTrade = {
-          id: Date.now(),
-          date: selectedDate,
-          symbol: document.getElementById('symbol').value.toUpperCase(),
-          direction: document.getElementById('direction').value,
-          pnl: parseFloat(document.getElementById('pnl').value),
-          riskR: parseFloat(document.getElementById('riskR').value) || null,
-          setup: document.getElementById('setup').value,
-          mistake: document.getElementById('mistake').value,
-          notes: document.getElementById('notes').value,
-          imageBase64: imageBase64
-        };
-        trades.push(newTrade);
-      }
-
-      await persistAllTradeData();
-
-      resetFormState();
-      tradeForm.style.display = 'none';
-      btnShowForm.style.display = 'flex';
-      renderModalTrades();
-      renderDashboard();
-    }
-
-    // Boot Auth & Dashboard
-    initAuthSystem();
   </script>
 </body>
 </html>
-```[cite: 1]
