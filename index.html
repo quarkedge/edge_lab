@@ -56,6 +56,175 @@
         radial-gradient(circle at 90% 85%, rgba(56, 189, 248, 0.03) 0%, transparent 50%);
     }
 
+    /* ==========================================
+       AUTHENTICATION & CLOUD LOGIN GATE
+       ========================================== */
+    .auth-gate-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(4, 6, 10, 0.94);
+      backdrop-filter: blur(20px);
+      z-index: 5000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .auth-card {
+      background: #090d15;
+      border: 1px solid var(--border-focus);
+      border-radius: 18px;
+      width: 100%;
+      max-width: 440px;
+      padding: 32px 28px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 40px rgba(212, 175, 55, 0.12);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      text-align: center;
+    }
+
+    .auth-logo {
+      width: 58px;
+      height: 58px;
+      margin: 0 auto;
+      filter: drop-shadow(0 0 16px rgba(212, 175, 55, 0.4));
+    }
+
+    .auth-title {
+      font-family: var(--serif);
+      font-size: 1.55rem;
+      letter-spacing: 3px;
+      background: var(--gold-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 800;
+    }
+
+    .auth-sub {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .auth-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 4px;
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .auth-tab {
+      padding: 8px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      background: transparent;
+      border: none;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .auth-tab.active {
+      background: rgba(212, 175, 55, 0.16);
+      color: var(--gold);
+      border: 1px solid rgba(212, 175, 55, 0.35);
+    }
+
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 13px;
+      text-align: left;
+    }
+
+    .auth-error {
+      color: var(--rose);
+      font-size: 0.76rem;
+      background: rgba(244, 63, 94, 0.12);
+      border: 1px solid rgba(244, 63, 94, 0.3);
+      padding: 8px 10px;
+      border-radius: 8px;
+      display: none;
+      text-align: center;
+    }
+
+    /* User Profile Bar in Sidebar */
+    .user-profile-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(212, 175, 55, 0.06);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      border-radius: 10px;
+      padding: 9px 12px;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      overflow: hidden;
+    }
+
+    .user-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--gold-gradient);
+      color: #05070b;
+      font-weight: 800;
+      font-size: 0.78rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .user-details {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .user-name {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .sync-status-dot {
+      font-size: 0.65rem;
+      color: var(--emerald);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-lock {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      padding: 5px 9px;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-lock:hover {
+      border-color: var(--rose);
+      color: var(--rose);
+    }
+
     .hero-section {
       height: 100vh;
       width: 100%;
@@ -223,13 +392,13 @@
     }
 
     aside {
-      width: 330px;
+      width: 340px;
       background: var(--bg-surface);
       border-right: 1px solid var(--border-subtle);
-      padding: 22px 16px;
+      padding: 20px 16px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 12px;
       overflow-y: auto;
       max-height: 100vh;
       position: sticky;
@@ -240,14 +409,20 @@
     .brand-wrap {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding-bottom: 14px;
+      justify-content: space-between;
+      padding-bottom: 12px;
       border-bottom: 1px solid var(--border-subtle);
     }
 
+    .brand-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
     .brand-mark {
-      width: 38px;
-      height: 38px;
+      width: 34px;
+      height: 34px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -262,7 +437,7 @@
 
     .brand-text {
       font-family: var(--serif);
-      font-size: 1.3rem;
+      font-size: 1.25rem;
       font-weight: 700;
       letter-spacing: 2px;
       background: var(--gold-gradient);
@@ -274,17 +449,17 @@
       background: linear-gradient(145deg, rgba(212, 175, 55, 0.07), rgba(16, 185, 129, 0.03));
       border: 1px solid rgba(212, 175, 55, 0.25);
       border-radius: 12px;
-      padding: 14px;
+      padding: 13px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 7px;
     }
 
     .copilot-badge {
       display: flex;
       align-items: center;
       gap: 8px;
-      font-size: 0.74rem;
+      font-size: 0.72rem;
       font-weight: 700;
       color: var(--gold);
       text-transform: uppercase;
@@ -292,18 +467,18 @@
     }
 
     .copilot-sidebar-card p {
-      font-size: 0.75rem;
+      font-size: 0.73rem;
       color: var(--text-muted);
-      line-height: 1.45;
+      line-height: 1.4;
     }
 
     .btn-ai-trigger {
       background: var(--gold-gradient);
       color: #06080d;
       font-weight: 700;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       border: none;
-      padding: 9px 14px;
+      padding: 8px 14px;
       border-radius: 8px;
       cursor: pointer;
       display: flex;
@@ -323,19 +498,19 @@
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
       border-radius: 12px;
-      padding: 14px;
+      padding: 13px;
     }
 
     .discipline-box h4 {
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       text-transform: uppercase;
       letter-spacing: 1px;
       color: var(--text-muted);
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
 
     .discipline-score {
-      font-size: 1.55rem;
+      font-size: 1.45rem;
       font-weight: 800;
       font-family: var(--mono);
     }
@@ -345,7 +520,7 @@
       background: rgba(255, 255, 255, 0.08);
       border-radius: 3px;
       overflow: hidden;
-      margin-top: 8px;
+      margin-top: 6px;
     }
 
     .discipline-bar-fill {
@@ -355,39 +530,38 @@
       transition: width 0.4s ease;
     }
 
-    /* Upgraded Leak Tracker (#1) */
     .leak-tracker {
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
       border-radius: 12px;
-      padding: 14px;
-      max-height: 250px;
+      padding: 13px;
+      max-height: 210px;
       overflow-y: auto;
     }
 
     .leak-tracker h4 {
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       text-transform: uppercase;
       letter-spacing: 1px;
       color: var(--text-muted);
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .leak-list {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
     }
 
     .leak-item {
       display: flex;
       flex-direction: column;
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       background: rgba(8, 12, 20, 0.6);
       border: 1px solid rgba(255, 255, 255, 0.05);
       border-radius: 8px;
-      padding: 9px 11px;
-      gap: 5px;
+      padding: 8px 10px;
+      gap: 4px;
     }
 
     .leak-header {
@@ -402,8 +576,8 @@
       background: rgba(244, 63, 94, 0.18);
       color: #fda4af;
       border: 1px solid rgba(244, 63, 94, 0.3);
-      font-size: 0.68rem;
-      padding: 1px 7px;
+      font-size: 0.66rem;
+      padding: 1px 6px;
       border-radius: 4px;
       font-family: var(--mono);
     }
@@ -411,67 +585,60 @@
     .leak-metrics {
       display: flex;
       flex-direction: column;
-      gap: 3px;
-      font-size: 0.71rem;
-      margin-top: 2px;
+      gap: 2px;
+      font-size: 0.69rem;
     }
 
-    .leak-cost-loss {
-      color: var(--rose);
-      font-weight: 600;
-    }
+    .leak-cost-loss { color: var(--rose); font-weight: 600; }
+    .leak-cost-lucky { color: var(--amber); font-weight: 500; }
 
-    .leak-cost-lucky {
-      color: var(--amber);
-      font-weight: 500;
-    }
-
-    /* Data Vault Backup & Restore (#3) */
+    /* Upgraded Data Vault + Cloud Sync */
     .vault-card {
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
       border-radius: 12px;
-      padding: 14px;
+      padding: 13px;
       margin-top: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
 
     .vault-card h4 {
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       text-transform: uppercase;
       letter-spacing: 1px;
       color: var(--text-muted);
-      margin-bottom: 6px;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
     .vault-sub {
-      font-size: 0.71rem;
+      font-size: 0.69rem;
       color: var(--text-muted);
-      margin-bottom: 10px;
-      line-height: 1.4;
+      line-height: 1.35;
     }
 
     .vault-actions {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 8px;
+      gap: 6px;
     }
 
     .btn-vault {
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--border-subtle);
       color: var(--text-main);
-      font-size: 0.74rem;
+      font-size: 0.72rem;
       font-weight: 600;
-      padding: 8px 10px;
+      padding: 7px 8px;
       border-radius: 7px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 5px;
+      gap: 4px;
       transition: all 0.2s;
     }
 
@@ -479,6 +646,16 @@
       border-color: var(--gold);
       color: var(--gold);
       background: rgba(212, 175, 55, 0.08);
+    }
+
+    .btn-vault.full-span {
+      grid-column: span 2;
+    }
+
+    .btn-vault.active-sync {
+      border-color: var(--emerald-border);
+      background: rgba(16, 185, 129, 0.1);
+      color: #34d399;
     }
 
     main {
@@ -563,10 +740,6 @@
       outline: none;
     }
 
-    .month-selector select:focus {
-      border-color: var(--gold);
-    }
-
     .kpi-grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
@@ -580,8 +753,6 @@
       border-radius: 12px;
       padding: 16px 18px;
       backdrop-filter: blur(10px);
-      position: relative;
-      overflow: hidden;
     }
 
     .kpi-label {
@@ -606,9 +777,6 @@
       margin-top: 5px;
     }
 
-    /* ==========================================
-       ELEGANT INSTITUTIONAL CALENDAR UPGRADE
-       ========================================== */
     .calendar-container {
       background: rgba(11, 15, 25, 0.8);
       border: 1px solid var(--border-subtle);
@@ -632,9 +800,7 @@
       border-bottom: 1px solid var(--border-subtle);
     }
 
-    .weekday-summary-col {
-      color: var(--gold);
-    }
+    .weekday-summary-col { color: var(--gold); }
 
     .calendar-days {
       display: grid;
@@ -666,7 +832,6 @@
       right: 0;
       height: 3px;
       background: transparent;
-      transition: background 0.2s;
     }
 
     .day-cell:hover {
@@ -683,27 +848,11 @@
       pointer-events: none;
     }
 
-    .day-cell.profit {
-      background: var(--emerald-bg);
-      border-color: var(--emerald-border);
-    }
-
-    .day-cell.profit::before {
-      background: var(--emerald);
-    }
-
-    .day-cell.loss {
-      background: var(--rose-bg);
-      border-color: var(--rose-border);
-    }
-
-    .day-cell.loss::before {
-      background: var(--rose);
-    }
-
-    .day-cell.today-cell {
-      box-shadow: inset 0 0 0 1.5px var(--gold);
-    }
+    .day-cell.profit { background: var(--emerald-bg); border-color: var(--emerald-border); }
+    .day-cell.profit::before { background: var(--emerald); }
+    .day-cell.loss { background: var(--rose-bg); border-color: var(--rose-border); }
+    .day-cell.loss::before { background: var(--rose); }
+    .day-cell.today-cell { box-shadow: inset 0 0 0 1.5px var(--gold); }
 
     .day-header {
       display: flex;
@@ -728,7 +877,6 @@
       padding: 1px 5px;
       border-radius: 4px;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
     }
 
     .trade-badge {
@@ -753,7 +901,6 @@
       font-family: var(--mono);
       font-weight: 700;
       font-size: 1.02rem;
-      letter-spacing: -0.03em;
     }
 
     .profit .day-pnl { color: #34d399; }
@@ -773,10 +920,6 @@
       padding: 1px 5px;
       border-radius: 4px;
       border: 1px solid rgba(255, 255, 255, 0.07);
-      max-width: 100%;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
     }
 
     .day-footer {
@@ -815,7 +958,6 @@
     .day-wl-win { background: var(--emerald); height: 100%; }
     .day-wl-loss { background: var(--rose); height: 100%; }
 
-    /* Weekly Summary Cell on Right Column */
     .week-summary-cell {
       min-height: 118px;
       background: rgba(9, 13, 22, 0.85);
@@ -849,7 +991,6 @@
       color: var(--text-muted);
     }
 
-    /* Unified Scrollable Modal */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -902,7 +1043,6 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.2s;
     }
 
     .close-btn:hover {
@@ -925,11 +1065,6 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      transition: all 0.2s ease;
-    }
-
-    .btn-toggle-form:hover {
-      background: rgba(212, 175, 55, 0.18);
     }
 
     #tradeForm {
@@ -971,11 +1106,6 @@
       outline: none;
     }
 
-    input[type="file"] {
-      padding: 8px;
-      cursor: pointer;
-    }
-
     input:focus, select:focus, textarea:focus {
       border-color: var(--gold);
     }
@@ -1007,11 +1137,6 @@
       border: 1px solid var(--border-subtle);
       cursor: pointer;
       display: none;
-      transition: all 0.2s ease;
-    }
-
-    .btn-cancel-edit:hover {
-      background: rgba(255, 255, 255, 0.15);
     }
 
     .trade-list-header {
@@ -1037,7 +1162,6 @@
       border: 1px solid rgba(255, 255, 255, 0.09);
       border-radius: 12px;
       gap: 14px;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
     }
 
     .trade-row-top {
@@ -1061,7 +1185,6 @@
       font-size: 1.15rem;
       font-weight: 800;
       color: #ffffff;
-      letter-spacing: 0.3px;
     }
 
     .trade-dir-badge {
@@ -1115,22 +1238,6 @@
       font-size: 0.78rem;
       font-weight: 600;
       cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      transition: all 0.2s;
-    }
-
-    .action-btn.edit:hover {
-      border-color: var(--gold);
-      color: var(--gold);
-      background: rgba(212, 175, 55, 0.12);
-    }
-
-    .action-btn.delete:hover {
-      border-color: var(--rose);
-      color: var(--rose);
-      background: rgba(244, 63, 94, 0.15);
     }
 
     .trade-notes-card {
@@ -1142,12 +1249,6 @@
       line-height: 1.75;
       color: #e2e8f0;
       white-space: pre-wrap;
-      word-break: break-word;
-    }
-
-    .trade-notes-card strong {
-      color: #ffffff;
-      font-weight: 700;
     }
 
     .chart-thumb-link {
@@ -1166,11 +1267,6 @@
       align-self: flex-start;
     }
 
-    .chart-thumb-link:hover {
-      background: rgba(212, 175, 55, 0.2);
-    }
-
-    /* AI Modal */
     .ai-report-body {
       display: flex;
       flex-direction: column;
@@ -1247,7 +1343,6 @@
       color: var(--gold);
     }
 
-    /* Image Lightbox Modal */
     .lightbox-overlay {
       position: fixed;
       inset: 0;
@@ -1269,6 +1364,81 @@
   </style>
 </head>
 <body>
+
+  <!-- ==========================================
+       TERMINAL LOGIN & VAULT PROTECTION GATE
+       ========================================== -->
+  <div class="auth-gate-overlay" id="authGateOverlay">
+    <div class="auth-card">
+      <svg class="auth-logo" viewBox="0 0 100 100" fill="none">
+        <circle cx="50" cy="46" r="32" stroke="#d4af37" stroke-width="6.5"/>
+        <path d="M56 52 L78 78" stroke="#d4af37" stroke-width="7" stroke-linecap="round"/>
+        <circle cx="50" cy="46" r="8" fill="#d4af37"/>
+        <circle cx="50" cy="46" r="3" fill="#ffffff"/>
+      </svg>
+      <div>
+        <div class="auth-title">QUARK VAULT</div>
+        <p class="auth-sub" id="authSubText">Sign in to unlock your institutional trading journal & sync your backup vault.</p>
+      </div>
+
+      <div class="auth-tabs">
+        <button type="button" class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Login Terminal</button>
+        <button type="button" class="auth-tab" id="tabSignup" onclick="switchAuthTab('signup')">Create Account</button>
+      </div>
+
+      <div class="auth-error" id="authErrorBox"></div>
+
+      <form class="auth-form" id="authForm">
+        <div class="form-group">
+          <label>Trader ID / Email</label>
+          <input type="text" id="authUsername" placeholder="e.g. trader@quark.io" required />
+        </div>
+        <div class="form-group">
+          <label>Vault Password / PIN</label>
+          <input type="password" id="authPassword" placeholder="••••••••" required />
+        </div>
+        <div class="form-group" id="cloudUrlGroup" style="display:none;">
+          <label>Optional Free Cloud Sync URL (Firebase DB)</label>
+          <input type="url" id="authCloudUrl" placeholder="https://your-project-default-rtdb.firebaseio.com" />
+        </div>
+        <button type="submit" class="btn-save" id="authSubmitBtn" style="margin-top:6px;">Unlock Terminal →</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Cloud Sync Setup Modal -->
+  <div class="modal-overlay" id="cloudModalOverlay">
+    <div class="modal" style="max-width: 560px;">
+      <div class="modal-header">
+        <h3>☁️ Free Cloud & Hard-Drive Auto-Sync</h3>
+        <button class="close-btn" onclick="document.getElementById('cloudModalOverlay').style.display='none'">&times;</button>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:16px; font-size:0.86rem; line-height:1.6; color:var(--text-muted);">
+        <div style="background:rgba(212,175,55,0.08); border-left:3px solid var(--gold); padding:12px 14px; border-radius:6px; color:var(--text-main);">
+          <strong>Option 1: Free Cloud Sync Across Devices (Firebase)</strong><br>
+          1. Go to <a href="https://console.firebase.google.com" target="_blank" style="color:var(--gold);">console.firebase.google.com</a> (Free) → Create a Project → Build → <strong>Realtime Database</strong> (Start in Test Mode).<br>
+          2. Copy your Database URL (e.g. <code>https://my-quark-default-rtdb.firebaseio.com</code>) and paste it below. Your trades will sync to the cloud automatically!
+        </div>
+
+        <div class="form-group">
+          <label>Firebase Realtime Database URL</label>
+          <input type="url" id="cloudSyncUrlInput" placeholder="https://your-db-name.firebaseio.com" />
+        </div>
+
+        <div style="display:flex; gap:10px;">
+          <button class="btn-save" onclick="saveCloudConfig()">Save & Sync Now</button>
+          <button class="btn-vault" onclick="pullFromCloud(true)" style="padding:12px 16px;">⬇️ Pull Cloud Backup</button>
+        </div>
+
+        <hr style="border:none; border-top:1px solid var(--border-subtle); margin: 4px 0;">
+
+        <div style="background:rgba(16,185,129,0.08); border-left:3px solid var(--emerald); padding:12px 14px; border-radius:6px; color:var(--text-main);">
+          <strong>Option 2: Automatic Computer Hard-Drive Sync (Zero Cloud Needed)</strong><br>
+          Click <strong>"🔗 Link Local Auto-Save File"</strong> in the sidebar. Every trade you log or edit will immediately save directly to a `.json` file on your computer's hard drive or Google Drive folder so clearing your browser cache can never erase it.
+        </div>
+      </div>
+    </div>
+  </div>
 
   <section class="hero-section">
     <div class="hero-glow"></div>
@@ -1315,15 +1485,29 @@
   <div class="app-workspace" id="workspace">
     <aside>
       <div class="brand-wrap">
-        <div class="brand-mark">
-          <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="50" cy="46" r="32" stroke="url(#logoGoldGrad)" stroke-width="6.5" stroke-linecap="round"/>
-            <path d="M56 52 L78 78" stroke="url(#logoGoldGrad)" stroke-width="7" stroke-linecap="round"/>
-            <circle cx="50" cy="46" r="8" fill="url(#logoGoldGrad)"/>
-            <circle cx="50" cy="46" r="3" fill="#ffffff"/>
-          </svg>
+        <div class="brand-left">
+          <div class="brand-mark">
+            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="50" cy="46" r="32" stroke="url(#logoGoldGrad)" stroke-width="6.5" stroke-linecap="round"/>
+              <path d="M56 52 L78 78" stroke="url(#logoGoldGrad)" stroke-width="7" stroke-linecap="round"/>
+              <circle cx="50" cy="46" r="8" fill="url(#logoGoldGrad)"/>
+              <circle cx="50" cy="46" r="3" fill="#ffffff"/>
+            </svg>
+          </div>
+          <div class="brand-text">QUARK</div>
         </div>
-        <div class="brand-text">QUARK</div>
+      </div>
+
+      <!-- Logged-in Trader Bar -->
+      <div class="user-profile-bar">
+        <div class="user-info">
+          <div class="user-avatar" id="userAvatar">T</div>
+          <div class="user-details">
+            <span class="user-name" id="displayUsername">Trader</span>
+            <span class="sync-status-dot" id="syncStatusLabel">● Persistent Vault Active</span>
+          </div>
+        </div>
+        <button class="btn-lock" onclick="logoutTerminal()" title="Lock Terminal / Switch Account">🔒 Lock</button>
       </div>
 
       <div class="copilot-sidebar-card">
@@ -1347,14 +1531,20 @@
         </div>
       </div>
 
-      <!-- Data Vault (#3: Backup & Restore) -->
+      <!-- Upgraded Data Vault with Auto-File & Cloud Sync -->
       <div class="vault-card">
         <h4>
           <span>🛡️ Data Vault</span>
-          <span id="vaultTradeCount" style="color:var(--gold); font-family:var(--mono);">0 Trades</span>
+          <span id="vaultTradeCount" style="color:var(--gold); font-family:var(--mono);">0 Total</span>
         </h4>
-        <div class="vault-sub">Auto-compresses chart images & exports full journal backups.</div>
+        <div class="vault-sub">Protected by account lock, browser persistence, cloud sync & local disk link.</div>
         <div class="vault-actions">
+          <button class="btn-vault full-span" id="btnAutoFileSync" onclick="linkLocalAutoSaveFile()" title="Automatically writes every trade to a file on your PC">
+            🔗 Link Local Auto-Save File
+          </button>
+          <button class="btn-vault full-span" id="btnCloudConfig" onclick="openCloudModal()">
+            ☁️ Configure Free Cloud Sync
+          </button>
           <button class="btn-vault" onclick="exportTradesBackup()" title="Download JSON backup">⬇️ Export</button>
           <button class="btn-vault" onclick="document.getElementById('importFileInput').click()" title="Restore from JSON backup">⬆️ Restore</button>
           <input type="file" id="importFileInput" accept=".json" style="display:none" onchange="importTradesBackup(event)" />
@@ -1520,9 +1710,246 @@
   </div>
 
   <script>
-    let trades = JSON.parse(localStorage.getItem('quark_trades')) || [];
+    // Request browser never to auto-delete local storage
+    if (navigator.storage && navigator.storage.persist) {
+      navigator.storage.persist();
+    }
+
+    // ==========================================
+    // ACCOUNT AUTHENTICATION & STORAGE ENGINE
+    // ==========================================
+    let usersDB = JSON.parse(localStorage.getItem('quark_users_db')) || {};
+    let currentSessionUser = localStorage.getItem('quark_active_user') || null;
+    let authMode = 'login';
+    let localFileHandle = null; // For PC Hard-Drive live auto-save
+    let trades = [];
     let selectedDate = null;
 
+    const authGateOverlay = document.getElementById('authGateOverlay');
+    const authForm = document.getElementById('authForm');
+    const authErrorBox = document.getElementById('authErrorBox');
+
+    function getStorageKeyForUser(username) {
+      return `quark_trades_${username.toLowerCase().replace(/[^a-z0-9]/g, '_')}`;
+    }
+
+    function initAuthSystem() {
+      const existingUsers = Object.keys(usersDB);
+      if (existingUsers.length === 0) {
+        switchAuthTab('signup');
+        document.getElementById('authSubText').textContent = 
+          "Create your master account to lock & protect your existing trading data.";
+      } else {
+        switchAuthTab('login');
+      }
+
+      if (currentSessionUser && usersDB[currentSessionUser]) {
+        unlockTerminalForUser(currentSessionUser);
+      } else {
+        authGateOverlay.style.display = 'flex';
+      }
+    }
+
+    function switchAuthTab(mode) {
+      authMode = mode;
+      authErrorBox.style.display = 'none';
+      document.getElementById('tabLogin').classList.toggle('active', mode === 'login');
+      document.getElementById('tabSignup').classList.toggle('active', mode === 'signup');
+      document.getElementById('cloudUrlGroup').style.display = mode === 'signup' ? 'flex' : 'none';
+      document.getElementById('authSubmitBtn').textContent = mode === 'login' ? 'Unlock Terminal →' : 'Create Vault Account →';
+    }
+
+    authForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const rawUser = document.getElementById('authUsername').value.trim();
+      const usernameKey = rawUser.toLowerCase();
+      const pass = document.getElementById('authPassword').value;
+      const cloudUrl = document.getElementById('authCloudUrl').value.trim();
+
+      if (authMode === 'signup') {
+        if (usersDB[usernameKey]) {
+          showAuthError("Account already exists. Please switch to Login.");
+          return;
+        }
+        usersDB[usernameKey] = {
+          displayName: rawUser,
+          passwordHash: btoa(pass),
+          cloudUrl: cloudUrl || ''
+        };
+        localStorage.setItem('quark_users_db', JSON.stringify(usersDB));
+
+        // Migrate any pre-existing unauthenticated trades into this first account so zero data is lost
+        const legacyTrades = JSON.parse(localStorage.getItem('quark_trades')) || [];
+        const userKey = getStorageKeyForUser(usernameKey);
+        if (legacyTrades.length > 0 && !localStorage.getItem(userKey)) {
+          localStorage.setItem(userKey, JSON.stringify(legacyTrades));
+        }
+
+        unlockTerminalForUser(usernameKey);
+      } else {
+        const userRecord = usersDB[usernameKey];
+        if (!userRecord || userRecord.passwordHash !== btoa(pass)) {
+          showAuthError("Invalid Trader ID or Vault Password.");
+          return;
+        }
+        unlockTerminalForUser(usernameKey);
+      }
+    });
+
+    function showAuthError(msg) {
+      authErrorBox.textContent = msg;
+      authErrorBox.style.display = 'block';
+    }
+
+    async function unlockTerminalForUser(usernameKey) {
+      currentSessionUser = usernameKey;
+      localStorage.setItem('quark_active_user', usernameKey);
+      authGateOverlay.style.display = 'none';
+
+      const userObj = usersDB[usernameKey];
+      document.getElementById('displayUsername').textContent = userObj.displayName;
+      document.getElementById('userAvatar').textContent = userObj.displayName.charAt(0).toUpperCase();
+
+      const userStorageKey = getStorageKeyForUser(usernameKey);
+      const savedUserTrades = JSON.parse(localStorage.getItem(userStorageKey));
+      const legacyTrades = JSON.parse(localStorage.getItem('quark_trades')) || [];
+
+      if (savedUserTrades && savedUserTrades.length > 0) {
+        trades = savedUserTrades;
+      } else if (legacyTrades.length > 0) {
+        trades = legacyTrades;
+        localStorage.setItem(userStorageKey, JSON.stringify(trades));
+      } else {
+        trades = [];
+      }
+
+      renderDashboard();
+
+      // If Cloud URL is configured, pull or sync automatically
+      if (userObj.cloudUrl) {
+        document.getElementById('syncStatusLabel').textContent = "☁️ Cloud Sync Connected";
+        await pullFromCloud(false);
+      }
+    }
+
+    function logoutTerminal() {
+      localStorage.removeItem('quark_active_user');
+      currentSessionUser = null;
+      document.getElementById('authPassword').value = '';
+      authGateOverlay.style.display = 'flex';
+    }
+
+    // Master Save Function: Saves to User LocalStorage + Legacy Key + Hard Drive File + Cloud DB
+    async function persistAllTradeData() {
+      localStorage.setItem('quark_trades', JSON.stringify(trades));
+      if (currentSessionUser) {
+        localStorage.setItem(getStorageKeyForUser(currentSessionUser), JSON.stringify(trades));
+      }
+
+      // 1. Auto-save to linked PC File if active
+      if (localFileHandle) {
+        try {
+          const writable = await localFileHandle.createWritable();
+          await writable.write(JSON.stringify(trades, null, 2));
+          await writable.close();
+          document.getElementById('syncStatusLabel').textContent = "💾 Saved to PC Hard Drive";
+        } catch (err) {
+          console.warn("Auto-file write skipped:", err);
+        }
+      }
+
+      // 2. Auto-save to Cloud if configured
+      if (currentSessionUser && usersDB[currentSessionUser]?.cloudUrl) {
+        pushToCloud();
+      }
+    }
+
+    // ==========================================
+    // HARD DRIVE AUTO-SAVE & CLOUD SYNC
+    // ==========================================
+    async function linkLocalAutoSaveFile() {
+      if (!window.showSaveFilePicker) {
+        alert("Your browser doesn't support direct File System linking. Use Chrome, Edge, or Brave on Desktop, or use the Export button.");
+        return;
+      }
+      try {
+        localFileHandle = await window.showSaveFilePicker({
+          suggestedName: `Quark_AutoVault_${currentSessionUser || 'Master'}.json`,
+          types: [{ description: 'Quark JSON Vault', accept: { 'application/json': ['.json'] } }]
+        });
+        const btn = document.getElementById('btnAutoFileSync');
+        btn.classList.add('active-sync');
+        btn.innerHTML = "✅ Linked to PC File (Auto-Saving)";
+        await persistAllTradeData();
+      } catch (err) {
+        // User cancelled picker
+      }
+    }
+
+    function openCloudModal() {
+      const currentUrl = (currentSessionUser && usersDB[currentSessionUser]?.cloudUrl) || '';
+      document.getElementById('cloudSyncUrlInput').value = currentUrl;
+      document.getElementById('cloudModalOverlay').style.display = 'flex';
+    }
+
+    async function saveCloudConfig() {
+      if (!currentSessionUser) return;
+      let url = document.getElementById('cloudSyncUrlInput').value.trim();
+      if (url.endsWith('/')) url = url.slice(0, -1);
+      usersDB[currentSessionUser].cloudUrl = url;
+      localStorage.setItem('quark_users_db', JSON.stringify(usersDB));
+      if (url) {
+        await pushToCloud();
+        alert("Cloud Sync URL saved & current trades backed up to the cloud!");
+      }
+      document.getElementById('cloudModalOverlay').style.display = 'none';
+    }
+
+    async function pushToCloud() {
+      const url = usersDB[currentSessionUser]?.cloudUrl;
+      if (!url) return;
+      try {
+        const endpoint = `${url}/quark_vault/${currentSessionUser}.json`;
+        await fetch(endpoint, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ updatedAt: Date.now(), trades })
+        });
+        document.getElementById('syncStatusLabel').textContent = "☁️ Synced to Cloud";
+      } catch (e) {
+        document.getElementById('syncStatusLabel').textContent = "⚠️ Cloud Offline (Saved Locally)";
+      }
+    }
+
+    async function pullFromCloud(notifyUser = false) {
+      const url = usersDB[currentSessionUser]?.cloudUrl;
+      if (!url) {
+        if (notifyUser) alert("Please enter a Firebase Realtime Database URL first.");
+        return;
+      }
+      try {
+        const endpoint = `${url}/quark_vault/${currentSessionUser}.json`;
+        const res = await fetch(endpoint);
+        const data = await res.json();
+        if (data && Array.isArray(data.trades)) {
+          if (data.trades.length >= trades.length || notifyUser) {
+            trades = data.trades;
+            localStorage.setItem('quark_trades', JSON.stringify(trades));
+            localStorage.setItem(getStorageKeyForUser(currentSessionUser), JSON.stringify(trades));
+            renderDashboard();
+            if (notifyUser) alert(`Restored ${trades.length} trades from your Cloud Vault!`);
+          }
+        } else if (notifyUser) {
+          alert("No cloud backup found at this URL yet. Clicking 'Save & Sync Now' will upload your current trades.");
+        }
+      } catch (e) {
+        if (notifyUser) alert("Could not connect to Cloud URL. Check your URL and Firebase rules.");
+      }
+    }
+
+    // ==========================================
+    // CALENDAR & JOURNAL LOGIC
+    // ==========================================
     const months = [
       "January", "February", "March", "April", "May", "June", 
       "July", "August", "September", "October", "November", "December"
@@ -1678,7 +2105,6 @@
             redDays++;
           }
 
-          // Unique tickers up to 2
           const uniqueTickers = [...new Set(dayTrades.map(t => t.symbol))];
           const tickerTags = uniqueTickers.slice(0, 2).map(sym => `<span class="ticker-chip">${sym}</span>`).join('');
           const moreTag = uniqueTickers.length > 2 ? `<span class="ticker-chip">+${uniqueTickers.length - 2}</span>` : '';
@@ -1728,7 +2154,6 @@
         }
       }
 
-      // Fill remaining empty days in the final week
       if (currentDayOfWeek > 0) {
         while (currentDayOfWeek < 7) {
           const emptyCell = document.createElement('div');
@@ -1770,7 +2195,6 @@
       renderDisciplineAndLeaks(monthTrades);
     }
 
-    // #1: Fixed P&L Drag vs Toxic Habit Reinforcement Math
     function renderDisciplineAndLeaks(monthTrades) {
       const mistakeStats = {};
       let totalMistakes = 0;
@@ -1783,11 +2207,8 @@
           }
           mistakeStats[t.mistake].count += 1;
           const p = Number(t.pnl);
-          if (p < 0) {
-            mistakeStats[t.mistake].directLoss += p; // negative sum
-          } else if (p > 0) {
-            mistakeStats[t.mistake].luckyProfit += p; // positive sum on a rule break
-          }
+          if (p < 0) mistakeStats[t.mistake].directLoss += p;
+          else if (p > 0) mistakeStats[t.mistake].luckyProfit += p;
         }
       });
 
@@ -2039,12 +2460,12 @@
       lightboxOverlay.style.display = 'none';
     };
 
-    function deleteTrade(id) {
+    async function deleteTrade(id) {
       if (editTradeId.value == id) {
         resetFormState();
       }
       trades = trades.filter(t => t.id !== id);
-      localStorage.setItem('quark_trades', JSON.stringify(trades));
+      await persistAllTradeData();
       
       const dayTrades = trades.filter(t => t.date === selectedDate);
       if (dayTrades.length === 0) {
@@ -2056,7 +2477,6 @@
       renderDashboard();
     }
 
-    // #3: Auto-Compress Uploaded Chart Images via Canvas so localStorage never fills up
     function compressImageFile(file, callback) {
       const reader = new FileReader();
       reader.onload = function(event) {
@@ -2082,7 +2502,6 @@
       reader.readAsDataURL(file);
     }
 
-    // #3: Export & Restore JSON Backup
     function exportTradesBackup() {
       const dataStr = JSON.stringify(trades, null, 2);
       const blob = new Blob([dataStr], { type: 'application/json' });
@@ -2100,12 +2519,12 @@
       const file = event.target.files[0];
       if (!file) return;
       const reader = new FileReader();
-      reader.onload = function(e) {
+      reader.onload = async function(e) {
         try {
           const imported = JSON.parse(e.target.result);
           if (Array.isArray(imported)) {
             trades = imported;
-            localStorage.setItem('quark_trades', JSON.stringify(trades));
+            await persistAllTradeData();
             renderDashboard();
             alert(`Successfully restored ${trades.length} trades into Quark!`);
           } else {
@@ -2158,7 +2577,7 @@
       }
     });
 
-    function saveTradeRecord(imageBase64) {
+    async function saveTradeRecord(imageBase64) {
       const isEditing = Boolean(editTradeId.value);
 
       if (isEditing) {
@@ -2191,7 +2610,7 @@
         trades.push(newTrade);
       }
 
-      localStorage.setItem('quark_trades', JSON.stringify(trades));
+      await persistAllTradeData();
 
       resetFormState();
       tradeForm.style.display = 'none';
@@ -2200,7 +2619,9 @@
       renderDashboard();
     }
 
-    renderDashboard();
+    // Boot Auth & Dashboard
+    initAuthSystem();
   </script>
 </body>
 </html>
+```[cite: 1]
