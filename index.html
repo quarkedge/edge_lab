@@ -97,42 +97,73 @@
       border: 1px solid rgba(244, 63, 94, 0.3); padding: 8px 10px; border-radius: 8px; display: none; text-align: center;
     }
 
-    /* Profile Sidebar Section with Popup Menu */
+    /* Clean Profile Section & Popup Menu */
     .user-profile-wrapper {
       position: relative;
     }
 
     .user-profile-bar {
       display: flex; align-items: center; justify-content: space-between;
-      background: rgba(212, 175, 55, 0.06); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 10px; padding: 10px 12px;
-      cursor: pointer; transition: background 0.2s;
+      background: rgba(212, 175, 55, 0.06); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 12px; padding: 12px 14px;
+      cursor: pointer; transition: all 0.2s;
     }
     .user-profile-bar:hover {
       background: rgba(212, 175, 55, 0.12);
+      border-color: rgba(212, 175, 55, 0.4);
     }
-    .user-info { display: flex; align-items: center; gap: 9px; overflow: hidden; }
+    .user-info { display: flex; align-items: center; gap: 11px; overflow: hidden; }
+    
+    .user-avatar-container {
+      position: relative;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
     .user-avatar {
-      width: 30px; height: 30px; border-radius: 50%; background: var(--gold-gradient);
-      color: #05070b; font-weight: 800; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: var(--gold-gradient);
+      color: #05070b;
+      font-weight: 800;
+      font-size: 0.88rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      object-fit: cover;
     }
+    .user-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .avatar-edit-badge {
+      position: absolute; bottom: -2px; right: -2px; background: var(--gold); color: #05070b;
+      font-size: 0.55rem; width: 14px; height: 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-weight: 800; border: 1px solid #090d15;
+    }
+
     .user-details { display: flex; flex-direction: column; overflow: hidden; text-align: left; }
-    .user-name { font-size: 0.82rem; font-weight: 700; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .user-name { font-size: 0.85rem; font-weight: 700; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .sync-status-dot { font-size: 0.65rem; color: var(--emerald); display: flex; align-items: center; gap: 4px; }
 
-    /* Profile Dropdown Menu */
+    /* Well-aligned dropdown menu popup */
     .profile-dropdown {
-      position: absolute; bottom: 100%; left: 0; right: 0; margin-bottom: 6px;
-      background: #0f1420; border: 1px solid var(--border-focus); border-radius: 10px;
+      position: absolute; bottom: calc(100% + 8px); left: 0; right: 0;
+      background: #0d121c; border: 1px solid var(--border-focus); border-radius: 12px;
       padding: 8px; display: none; flex-direction: column; gap: 6px; z-index: 100;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.85);
     }
     .profile-dropdown.open { display: flex; }
     .dropdown-btn {
-      background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-subtle); color: var(--text-main);
-      padding: 8px 10px; border-radius: 6px; font-size: 0.78rem; font-weight: 600; cursor: pointer; text-align: left;
+      background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border-subtle); color: var(--text-main);
+      padding: 9px 12px; border-radius: 8px; font-size: 0.78rem; font-weight: 600; cursor: pointer; text-align: left;
       display: flex; align-items: center; gap: 8px; transition: all 0.2s;
     }
-    .dropdown-btn:hover { background: rgba(244, 63, 94, 0.15); color: var(--rose); border-color: rgba(244, 63, 94, 0.3); }
+    .dropdown-btn:hover { background: rgba(212, 175, 55, 0.1); color: var(--gold); border-color: rgba(212, 175, 55, 0.3); }
+    .dropdown-btn.danger:hover { background: rgba(244, 63, 94, 0.15); color: var(--rose); border-color: rgba(244, 63, 94, 0.3); }
 
     .hero-section {
       height: 100vh; width: 100%; display: flex; flex-direction: column; justify-content: center;
@@ -416,15 +447,19 @@
         </div>
       </div>
 
-      <!-- Profile & Logout Dropdown Section -->
+      <!-- Profile & Logout Dropdown Section with Avatar Upload -->
       <div class="user-profile-wrapper">
         <div class="profile-dropdown" id="profileDropdown">
+          <button class="dropdown-btn" onclick="triggerAvatarUpload()">📷 Change Profile Photo</button>
           <button class="dropdown-btn" onclick="openLoginModalFromProfile()">🔑 Switch / Sign In Account</button>
-          <button class="dropdown-btn" onclick="logoutTerminal()">🔒 Logout Terminal</button>
+          <button class="dropdown-btn danger" onclick="logoutTerminal()">🔒 Logout Terminal</button>
         </div>
         <div class="user-profile-bar" onclick="toggleProfileMenu()">
           <div class="user-info">
-            <div class="user-avatar" id="userAvatar">G</div>
+            <div class="user-avatar-container">
+              <div class="user-avatar" id="userAvatar">G</div>
+              <div class="avatar-edit-badge">📷</div>
+            </div>
             <div class="user-details">
               <span class="user-name" id="displayUsername">Guest Visitor</span>
               <span class="sync-status-dot" id="syncStatusLabel">● Click for Profile</span>
@@ -432,6 +467,7 @@
           </div>
           <span style="font-size: 0.75rem; color: var(--gold);">▲</span>
         </div>
+        <input type="file" id="avatarFileInput" accept="image/*" style="display:none" onchange="handleAvatarUpload(event)" />
       </div>
 
       <div class="copilot-sidebar-card">
@@ -459,7 +495,7 @@
           <button class="btn-today" onclick="jumpToToday()">Today</button>
         </div>
         <div style="display: flex; gap: 12px; align-items: center;">
-          <button class="btn-ai-trigger" onclick="openLoginModalFromProfile()" style="background: rgba(212,175,55,0.15); border:1px solid var(--gold); color:var(--gold);">🔑 Sign In / Account</button>
+          <button class="btn-ai-trigger" id="topAuthBtn" onclick="openLoginModalFromProfile()" style="background: rgba(212,175,55,0.15); border:1px solid var(--gold); color:var(--gold);">🔑 Sign In / Account</button>
           <div class="month-selector">
             <button class="month-nav-btn" onclick="changeMonth(-1)">‹</button>
             <select id="monthSelect"></select>
@@ -575,9 +611,8 @@
 
     function initAuthSystem() {
       if (currentSessionUser) {
-        unlockTerminalForUser(currentSessionUser);
+        loadUserProfileAndTrades(currentSessionUser);
       } else {
-        // Allow visitors to view the site/calendar freely without forcing login gate
         authGateOverlay.style.display = 'none';
         renderDashboard();
       }
@@ -611,6 +646,48 @@
       dropdown.classList.toggle('open');
     }
 
+    function triggerAvatarUpload() {
+      if (!currentSessionUser) {
+        alert("Please sign in first to customize your profile photo.");
+        openLoginModalFromProfile();
+        return;
+      }
+      document.getElementById('profileDropdown').classList.remove('open');
+      document.getElementById('avatarFileInput').click();
+    }
+
+    function handleAvatarUpload(event) {
+      const file = event.target.files[0];
+      if (!file || !currentSessionUser) return;
+      const reader = new FileReader();
+      reader.onload = async function(e) {
+        const base64Img = e.target.result;
+        try {
+          await fetch(`${MASTER_FIREBASE_URL}/quark_vault/users/${currentSessionUser}/avatar.json`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(base64Img)
+          });
+          applyAvatarToUI(base64Img);
+          alert("Profile photo updated successfully!");
+        } catch(err) {
+          alert("Failed to save avatar to cloud.");
+        }
+      };
+      reader.readAsDataURL(file);
+      event.target.value = '';
+    }
+
+    function applyAvatarToUI(avatarData) {
+      const avatarContainer = document.getElementById('userAvatar');
+      if (avatarData) {
+        avatarContainer.innerHTML = `<img src="${avatarData}" alt="Profile Avatar" />`;
+      } else {
+        const name = document.getElementById('displayUsername').textContent || "G";
+        avatarContainer.textContent = name.charAt(0).toUpperCase();
+      }
+    }
+
     authForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const rawUser = document.getElementById('authUsername').value.trim();
@@ -642,7 +719,8 @@
             displayName: rawUser,
             passwordHash: btoa(pass),
             createdAt: Date.now(),
-            trades: []
+            trades: [],
+            avatar: null
           };
 
           await fetch(`${MASTER_FIREBASE_URL}/quark_vault/users/${userKey}.json`, {
@@ -651,7 +729,7 @@
             body: JSON.stringify(newUserRecord)
           });
 
-          unlockTerminalForUser(userKey, rawUser, []);
+          loadUserProfileAndTrades(userKey, rawUser, [], null);
         } else {
           if (!userData || !userData.passwordHash) {
             showAuthError("Trader ID not found. Switch to 'Create Account' to register.");
@@ -667,7 +745,7 @@
             return;
           }
 
-          unlockTerminalForUser(userKey, userData.displayName || rawUser, userData.trades || []);
+          loadUserProfileAndTrades(userKey, userData.displayName || rawUser, userData.trades || [], userData.avatar || null);
         }
       } catch (err) {
         showAuthError("Cloud connection error. Verify your Firebase database rules.");
@@ -682,19 +760,31 @@
       authErrorBox.style.display = 'block';
     }
 
-    async function unlockTerminalForUser(userKey, displayName = null, initialTrades = []) {
+    async function loadUserProfileAndTrades(userKey, fallbackName = null, initialTrades = [], avatarData = null) {
       currentSessionUser = userKey;
       localStorage.setItem('quark_active_user', userKey);
       authGateOverlay.style.display = 'none';
 
-      const nameToDisplay = displayName || userKey;
+      let nameToDisplay = fallbackName || userKey;
+      try {
+        const res = await fetch(`${MASTER_FIREBASE_URL}/quark_vault/users/${userKey}.json`);
+        const data = await res.json();
+        if (data) {
+          if (data.displayName) nameToDisplay = data.displayName;
+          if (data.avatar) avatarData = data.avatar;
+          if (data.trades) initialTrades = data.trades;
+        }
+      } catch (e) {}
+
       document.getElementById('displayUsername').textContent = nameToDisplay;
-      document.getElementById('userAvatar').textContent = nameToDisplay.charAt(0).toUpperCase();
+      applyAvatarToUI(avatarData);
+
+      // Hide top sign-in button when logged in, show profile state
+      document.getElementById('topAuthBtn').style.display = 'none';
 
       trades = Array.isArray(initialTrades) ? initialTrades : Object.values(initialTrades || {});
       renderDashboard();
       document.getElementById('syncStatusLabel').textContent = "☁️ Cloud Vault Active";
-      await pullFromCloud(false);
     }
 
     function logoutTerminal() {
@@ -702,8 +792,9 @@
       currentSessionUser = null;
       document.getElementById('profileDropdown').classList.remove('open');
       document.getElementById('displayUsername').textContent = "Guest Visitor";
-      document.getElementById('userAvatar').textContent = "G";
+      applyAvatarToUI(null);
       document.getElementById('syncStatusLabel').textContent = "● Click for Profile";
+      document.getElementById('topAuthBtn').style.display = 'flex';
       trades = [];
       renderDashboard();
       switchAuthTab('login');
@@ -722,23 +813,6 @@
         document.getElementById('syncStatusLabel').textContent = "☁️ Cloud Vault Active";
       } catch (e) {
         document.getElementById('syncStatusLabel').textContent = "⚠️ Cloud Offline";
-      }
-    }
-
-    async function pullFromCloud(notifyUser = false) {
-      if (!currentSessionUser) return;
-      try {
-        const res = await fetch(`${MASTER_FIREBASE_URL}/quark_vault/users/${currentSessionUser}/trades.json`);
-        const cloudTrades = await res.json();
-        if (cloudTrades) {
-          trades = Array.isArray(cloudTrades) ? cloudTrades : Object.values(cloudTrades);
-          renderDashboard();
-          if (notifyUser) alert(`Synced! Loaded ${trades.length} trades from Cloud Vault.`);
-        } else if (notifyUser) {
-          alert("Connected! No trades found in cloud storage yet.");
-        }
-      } catch (e) {
-        if (notifyUser) alert("Could not pull data from cloud server.");
       }
     }
 
@@ -777,7 +851,8 @@
       monthSelect.appendChild(opt);
     });
 
-    for (let y = currentYear - 3; y <= currentYear + 3; y++) {
+    // Extended years from 2023 to 2035
+    for (let y = 2023; y <= 2035; y++) {
       const opt = document.createElement('option');
       opt.value = y; opt.textContent = y;
       if (y === currentYear) opt.selected = true;
