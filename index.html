@@ -116,6 +116,16 @@
       color: var(--rose); font-size: 0.76rem; background: rgba(244, 63, 94, 0.12);
       border: 1px solid rgba(244, 63, 94, 0.3); padding: 8px 10px; border-radius: 8px; display: none; text-align: center;
     }
+    .auth-success {
+      color: var(--emerald); font-size: 0.76rem; background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3); padding: 8px 10px; border-radius: 8px; display: none; text-align: center;
+    }
+
+    .forgot-password-link {
+      background: none; border: none; color: var(--gold); font-size: 0.75rem; font-weight: 600;
+      cursor: pointer; text-align: right; margin-top: -6px; padding: 0;
+    }
+    .forgot-password-link:hover { text-decoration: underline; }
 
     /* Clean Profile Section & Popup Menu - Opening Downwards */
     .user-profile-wrapper {
@@ -158,11 +168,6 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-    }
-    .avatar-edit-badge {
-      position: absolute; bottom: -2px; right: -2px; background: var(--gold); color: #05070b;
-      font-size: 0.55rem; width: 14px; height: 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-      font-weight: 800; border: 1px solid var(--bg-surface);
     }
 
     .user-details { display: flex; flex-direction: column; overflow: hidden; text-align: left; }
@@ -405,27 +410,29 @@
       </svg>
       <div>
         <div class="auth-title">QUARK VAULT</div>
-        <p class="auth-sub" id="authSubText">Sign in to unlock your institutional trading journal & sync your backup vault.</p>
+        <p class="auth-sub" id="authSubText">Sign in to unlock your institutional trading journal & sync your data.</p>
       </div>
 
-      <div class="auth-tabs">
+      <div class="auth-tabs" id="authTabsContainer">
         <button type="button" class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Login Terminal</button>
         <button type="button" class="auth-tab" id="tabSignup" onclick="switchAuthTab('signup')">Create Account</button>
       </div>
 
       <div class="auth-error" id="authErrorBox"></div>
+      <div class="auth-success" id="authSuccessBox"></div>
 
       <form class="auth-form" id="authForm">
         <div class="form-group">
           <label>Trader ID / Email</label>
           <input type="text" id="authUsername" placeholder="e.g. trader@quark.io" required />
         </div>
-        <div class="form-group">
+        <div class="form-group" id="passwordGroup">
           <label>Vault Password / PIN</label>
           <div class="password-input-wrapper">
             <input type="password" id="authPassword" placeholder="••••••••" required />
             <button type="button" class="password-eye-btn" onclick="togglePasswordVisibility()" title="Show/Hide Password">👁️</button>
           </div>
+          <button type="button" class="forgot-password-link" id="forgotPassBtn" onclick="switchAuthTab('forgot')">Forgot Password?</button>
         </div>
         <button type="submit" class="btn-save" id="authSubmitBtn" style="margin-top:6px;">Unlock Terminal →</button>
       </form>
@@ -471,17 +478,16 @@
         </div>
       </div>
 
-      <!-- Profile & Logout Dropdown Section with Avatar Upload & Theme Toggle -->
+      <!-- Profile & Logout Dropdown Section (No Photo Icon, Clean Sync Status) -->
       <div class="user-profile-wrapper">
         <div class="user-profile-bar" onclick="toggleProfileMenu()">
           <div class="user-info">
             <div class="user-avatar-container">
               <div class="user-avatar" id="userAvatar">G</div>
-              <div class="avatar-edit-badge">📷</div>
             </div>
             <div class="user-details">
               <span class="user-name" id="displayUsername">Guest Visitor</span>
-              <span class="sync-status-dot" id="syncStatusLabel">● Click for Profile</span>
+              <span class="sync-status-dot" id="syncStatusLabel">● Session Active</span>
             </div>
           </div>
           <span class="dropdown-arrow">▼</span>
@@ -630,8 +636,8 @@
     const authGateOverlay = document.getElementById('authGateOverlay');
     const authForm = document.getElementById('authForm');
     const authErrorBox = document.getElementById('authErrorBox');
+    const authSuccessBox = document.getElementById('authSuccessBox');
 
-    // Theme Switcher Initialization
     function initTheme() {
       const savedTheme = localStorage.getItem('quark_theme') || 'dark';
       if (savedTheme === 'light') {
@@ -674,9 +680,31 @@
     function switchAuthTab(mode) {
       authMode = mode;
       authErrorBox.style.display = 'none';
+      authSuccessBox.style.display = 'none';
       document.getElementById('tabLogin').classList.toggle('active', mode === 'login');
       document.getElementById('tabSignup').classList.toggle('active', mode === 'signup');
-      document.getElementById('authSubmitBtn').textContent = mode === 'login' ? 'Unlock Terminal →' : 'Create Vault Account →';
+      document.getElementById('tabLogin').style.display = mode === 'forgot' ? 'none' : 'block';
+      document.getElementById('tabSignup').style.display = mode === 'forgot' ? 'none' : 'block';
+
+      const passGroup = document.getElementById('passwordGroup');
+      const forgotBtn = document.getElementById('forgotPassBtn');
+
+      if (mode === 'forgot') {
+        document.getElementById('authSubText').textContent = "Enter your Trader ID and a new password to reset your account credentials.";
+        document.getElementById('authSubmitBtn').textContent = "Reset Password →";
+        forgotBtn.style.display = 'none';
+        passGroup.querySelector('label').textContent = "New Vault Password / PIN";
+      } else if (mode === 'login') {
+        document.getElementById('authSubText').textContent = "Sign in to unlock your institutional trading journal & sync your data.";
+        document.getElementById('authSubmitBtn').textContent = "Unlock Terminal →";
+        forgotBtn.style.display = 'block';
+        passGroup.querySelector('label').textContent = "Vault Password / PIN";
+      } else {
+        document.getElementById('authSubText').textContent = "Create an account to protect and sync your institutional trading journal.";
+        document.getElementById('authSubmitBtn').textContent = "Create Vault Account →";
+        forgotBtn.style.display = 'block';
+        passGroup.querySelector('label').textContent = "Vault Password / PIN";
+      }
     }
 
     function togglePasswordVisibility() {
@@ -754,11 +782,28 @@
       }
 
       btn.disabled = true;
-      btn.textContent = "Connecting to Cloud Vault...";
 
       try {
         const checkRes = await fetch(`${MASTER_FIREBASE_URL}/quark_vault/users/${userKey}.json`);
         const userData = await checkRes.json();
+
+        if (authMode === 'forgot') {
+          if (!userData || !userData.passwordHash) {
+            showAuthError("Trader ID not found. Cannot reset password.");
+            btn.disabled = false;
+            btn.textContent = "Reset Password →";
+            return;
+          }
+          await fetch(`${MASTER_FIREBASE_URL}/quark_vault/users/${userKey}/passwordHash.json`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(btoa(pass))
+          });
+          showAuthSuccess("Password reset successfully! You can now log in.");
+          setTimeout(() => switchAuthTab('login'), 1500);
+          btn.disabled = false;
+          return;
+        }
 
         if (authMode === 'signup') {
           if (userData && userData.passwordHash) {
@@ -804,13 +849,20 @@
         showAuthError("Cloud connection error. Verify your Firebase database rules.");
         console.error(err);
       } finally {
-        btn.disabled = false;
+        if (authMode !== 'forgot') btn.disabled = false;
       }
     });
 
     function showAuthError(msg) {
+      authSuccessBox.style.display = 'none';
       authErrorBox.textContent = msg;
       authErrorBox.style.display = 'block';
+    }
+
+    function showAuthSuccess(msg) {
+      authErrorBox.style.display = 'none';
+      authSuccessBox.textContent = msg;
+      authSuccessBox.style.display = 'block';
     }
 
     async function loadUserProfileAndTrades(userKey, fallbackName = null, initialTrades = [], avatarData = null) {
@@ -836,7 +888,7 @@
 
       trades = Array.isArray(initialTrades) ? initialTrades : Object.values(initialTrades || {});
       renderDashboard();
-      document.getElementById('syncStatusLabel').textContent = "☁️ Cloud Vault Active";
+      document.getElementById('syncStatusLabel').textContent = "● Synced";
     }
 
     function logoutTerminal() {
@@ -845,7 +897,7 @@
       document.getElementById('profileDropdown').classList.remove('open');
       document.getElementById('displayUsername').textContent = "Guest Visitor";
       applyAvatarToUI(null);
-      document.getElementById('syncStatusLabel').textContent = "● Click for Profile";
+      document.getElementById('syncStatusLabel').textContent = "● Session Active";
       document.getElementById('topAuthBtn').style.display = 'flex';
       trades = [];
       renderDashboard();
@@ -855,16 +907,16 @@
 
     async function persistAllTradeData() {
       if (!currentSessionUser) return;
-      document.getElementById('syncStatusLabel').textContent = "☁️ Syncing...";
+      document.getElementById('syncStatusLabel').textContent = "● Syncing...";
       try {
         await fetch(`${MASTER_FIREBASE_URL}/quark_vault/users/${currentSessionUser}/trades.json`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(trades)
         });
-        document.getElementById('syncStatusLabel').textContent = "☁️ Cloud Vault Active";
+        document.getElementById('syncStatusLabel').textContent = "● Synced";
       } catch (e) {
-        document.getElementById('syncStatusLabel').textContent = "⚠️ Cloud Offline";
+        document.getElementById('syncStatusLabel').textContent = "● Offline";
       }
     }
 
