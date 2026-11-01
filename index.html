@@ -653,6 +653,51 @@
     .news-empty button { margin-top: 12px; }
     .news-foot { font-size: 0.72rem; color: var(--text-muted); line-height: 1.6; margin-top: 18px; }
     @media (max-width: 760px) { .news-search { width: 100%; } .inst-subtabs { display: flex; } .sub-tab { flex: 1; padding: 9px 6px; } }
+
+    /* ===== v6: platforms, news, audit ===== */
+    .view-tabs { grid-template-columns: repeat(3, 1fr); }
+    .view-tab { padding: 9px 2px; font-size: .72rem; }
+    .launch-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .launch-head h4 { margin: 0; }
+    .launch-add { background: var(--gold-soft); border: 1px solid rgba(212,175,55,.35); color: var(--gold); border-radius: 8px; padding: 5px 10px; font-size: .72rem; font-weight: 700; cursor: pointer; }
+    .launcher-grid { display: flex; flex-direction: column; gap: 6px; }
+    .site-row { display: flex; gap: 6px; align-items: stretch; }
+    .site-row .launch-btn { flex: 1; min-width: 0; justify-content: flex-start; gap: 9px; padding: 9px 10px; }
+    .site-row .launch-btn span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .site-row .launch-btn img { width: 16px; height: 16px; border-radius: 3px; flex-shrink: 0; }
+    .site-act { background: transparent; border: 1px solid var(--border-subtle); color: var(--text-muted); border-radius: 8px; width: 32px; cursor: pointer; font-size: .8rem; }
+    .site-act:hover { color: var(--gold); border-color: var(--gold); }
+    .site-act.del:hover { color: var(--rose); border-color: var(--rose); }
+    .launch-empty { font-size: .78rem; color: var(--text-muted); line-height: 1.5; padding: 4px 2px; }
+    .site-form { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border-subtle); }
+    .site-form input { padding: 9px; font-size: .82rem; }
+    .site-form-row { display: flex; gap: 8px; }
+    .site-form-row .btn-save, .site-form-row .btn-cancel-edit { padding: 9px 12px; font-size: .8rem; }
+    .site-err { color: var(--rose); font-size: .74rem; }
+    .news-cats { margin-bottom: 12px; }
+    .news-filters { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+    .news-filters select { padding: 8px 10px; font-size: .8rem; }
+    .news-chk { display: flex; align-items: center; gap: 6px; font-size: .78rem; color: var(--text-muted); text-transform: none; font-weight: 600; cursor: pointer; }
+    .news-title { display: block; color: var(--text-main); text-decoration: none; }
+    .news-title:hover { color: var(--gold); }
+    .news-item.read .news-title { opacity: .55; }
+    .news-also { color: var(--text-muted); }
+    .news-save { margin-left: auto; background: none; border: none; cursor: pointer; opacity: .35; font-size: .95rem; }
+    .news-save.on, .news-save:hover { opacity: 1; }
+    .ai-grid-stats { grid-template-columns: repeat(3, 1fr); }
+    @media (max-width: 600px) { .ai-grid-stats { grid-template-columns: repeat(2, 1fr); } }
+    .ai-sec { font-size: .72rem; text-transform: uppercase; letter-spacing: 1px; color: var(--gold); font-weight: 800; margin: 6px 0 -6px; }
+    .ai-sub { font-size: .7rem; color: var(--text-muted); margin-top: 3px; }
+    svg.eq { width: 100%; height: 140px; background: var(--bg-base); border: 1px solid var(--border-subtle); border-radius: 10px; }
+    .ai-ins { display: flex; flex-direction: column; gap: 8px; }
+    .ai-ins div { padding: 10px 12px; border-radius: 8px; font-size: .85rem; line-height: 1.5; border-left: 3px solid var(--text-muted); background: var(--bg-base); }
+    .ai-ins .bad { border-color: var(--rose); } .ai-ins .warn { border-color: var(--amber); } .ai-ins .good { border-color: var(--emerald); }
+    .ai-tbl-wrap { overflow-x: auto; }
+    .ai-table { width: 100%; border-collapse: collapse; font-size: .8rem; }
+    .ai-table th { font-size: .66rem; text-transform: uppercase; color: var(--text-muted); text-align: right; padding: 6px; border-bottom: 1px solid var(--border-subtle); }
+    .ai-table td { padding: 7px 6px; text-align: right; border-bottom: 1px solid var(--border-subtle); font-family: var(--mono); }
+    .ai-table th:first-child, .ai-table td:first-child { text-align: left; }
+    .ai-table td:first-child { font-family: var(--sans); font-weight: 600; }
   </style>
 </head>
 <body>
@@ -679,7 +724,7 @@
 
       <!-- One-Click Google & Apple Sign In -->
       <div class="social-auth-group" id="socialAuthGroup">
-        <button type="button" class="btn-social" onclick="handleSocialLogin('Google')">
+        <button type="button" class="btn-social" id="btnGoogle" onclick="handleSocialLogin('Google')">
           <svg viewBox="0 0 24 24">
             <path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.7l3.1-3.1C17.3 1.8 14.8 1 12 1 7.4 1 3.5 3.6 1.6 7.4l3.7 2.8C6.2 7.2 8.9 5 12 5z"/>
             <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.6l3.7 2.9c2.2-2 3.7-5 3.7-8.7z"/>
@@ -688,7 +733,7 @@
           </svg>
           Google
         </button>
-        <button type="button" class="btn-social" onclick="handleSocialLogin('Apple')">
+        <button type="button" class="btn-social" id="btnApple" onclick="handleSocialLogin('Apple')">
           <svg viewBox="0 0 24 24" fill="currentColor">
             <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
           </svg>
@@ -704,26 +749,26 @@
       <form class="auth-form" id="authForm">
         <div class="form-group">
           <label id="usernameLabel">Trader ID / Email</label>
-          <input type="text" id="authUsername" placeholder="e.g. trader@quark.io" required />
+          <input type="text" id="authUsername" placeholder="e.g. trader@quark.io" autocomplete="username" autocapitalize="off" spellcheck="false" maxlength="60" required />
         </div>
 
         <!-- Current Password (shown only when changing password) -->
         <div class="form-group" id="currentPasswordGroup" style="display:none;">
           <label>Current Password</label>
-          <input type="password" id="authCurrentPassword" placeholder="Enter current password" />
+          <input type="password" id="authCurrentPassword" placeholder="Enter current password" autocomplete="current-password" />
         </div>
 
         <!-- Recovery PIN (shown on Signup & Forgot Password) -->
         <div class="form-group" id="recoveryPinGroup" style="display:none;">
           <label id="recoveryPinLabel">4-Digit Recovery PIN (For Password Reset)</label>
-          <input type="text" id="authRecoveryPin" maxlength="8" placeholder="e.g. 1998" />
+          <input type="password" id="authRecoveryPin" maxlength="8" inputmode="numeric" autocomplete="off" placeholder="4 to 8 digits" />
         </div>
 
         <div class="form-group" id="passwordGroup">
           <label id="passwordLabel">Password</label>
           <div class="password-input-wrapper">
-            <input type="password" id="authPassword" placeholder="••••••••" required />
-            <button type="button" class="password-eye-btn" onclick="togglePasswordVisibility()" title="Show/Hide Password">👁️</button>
+            <input type="password" id="authPassword" placeholder="••••••••" autocomplete="current-password" required />
+            <button type="button" class="password-eye-btn" onclick="togglePasswordVisibility()" title="Show/Hide Password" aria-label="Show or hide password">👁️</button>
           </div>
           <div class="forgot-password-row" id="forgotPassRow">
             <span></span>
@@ -769,18 +814,13 @@
           <button class="nav-link" type="button" onclick="toggleNavItem(this)">Instruments <span class="caret">▼</span></button>
           <div class="nav-menu">
             <button type="button" onclick="navGo('inst')">Instrument Calendar<small>P&amp;L calendar per instrument</small></button>
-            <button type="button" onclick="navGo('news')">Market News<small>India + global news, daily results</small></button>
+            <button type="button" onclick="navGo('news')">Market News<small>Indices, stocks, results, global cues</small></button>
             <button type="button" onclick="navGo('perf')">Performance Matrix<small>Full month overview</small></button>
           </div>
         </div>
         <div class="nav-item">
           <button class="nav-link" type="button" onclick="toggleNavItem(this)">Platforms <span class="caret">▼</span></button>
-          <div class="nav-menu">
-            <a href="https://kite.zerodha.com" target="_blank" rel="noopener">Kite<small>Zerodha trading platform</small></a>
-            <a href="https://www.tradingview.com/chart/" target="_blank" rel="noopener">TradingView<small>Charts &amp; analysis</small></a>
-            <a href="https://chartink.com/screener" target="_blank" rel="noopener">Chartink<small>Stock screener</small></a>
-            <a href="https://www.screener.in" target="_blank" rel="noopener">Screener<small>Fundamentals</small></a>
-          </div>
+          <div class="nav-menu" id="navSitesMenu"></div>
         </div>
         <div class="nav-item"><button class="nav-link" type="button" onclick="navGo('audit')">Tools</button></div>
         <div class="nav-item"><a class="nav-link" href="https://zerodha.com/varsity/" target="_blank" rel="noopener">Learning Center</a></div>
@@ -848,8 +888,9 @@
 
       
       <div class="view-tabs">
-        <button type="button" class="view-tab tab-perf active" id="tabPerf" onclick="setView('perf')">📊 Performance</button>
-        <button type="button" class="view-tab tab-inst" id="tabInst" onclick="setView('inst')">🎯 Instruments</button>
+        <button type="button" class="view-tab tab-perf active" id="tabPerf" onclick="setView('perf')">Performance</button>
+        <button type="button" class="view-tab tab-inst" id="tabInst" onclick="setView('inst')">Instruments</button>
+        <button type="button" class="view-tab tab-news" onclick="setView('news')">News</button>
       </div>
 
       <!-- Clean Profile & Dropdown Section -->
@@ -893,20 +934,23 @@
         <div class="leak-list" id="leakList"><span style="color: var(--text-muted); font-size: 0.8rem;">No rule violations logged</span></div>
       </div>
     
-      <div class="launcher-card">
-        <h4>🚀 Platforms</h4>
+      <div class="launcher-card" id="platformsCard">
+        <div class="launch-head"><h4>🚀 My Platforms</h4><button type="button" class="launch-add" onclick="openSiteForm()">+ Add site</button></div>
         <div class="launcher-grid" id="launcherGrid"></div>
-        <div class="launch-tools">
-          <button type="button" onclick="splitWithKite()">⇆ Split with Kite</button>
-          <button type="button" onclick="addLauncherSite()">+ Add site</button>
-        </div>
+        <form class="site-form" id="siteForm" style="display:none;" onsubmit="saveSite(event)">
+          <input id="siteName" placeholder="Name (e.g. Groww)" maxlength="24" autocomplete="off" />
+          <input id="siteUrl" placeholder="Website (e.g. groww.in)" inputmode="url" autocapitalize="off" autocomplete="off" spellcheck="false" required />
+          <div class="site-err" id="siteErr"></div>
+          <div class="site-form-row"><button type="submit" class="btn-save">Save site</button><button type="button" class="btn-cancel-edit" style="display:inline-block;" onclick="closeSiteForm()">Cancel</button></div>
+        </form>
       </div>
     </aside>
 
     <main>
       <div class="view-tabs mobile-tabs">
-        <button type="button" class="view-tab tab-perf active" onclick="setView('perf')">📊 Performance</button>
-        <button type="button" class="view-tab tab-inst" onclick="setView('inst')">🎯 Instruments</button>
+        <button type="button" class="view-tab tab-perf active" onclick="setView('perf')">Performance</button>
+        <button type="button" class="view-tab tab-inst" onclick="setView('inst')">Instruments</button>
+        <button type="button" class="view-tab tab-news" onclick="setView('news')">News</button>
       </div>
       <div class="header-bar">
         <div class="header-title-wrap">
@@ -944,10 +988,6 @@
       <section id="instView" style="display:none;">
         <div class="inst-title"><span id="instTitleText">Instruments</span><span class="ticker-chip" id="instTitleChip">—</span></div>
         <div class="inst-chips" id="instList"></div>
-        <div class="inst-subtabs">
-          <button type="button" class="sub-tab active" id="subCal" onclick="setInstTab('cal')">📅 Calendar</button>
-          <button type="button" class="sub-tab" id="subNews" onclick="setInstTab('news')">📰 Market News</button>
-        </div>
         <div id="instCalPane">
         <div class="inst-kpis">
           <div class="kpi-card"><div class="kpi-label">Net P&L</div><div class="kpi-value" id="iPnl">$0.00</div><div class="kpi-sub" id="iPnlSub">0 trades</div></div>
@@ -964,20 +1004,25 @@
         </div>
         </div>
 
-        <div id="instNewsPane" style="display:none;">
-          <div class="news-top">
-            <span class="mkt-pill" id="mktStatus"></span>
-            <span class="news-updated" id="newsUpdated"></span>
-            <button type="button" class="nav-btn-ghost" id="newsRefreshBtn" onclick="loadNews(true)">⟳ Refresh</button>
-          </div>
-          <div class="news-controls">
-            <div class="news-cats" id="newsCats"></div>
-            <input type="search" id="newsSearch" class="news-search" placeholder="Search headlines…" oninput="renderNewsList()">
-          </div>
-          <div id="newsNote" class="news-note" style="display:none;"></div>
-          <div class="news-list" id="newsList"></div>
-          <p class="news-foot">Headlines come from Google News (India edition) and open on the publisher's site. Fresh headlines load each day; results older than 30 minutes are refreshed automatically. Market status ignores exchange holidays. For information only, not investment advice.</p>
+        </section>
+
+      <section id="newsView" style="display:none;">
+        <div class="news-top">
+          <span class="mkt-pill" id="mktStatus"></span>
+          <span class="news-updated" id="newsUpdated"></span>
+          <button type="button" class="nav-btn-ghost" id="newsRefreshBtn" onclick="loadNews(true)">⟳ Refresh</button>
         </div>
+        <div class="news-cats" id="newsCats"></div>
+        <div class="news-controls">
+          <input type="search" id="newsSearch" class="news-search" placeholder="Search headlines…" oninput="renderNewsList()">
+          <div class="news-filters">
+            <select id="newsAge" onchange="renderNewsList()"><option value="0">Any time</option><option value="6">Last 6 hours</option><option value="24">Last 24 hours</option></select>
+            <label class="news-chk"><input type="checkbox" id="newsMineOnly" onchange="renderNewsList()"> Only my symbols</label>
+          </div>
+        </div>
+        <div id="newsNote" class="news-note" style="display:none;"></div>
+        <div class="news-list" id="newsList"></div>
+        <p class="news-foot">Headlines come from Google News (India edition) and open on the publisher's site. Similar stories are merged. Lists refresh after 20 minutes. Market status ignores exchange holidays. For information only, not investment advice.</p>
       </section>
     </main>
   </div>
@@ -988,6 +1033,7 @@
         <h3 id="aiModalTitle">✨ Quark AI Execution Audit</h3>
         <button class="close-btn" id="closeAiModal">&times;</button>
       </div>
+      <div class="inst-subtabs" style="align-self:flex-start;"><button type="button" class="sub-tab active" id="scopeMonth" onclick="setAuditScope('month')">Selected month</button><button type="button" class="sub-tab" id="scopeAll" onclick="setAuditScope('all')">All time</button></div>
       <div class="ai-report-body" id="aiReportContent"></div>
     </div>
   </div>
@@ -1066,7 +1112,24 @@
               ".read":  "!$u.beginsWith('fb_') || (auth != null && $u === 'fb_' + auth.uid)",
               ".write": "!$u.beginsWith('fb_') || (auth != null && $u === 'fb_' + auth.uid)" } } } } }
        ===================================================================== */
-    const FIREBASE_WEB_CONFIG = { apiKey: '', authDomain: '', projectId: '', appId: '' };
+    // projectId and authDomain below are inferred from your database URL. Verify them in the console, then paste apiKey and appId.
+    // Until apiKey is filled in, the Google / Apple buttons stay hidden so visitors never see a setup error.
+    const FIREBASE_WEB_CONFIG = { apiKey: '', authDomain: 'quark-journal.firebaseapp.com', projectId: 'quark-journal', appId: '' };
+    // Apple sign-in needs a paid Apple Developer account. Set apple: true only after you configured it in Firebase.
+    const SOCIAL_LOGIN = { google: true, apple: false };
+    const socialReady = p => !!FIREBASE_WEB_CONFIG.apiKey && !!SOCIAL_LOGIN[p];
+    function applySocialAvailability(show) {
+      const g = socialReady('google'), a = socialReady('apple'), grp = document.getElementById('socialAuthGroup');
+      document.getElementById('btnGoogle').style.display = g ? '' : 'none';
+      document.getElementById('btnApple').style.display = a ? '' : 'none';
+      grp.style.gridTemplateColumns = (g && a) ? '1fr 1fr' : '1fr';
+      grp.style.display = (show && (g || a)) ? 'grid' : 'none';
+      document.getElementById('authDivider').style.display = (show && (g || a)) ? 'flex' : 'none';
+    }
+    function loginSubText() {
+      const n = [socialReady('google') && 'Google', socialReady('apple') && 'Apple ID'].filter(Boolean);
+      return n.length ? `Sign in with ${n.join(', ')}, or your Trader credentials.` : 'Sign in with your Trader ID and password.';
+    }
 
     function lsGet(k) { try { return window.localStorage.getItem(k); } catch (e) { return null; } }
     function lsSet(k, v) { try { window.localStorage.setItem(k, v); } catch (e) {} }
@@ -1174,7 +1237,8 @@
       authErrorBox.style.display = 'none';
       authSuccessBox.style.display = 'none';
       if (!FIREBASE_WEB_CONFIG.apiKey) {
-        showAuthError(`${provider} sign-in is not set up yet. Paste your Firebase web config into FIREBASE_WEB_CONFIG at the top of the script (see the SETUP note there).`);
+        console.warn('Social sign-in is off: add apiKey and appId to FIREBASE_WEB_CONFIG (see SETUP note).');
+        showAuthError(`${provider} sign-in is not available on this site yet. Use your Trader ID and password.`);
         return;
       }
       if (location.protocol === 'file:') {
@@ -1218,8 +1282,8 @@
 
       const isLoginOrSignup = mode === 'login' || mode === 'signup';
       document.getElementById('authTabsContainer').style.display = isLoginOrSignup ? 'grid' : 'none';
-      document.getElementById('socialAuthGroup').style.display = isLoginOrSignup ? 'grid' : 'none';
-      document.getElementById('authDivider').style.display = isLoginOrSignup ? 'flex' : 'none';
+      applySocialAvailability(isLoginOrSignup);
+      document.getElementById('authPassword').autocomplete = mode === 'login' ? 'current-password' : 'new-password';
       document.getElementById('tabLogin').classList.toggle('active', mode === 'login');
       document.getElementById('tabSignup').classList.toggle('active', mode === 'signup');
 
@@ -1236,29 +1300,31 @@
       usernameInput.readOnly = false;
 
       if (mode === 'login') {
-        document.getElementById('authSubText').textContent = "Sign in with Google, Apple ID, or your Trader credentials.";
+        document.getElementById('authSubText').textContent = loginSubText();
         document.getElementById('authSubmitBtn').textContent = "Unlock Terminal →";
         passLabel.textContent = "Password";
         forgotPassRow.style.display = 'flex';
       } else if (mode === 'signup') {
-        document.getElementById('authSubText').textContent = "Create an account with a 4-digit Recovery PIN so you can reset your password anytime.";
+        document.getElementById('authSubText').textContent = "Create an account. The Recovery PIN is the only way to reset a forgotten password.";
         document.getElementById('authSubmitBtn').textContent = "Create Account →";
         passLabel.textContent = "Create Password";
         recoveryPinGroup.style.display = 'flex';
         document.getElementById('recoveryPinLabel').textContent = "Set 4-Digit Recovery PIN (For Password Reset)";
         forgotPassRow.style.display = 'none';
       } else if (mode === 'forgot') {
-        document.getElementById('authSubText').textContent = "Enter your Trader ID and Recovery PIN (if set) to choose a new password.";
+        document.getElementById('authSubText').textContent = "Enter your Trader ID and Recovery PIN to choose a new password.";
         document.getElementById('authSubmitBtn').textContent = "Save New Password →";
         passLabel.textContent = "New Password";
         recoveryPinGroup.style.display = 'flex';
-        document.getElementById('recoveryPinLabel').textContent = "Recovery PIN (Leave blank if not set)";
+        document.getElementById('recoveryPinLabel').textContent = "Recovery PIN";
         forgotPassRow.style.display = 'none';
         backToLoginBtn.style.display = 'block';
       } else if (mode === 'change_password') {
         document.getElementById('authSubText').textContent = "Update your account password below.";
         document.getElementById('authSubmitBtn').textContent = "Update Password →";
         currentPassGroup.style.display = 'flex';
+        recoveryPinGroup.style.display = 'flex';
+        document.getElementById('recoveryPinLabel').textContent = "New Recovery PIN (optional, 4 to 8 digits)";
         passLabel.textContent = "New Password";
         forgotPassRow.style.display = 'none';
         backToLoginBtn.style.display = 'block';
@@ -1281,6 +1347,7 @@
     function togglePasswordVisibility() {
       const passInput = document.getElementById('authPassword');
       passInput.type = passInput.type === 'password' ? 'text' : 'password';
+      document.querySelector('.password-eye-btn').textContent = passInput.type === 'password' ? '👁️' : '🙈';
     }
 
     function closeAuthModal() {
@@ -1343,35 +1410,60 @@
       }
     }
 
-        const PASS_PREFIX = 'h2:';
+        const PASS_PREFIX = 'h2:', PBKDF2_ITER = 150000;
+    const hex = u => Array.from(u).map(b => b.toString(16).padStart(2, '0')).join('');
+    const unhex = h => new Uint8Array((h.match(/../g) || []).map(x => parseInt(x, 16)));
+    function needCrypto() { if (!(window.crypto && crypto.subtle)) throw new Error('NO_CRYPTO'); }
     function legacyHash(pass) { try { return btoa(pass); } catch (e) { return btoa(unescape(encodeURIComponent(pass))); } }
+    async function pbkdf2(secret, salt, iter) {
+      needCrypto();
+      const k = await crypto.subtle.importKey('raw', new TextEncoder().encode(secret), 'PBKDF2', false, ['deriveBits']);
+      return new Uint8Array(await crypto.subtle.deriveBits({ name: 'PBKDF2', hash: 'SHA-256', salt, iterations: iter }, k, 256));
+    }
     async function hashPass(userKey, pass) {
-      try {
-        if (window.crypto && crypto.subtle) {
-          const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`quark:${userKey}:${pass}`));
-          return PASS_PREFIX + Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
-        }
-      } catch (e) {}
-      return legacyHash(pass);
+      const salt = crypto.getRandomValues(new Uint8Array(16));
+      return `h3:${PBKDF2_ITER}:${hex(salt)}:${hex(await pbkdf2(`${userKey}:${pass}`, salt, PBKDF2_ITER))}`;
     }
     async function checkPassword(userKey, stored, pass) {
       if (!stored) return { ok: false, legacy: false };
-      if (stored.indexOf(PASS_PREFIX) === 0) return { ok: stored === await hashPass(userKey, pass), legacy: false };
-      return { ok: stored === legacyHash(pass), legacy: true };   // accounts created before the upgrade
+      if (stored.indexOf('h3:') === 0) {
+        const [, it, salt, h] = stored.split(':');
+        return { ok: hex(await pbkdf2(`${userKey}:${pass}`, unhex(salt), +it)) === h, legacy: false };
+      }
+      if (stored.indexOf(PASS_PREFIX) === 0) {
+        needCrypto();
+        const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`quark:${userKey}:${pass}`));
+        return { ok: stored === PASS_PREFIX + hex(new Uint8Array(buf)), legacy: true };
+      }
+      return { ok: stored === legacyHash(pass), legacy: true };   // very old accounts
     }
+    async function pinMatches(u, key, pin) {
+      if (u.recoveryPinHash) return (await checkPassword(key, u.recoveryPinHash, 'pin:' + pin)).ok;
+      return !!u.recoveryPin && String(u.recoveryPin) === pin;
+    }
+    // client-side brake against guessing (a real limit needs server-side auth, see notes)
+    function triesGet() { try { return JSON.parse(lsGet('quark_tries') || '{}'); } catch (e) { return {}; } }
+    function throttleLeft(k) { const r = triesGet()[k]; return r && r.until > Date.now() ? Math.ceil((r.until - Date.now()) / 1000) : 0; }
+    function throttleFail(k) { const s = triesGet(), r = s[k] || { n: 0 }; r.n++; if (r.n >= 5) r.until = Date.now() + 30000 * Math.min(r.n - 4, 20); s[k] = r; lsSet('quark_tries', JSON.stringify(s)); }
+    function throttleClear(k) { const s = triesGet(); delete s[k]; lsSet('quark_tries', JSON.stringify(s)); }
 
     authForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const rawUser = document.getElementById('authUsername').value.trim();
       const userKey = (authMode === 'change_password' && currentSessionUser) ? currentSessionUser : cleanUserKey(rawUser);
       const pass = document.getElementById('authPassword').value;
-      const recoveryPin = document.getElementById('authRecoveryPin').value.trim();
+      const pin = document.getElementById('authRecoveryPin').value.trim();
       const currentPass = document.getElementById('authCurrentPassword').value;
       const btn = document.getElementById('authSubmitBtn');
+      const pinValid = /^\d{4,8}$/.test(pin);
 
       if (!userKey || /^_+$/.test(userKey)) { showAuthError('Please enter a valid Trader ID (letters or numbers).'); return; }
+      if (userKey.length > 40) { showAuthError('Trader ID must be 40 characters or fewer.'); return; }
+      if (authMode === 'signup' && userKey.indexOf('fb_') === 0) { showAuthError("Trader IDs can't start with 'fb_'. Please choose another."); return; }
       if (['signup', 'forgot', 'change_password'].includes(authMode) && pass.length < 6) { showAuthError('Password must be at least 6 characters.'); return; }
-      if (authMode === 'signup' && recoveryPin && !/^\d{4,8}$/.test(recoveryPin)) { showAuthError('Recovery PIN must be 4 to 8 digits.'); return; }
+      if ((authMode === 'signup' || authMode === 'forgot' || (authMode === 'change_password' && pin)) && !pinValid) { showAuthError('Recovery PIN must be 4 to 8 digits.'); return; }
+      const wait = throttleLeft(userKey);
+      if (wait) { showAuthError(`Too many failed attempts. Try again in ${wait}s.`); return; }
 
       btn.disabled = true;
       let keepDisabled = false;
@@ -1382,8 +1474,10 @@
           if (!userData) { showAuthError('Account record not found.'); return; }
           if (userData.authProvider) { showAuthError(`This account signs in with ${userData.authProvider}, so it has no password to change.`); return; }
           const chk = await checkPassword(userKey, userData.passwordHash, currentPass);
-          if (!chk.ok) { showAuthError('Current password is incorrect.'); return; }
+          if (!chk.ok) { throttleFail(userKey); showAuthError('Current password is incorrect.'); return; }
+          throttleClear(userKey);
           await dbPut(`${userKey}/passwordHash`, await hashPass(userKey, pass));
+          if (pin) { await dbPut(`${userKey}/recoveryPinHash`, await hashPass(userKey, 'pin:' + pin)); await dbPut(`${userKey}/recoveryPin`, null); }
           showAuthSuccess('Password updated! Closing window...');
           keepDisabled = true;
           setTimeout(() => { closeAuthModal(); btn.disabled = false; }, 1200);
@@ -1392,8 +1486,11 @@
 
         if (authMode === 'forgot') {
           if (!userData || !userData.passwordHash) { showAuthError('Trader ID not found.'); return; }
-          if (userData.recoveryPin && userData.recoveryPin !== recoveryPin) { showAuthError('Invalid Recovery PIN. Please enter the PIN set during signup.'); return; }
+          if (!userData.recoveryPinHash && !userData.recoveryPin) { showAuthError('This account has no Recovery PIN, so the password cannot be reset here. If you remember the password, sign in and add a PIN under Change Password.'); return; }
+          if (!(await pinMatches(userData, userKey, pin))) { throttleFail(userKey); showAuthError('Invalid Recovery PIN.'); return; }
+          throttleClear(userKey);
           await dbPut(`${userKey}/passwordHash`, await hashPass(userKey, pass));
+          if (!userData.recoveryPinHash) { await dbPut(`${userKey}/recoveryPinHash`, await hashPass(userKey, 'pin:' + pin)); await dbPut(`${userKey}/recoveryPin`, null); }
           showAuthSuccess('Password reset successfully! Switching to login...');
           keepDisabled = true;
           setTimeout(() => { switchAuthTab('login'); btn.disabled = false; }, 1400);
@@ -1402,30 +1499,28 @@
 
         if (authMode === 'signup') {
           if (userData) { showAuthError("This Trader ID already exists! Switch to 'Login Terminal' to sign in."); return; }
-          const newUserRecord = {
-            displayName: rawUser, passwordHash: await hashPass(userKey, pass),
-            recoveryPin: recoveryPin || null, createdAt: Date.now(), trades: [], avatar: null
-          };
-          await dbPut(userKey, newUserRecord);
+          const rec = { displayName: rawUser, passwordHash: await hashPass(userKey, pass), recoveryPinHash: await hashPass(userKey, 'pin:' + pin), createdAt: Date.now(), trades: [], avatar: null };
+          await dbPut(userKey, rec);
           loadUserProfileAndTrades(userKey, rawUser, [], null);
           return;
         }
 
-        // login
         if (!userData || !userData.passwordHash) { showAuthError("Trader ID not found. Switch to 'Create Account' to register."); return; }
         const chk = await checkPassword(userKey, userData.passwordHash, pass);
-        if (!chk.ok) { showAuthError("Invalid Password. Click 'Forgot Password?' if you need to reset it."); return; }
-        if (chk.legacy) { try { await dbPut(`${userKey}/passwordHash`, await hashPass(userKey, pass)); } catch (err) {} }  // silent upgrade
+        if (!chk.ok) { throttleFail(userKey); showAuthError("Invalid Password. Click 'Forgot Password?' if you need to reset it."); return; }
+        throttleClear(userKey);
+        if (chk.legacy) { try { await dbPut(`${userKey}/passwordHash`, await hashPass(userKey, pass)); } catch (err) {} }
         loadUserProfileAndTrades(userKey, userData.displayName || rawUser, userData.trades || [], userData.avatar || null);
       } catch (err) {
-        showAuthError('Connection error. Please try again.');
+        const m = String(err && err.message);
+        showAuthError(/NO_CRYPTO/.test(m) ? 'Secure sign-in needs https:// or localhost. Open the hosted site instead.'
+          : /Database error (401|403)/.test(m) ? 'The database refused the request. Check your Firebase Realtime Database rules.'
+          : 'Connection error. Check your internet and try again.');
         console.error(err);
       } finally {
         if (!keepDisabled) btn.disabled = false;
       }
     });
-
-    
 
     function showAuthError(msg) {
       authSuccessBox.style.display = 'none';
@@ -1451,6 +1546,8 @@
           if (data.displayName) nameToDisplay = data.displayName;
           if (data.avatar) avatarData = data.avatar;
           if (data.trades) initialTrades = data.trades;
+          if (Array.isArray(data.sites)) { sites = cleanSites(data.sites); lsSet(SITES_KEY, JSON.stringify(sites)); renderLauncher(); }
+          else if (sites.length) { dbPut(`${userKey}/sites`, sites).catch(() => {}); }
         }
       } catch (e) { console.warn('Could not load profile', e); }
 
@@ -1732,46 +1829,103 @@
       });
     }
 
-    function generateMonthlyAudit() {
-      const monthName = months[monthSelect.value];
-      const yearName = yearSelect.value;
-      const monthTrades = getSelectedMonthTrades();
-      const content = document.getElementById('aiReportContent');
-      document.getElementById('aiModalTitle').textContent = `✨ Quark AI Execution Audit — ${monthName} ${yearName}`;
+    let auditScope = 'month';
+    const sum = a => a.reduce((s, x) => s + x, 0);
+    const isClean = t => !t.mistake || t.mistake === 'None';
+    const pfTxt = x => x === Infinity ? '∞' : x.toFixed(2);
+    function stat(list) {
+      const p = list.map(t => Number(t.pnl) || 0), w = p.filter(x => x > 0), l = p.filter(x => x < 0), n = p.length;
+      const gp = sum(w), gl = Math.abs(sum(l)), aw = w.length ? gp / w.length : 0, al = l.length ? gl / l.length : 0;
+      return { n, net: sum(p), gp, gl, wr: n ? w.length / n : 0, aw, al, pf: gl ? gp / gl : (gp ? Infinity : 0), exp: n ? sum(p) / n : 0, be: aw + al ? al / (aw + al) : 0 };
+    }
+    function groupBy(list, f) { const m = {}; list.forEach(t => { const k = f(t); (m[k] = m[k] || []).push(t); }); return Object.entries(m).map(([k, v]) => ({ k, ...stat(v) })).sort((a, b) => b.net - a.net); }
+    function eqSvg(eq) {
+      if (eq.length < 2) return '';
+      const W = 600, H = 140, P = 8, mn = Math.min(0, ...eq), mx = Math.max(0, ...eq), r = (mx - mn) || 1;
+      const x = i => P + i * (W - 2 * P) / (eq.length - 1), y = v => H - P - (v - mn) / r * (H - 2 * P);
+      const pts = eq.map((v, i) => x(i).toFixed(1) + ',' + y(v).toFixed(1)).join(' '), col = eq[eq.length - 1] >= 0 ? 'var(--emerald)' : 'var(--rose)';
+      return `<svg class="eq" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="Cumulative P&L by trading day"><line x1="0" x2="${W}" y1="${y(0)}" y2="${y(0)}" stroke="var(--border-subtle)" stroke-dasharray="4 4"/><polygon points="${P},${y(0)} ${pts} ${x(eq.length - 1)},${y(0)}" fill="${col}" opacity=".13"/><polyline points="${pts}" fill="none" stroke="${col}" stroke-width="2.5" vector-effect="non-scaling-stroke"/></svg>`;
+    }
+    const LEAK_RULES = { 'Revenge Trading': 'Stop trading for the day after 2 losses in a row.', 'Moved Stop Loss': 'Place the stop as a live order and never widen it.', 'FOMO / Chased': 'No entry unless your setup trigger prints. Skip if price is already past your plan.', 'Oversized Position': 'Size every trade from planned risk (1R) before you enter.', 'Early Exit (Cut Winner)': 'Set the target before entry and use bracket orders to exit.', 'No Stop Loss / Wide Stop': 'No stop, no trade.', 'Late Entry': 'If you miss the trigger, wait for the next setup.', 'Traded News / High Vol': 'Sit out or halve size around major events.', 'Overtrading (Boredom)': 'Set a hard cap on trades per day.', 'Hesitation / Missed Entry': 'Pre-plan entries and use alerts or limit orders.', 'Premature Entry (Jumped Trigger)': 'Wait for the candle close before entering.' };
+    const TILT = ['Revenge Trading', 'FOMO / Chased', 'Overtrading (Boredom)', 'Oversized Position'];
+    const WD = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const tbl = (head, rows) => `<div class="ai-tbl-wrap"><table class="ai-table"><tr>${head.map(h => `<th>${h}</th>`).join('')}</tr>${rows.join('')}</table></div>`;
+    const row = (name, s) => `<tr><td>${escHtml(name)}</td><td>${s.n}</td><td>${Math.round(s.wr * 100)}%</td><td style="color:${pnlColor(s.net)}">${formatCurrencyPlain(s.net)}</td><td style="color:${pnlColor(s.exp)}">${formatCurrencyPlain(s.exp)}</td></tr>`;
+    const TH = ['', 'Trades', 'Win', 'Net', 'Per trade'];
 
-      if (monthTrades.length === 0) {
-        content.innerHTML = `<div class="ai-headline-box">No executions logged for <strong>${monthName} ${yearName}</strong>.</div>`;
-        aiModalOverlay.style.display = 'flex';
-        return;
+    function setAuditScope(s) { auditScope = s; renderAudit(); }
+    function generateMonthlyAudit() { aiModalOverlay.style.display = 'flex'; renderAudit(); }
+
+    function renderAudit() {
+      el('scopeMonth').classList.toggle('active', auditScope === 'month'); el('scopeAll').classList.toggle('active', auditScope === 'all');
+      const m = parseInt(monthSelect.value), y = parseInt(yearSelect.value), content = el('aiReportContent');
+      const label = auditScope === 'month' ? `${months[m]} ${y}` : 'All time';
+      el('aiModalTitle').textContent = `✨ Quark AI Execution Audit — ${label}`;
+      const list = auditScope === 'month' ? getSelectedMonthTrades() : trades.slice();
+      if (!list.length) { content.innerHTML = `<div class="ai-headline-box">No executions logged for <strong>${label}</strong>. Log a few trades and the audit fills in.</div>`; return; }
+
+      const s = stat(list), ord = list.slice().sort((a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : a.id - b.id);
+      const byDay = {}, cnt = {}; list.forEach(t => { byDay[t.date] = (byDay[t.date] || 0) + Number(t.pnl); cnt[t.date] = (cnt[t.date] || 0) + 1; });
+      const dates = Object.keys(byDay).sort(); let c = 0, peak = 0, dd = 0;
+      const eq = dates.map(d => { c += byDay[d]; peak = Math.max(peak, c); dd = Math.max(dd, peak - c); return c; });
+      let cw = 0, cl = 0, ws = 0, ls = 0;
+      ord.forEach(t => { const p = Number(t.pnl); if (p > 0) { cw++; cl = 0; } else if (p < 0) { cl++; cw = 0; } else { cw = cl = 0; } ws = Math.max(ws, cw); ls = Math.max(ls, cl); });
+      let tiltN = 0, tiltPnl = 0;
+      dates.forEach(d => { let lost = false; ord.filter(t => t.date === d).forEach(t => { if (lost && TILT.includes(t.mistake)) { tiltN++; tiltPnl += Number(t.pnl); } if (Number(t.pnl) < 0) lost = true; }); });
+      const avgDay = list.length / dates.length, heavy = dates.filter(d => cnt[d] >= Math.max(4, avgDay * 1.5) && byDay[d] < 0);
+      const rs = list.filter(t => Number(t.riskR) > 0).map(t => Number(t.pnl) / Number(t.riskR)), breach = rs.filter(r => r < -1.25).length;
+      const leaks = groupBy(list.filter(t => !isClean(t)), t => t.mistake).map(L => ({ ...L, cost: sum(list.filter(t => t.mistake === L.k && Number(t.pnl) < 0).map(t => Number(t.pnl))) })).sort((a, b) => a.cost - b.cost);
+      const cleanNet = sum(list.filter(isClean).map(t => Number(t.pnl))), leakNet = s.net - cleanNet;
+      const disc = Math.round(100 * list.filter(isClean).length / s.n);
+      const score = Math.round(0.5 * disc + 0.3 * Math.min(s.pf === Infinity ? 2 : s.pf, 2) / 2 * 100 + 0.2 * (s.net > 0 ? 100 : 30));
+      const grade = score >= 85 ? 'A' : score >= 70 ? 'B' : score >= 55 ? 'C' : score >= 40 ? 'D' : 'F';
+      const setups = groupBy(list, t => t.setup || 'Unspecified'), syms = groupBy(list, t => symKey(t.symbol) || '—'), wd = groupBy(list, t => WD[new Date(t.date + 'T00:00:00').getDay()]);
+      wd.sort((a, b) => ((WD.indexOf(a.k) + 6) % 7) - ((WD.indexOf(b.k) + 6) % 7));
+
+      let prevTxt = '';
+      if (auditScope === 'month') {
+        const pm = m === 0 ? 11 : m - 1, py = m === 0 ? y - 1 : y;
+        const pl = trades.filter(t => { const [a, b] = t.date.split('-').map(Number); return a === py && b - 1 === pm; });
+        if (pl.length) { const p = stat(pl), d = s.net - p.net; prevTxt = ` Versus ${months[pm]}: net ${d >= 0 ? 'up' : 'down'} ${formatCurrencyPlain(Math.abs(d))}, win rate ${s.wr >= p.wr ? 'up' : 'down'} ${Math.abs(Math.round((s.wr - p.wr) * 100))} pts, profit factor ${pfTxt(p.pf)} → ${pfTxt(s.pf)}.`; }
       }
 
-      const mistakeTrades = monthTrades.filter(t => t.mistake && t.mistake !== 'None');
-      const leakLosses = mistakeTrades.filter(t => Number(t.pnl) < 0).reduce((a, t) => a + Number(t.pnl), 0);
-      const netPnl = monthTrades.reduce((acc, t) => acc + Number(t.pnl), 0);
+      const ins = [], add = (sev, t) => ins.push({ sev, t });
+      if (leaks.length && leaks[0].cost < 0) { const L = leaks[0]; add('bad', `<strong>${escHtml(L.k)}</strong> is your costliest leak: ${L.n} trades, ${formatCurrencyPlain(L.cost)} in losses (${s.gl ? Math.round(-L.cost / s.gl * 100) : 0}% of all losses). Rule: ${LEAK_RULES[L.k] || 'write a one-line rule and review it before each session.'}`); }
+      if (leakNet < 0) add('warn', `Without the trades that broke your rules, this period would read ${formatCurrencyPlain(cleanNet)} instead of ${formatCurrencyPlain(s.net)}.`);
+      if (tiltN >= 2) add(tiltPnl < 0 ? 'bad' : 'warn', `${tiltN} trades came right after a loss and were tagged as tilt behaviour, netting ${formatCurrencyPlain(tiltPnl)}. A "two losses and done" rule targets this.`);
+      if (s.n >= 8 && s.wr < s.be) add('bad', `You win ${Math.round(s.wr * 100)}% but need ${Math.round(s.be * 100)}% at your current payoff (avg win ${formatCurrencyPlain(s.aw)}, avg loss ${formatCurrencyPlain(s.al)}). Cut losers sooner or hold winners longer.`);
+      else if (s.n >= 8 && s.net > 0) add('good', `Positive edge: ${formatCurrencyPlain(s.exp)} per trade with a ${Math.round(s.wr * 100)}% win rate (break-even is ${Math.round(s.be * 100)}%).`);
+      const worstSetup = setups.filter(x => x.n >= 3 && x.net < 0).pop(), bestSetup = setups.find(x => x.n >= 3 && x.net > 0);
+      if (worstSetup) add('bad', `<strong>${escHtml(worstSetup.k)}</strong> is losing money: ${worstSetup.n} trades, ${formatCurrencyPlain(worstSetup.net)}. Pause it or trade it at half size until the numbers improve.`);
+      if (bestSetup) add('good', `<strong>${escHtml(bestSetup.k)}</strong> is your best playbook: ${bestSetup.n} trades, ${Math.round(bestSetup.wr * 100)}% win, ${formatCurrencyPlain(bestSetup.net)}.`);
+      const badDay = wd.filter(x => x.n >= 3 && x.net < 0).sort((a, b) => a.net - b.net)[0];
+      if (badDay) add('warn', `${badDay.k} is your weakest weekday (${badDay.n} trades, ${formatCurrencyPlain(badDay.net)}). Consider smaller size that day.`);
+      const badSym = syms.filter(x => x.n >= 3 && x.net < 0).pop();
+      if (badSym) add('warn', `<strong>${escHtml(badSym.k)}</strong> keeps costing you: ${badSym.n} trades, ${formatCurrencyPlain(badSym.net)}.`);
+      if (heavy.length) add('warn', `Overtrading: ${heavy.length} heavy day${heavy.length > 1 ? 's' : ''} (${Math.round(Math.max(...heavy.map(d => cnt[d])))} trades at most) finished red. Cap trades per day.`);
+      if (breach) add('bad', `${breach} trade${breach > 1 ? 's' : ''} lost more than 1.25× the planned risk. Your stop is not being respected.`);
+      if (disc >= 90 && s.n >= 5) add('good', `Discipline is ${disc}%. Almost every trade followed the plan.`);
+      ins.sort((a, b) => ({ bad: 0, warn: 1, good: 2 }[a.sev] - { bad: 0, warn: 1, good: 2 }[b.sev]));
 
-      const setupMap = {};
-      monthTrades.forEach(t => {
-        if (!setupMap[t.setup]) setupMap[t.setup] = { trades: 0, pnl: 0, wins: 0 };
-        setupMap[t.setup].trades++; setupMap[t.setup].pnl += Number(t.pnl);
-        if (Number(t.pnl) > 0) setupMap[t.setup].wins++;
-      });
-
-      let bestSetup = { name: "N/A", pnl: -Infinity, winRate: 0 };
-      Object.entries(setupMap).forEach(([setup, s]) => {
-        if (s.pnl > bestSetup.pnl) bestSetup = { name: setup, pnl: s.pnl, winRate: Math.round((s.wins / s.trades) * 100) };
-      });
-
+      const card = (l, v, sub, col) => `<div class="ai-stat-card"><div class="label">${l}</div><div class="val" style="${col ? 'color:' + col : ''}">${v}</div><div class="ai-sub">${sub}</div></div>`;
       content.innerHTML = `
-        <div class="ai-headline-box">
-          You logged <strong>${monthTrades.length} trades</strong> this month for a net total of <strong>${formatCurrencyPlain(netPnl)}</strong>. Your records show <strong>${mistakeTrades.length} behavioral leaks</strong> costing <strong>${formatCurrencyPlain(leakLosses)}</strong>.
-        </div>
+        <div class="ai-headline-box"><strong>${s.n} trades</strong> over <strong>${dates.length} sessions</strong> netted <strong style="color:${pnlColor(s.net)}">${formatCurrencyPlain(s.net)}</strong>. ${leaks.length ? `<strong>${list.length - list.filter(isClean).length}</strong> broke your rules, costing <strong>${formatCurrencyPlain(sum(leaks.map(l => l.cost)))}</strong> in losses.` : 'No rule breaks were logged.'}${prevTxt}</div>
         <div class="ai-grid-stats">
-          <div class="ai-stat-card"><div class="label">Behavioral Leaks</div><div class="val" style="color:var(--rose);">${mistakeTrades.length} Trades</div></div>
-          <div class="ai-stat-card"><div class="label">Top Playbook Setup</div><div class="val" style="color:var(--gold);">${escHtml(bestSetup.name)}</div></div>
-          <div class="ai-stat-card"><div class="label">Clean Execution P&L</div><div class="val" style="color:var(--emerald);">${formatCurrencyPlain(monthTrades.filter(t => !t.mistake || t.mistake === 'None').reduce((a, t) => a + Number(t.pnl), 0))}</div></div>
+          ${card('Execution score', `${grade} · ${score}`, 'Discipline 50%, profit factor 30%, profitable 20%', score >= 70 ? 'var(--emerald)' : score >= 55 ? 'var(--amber)' : 'var(--rose)')}
+          ${card('Net P&L', formatCurrencyPlain(s.net), `${formatCurrencyPlain(s.exp)} per trade`, pnlColor(s.net))}
+          ${card('Win rate', Math.round(s.wr * 100) + '%', `Break-even at ${Math.round(s.be * 100)}%`)}
+          ${card('Profit factor', pfTxt(s.pf), `${formatCurrencyPlain(s.gp)} / ${formatCurrencyPlain(s.gl)}`)}
+          ${card('Max drawdown', formatCurrencyPlain(-dd), 'Peak to trough, by day', dd ? 'var(--rose)' : '')}
+          ${card('Streaks', `${ws}W / ${ls}L`, rs.length ? `Avg ${(sum(rs) / rs.length).toFixed(2)}R over ${rs.length} trades` : 'Add planned risk to see R')}
         </div>
-      `;
-      aiModalOverlay.style.display = 'flex';
+        ${eq.length > 1 ? `<div class="ai-sec">Equity curve</div>${eqSvg(eq)}` : ''}
+        <div class="ai-sec">What to work on</div>
+        <div class="ai-ins">${ins.length ? ins.slice(0, 7).map(i => `<div class="${i.sev}">${i.t}</div>`).join('') : '<div>Not enough data for a pattern yet. Keep logging.</div>'}</div>
+        ${leaks.length ? `<div class="ai-sec">Leak cost</div>${tbl(['Mistake', 'Trades', 'Loss cost', 'Lucky wins'], leaks.map(L => `<tr><td>${escHtml(L.k)}</td><td>${L.n}</td><td style="color:var(--rose)">${formatCurrencyPlain(L.cost)}</td><td style="color:var(--amber)">${formatCurrencyPlain(sum(list.filter(t => t.mistake === L.k && Number(t.pnl) > 0).map(t => Number(t.pnl))))}</td></tr>`))}` : ''}
+        <div class="ai-sec">By setup</div>${tbl(['Setup', ...TH.slice(1)], setups.map(x => row(x.k, x)))}
+        <div class="ai-sec">By instrument</div>${tbl(['Symbol', ...TH.slice(1)], syms.slice(0, 8).map(x => row(x.k, x)))}
+        <div class="ai-sec">By weekday</div>${tbl(['Day', ...TH.slice(1)], wd.map(x => row(x.k, x)))}
+        <p class="ai-sub">${s.n < 20 ? `Only ${s.n} trades: treat these as hints, not proof. ` : ''}Calculated on this device from your journal with fixed rules. No data leaves your browser. Not investment advice.</p>`;
     }
 
     function openTradeModal(dateKey) {
@@ -1970,20 +2124,25 @@
     let instTab = 'cal';
     let currentView = 'perf';
 
+    const el = id => document.getElementById(id);
     function escHtml(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
     function symKey(s) { return String(s || '').trim().toUpperCase(); }
     function pnlColor(v) { return v > 0 ? 'var(--emerald)' : v < 0 ? 'var(--rose)' : 'var(--text-muted)'; }
 
     function setView(v) {
       currentView = v;
-      const inst = v === 'inst';
-      document.getElementById('perfKpis').style.display = inst ? 'none' : '';
-      document.getElementById('perfCalendar').style.display = inst ? 'none' : '';
-      document.getElementById('instView').style.display = inst ? 'block' : 'none';
-      document.querySelectorAll('.tab-perf').forEach(b => b.classList.toggle('active', !inst));
+      const perf = v === 'perf', inst = v === 'inst', news = v === 'news';
+      el('perfKpis').style.display = perf ? '' : 'none';
+      el('perfCalendar').style.display = perf ? '' : 'none';
+      el('instView').style.display = inst ? 'block' : 'none';
+      el('newsView').style.display = news ? 'block' : 'none';
+      document.querySelectorAll('.tab-perf').forEach(b => b.classList.toggle('active', perf));
       document.querySelectorAll('.tab-inst').forEach(b => b.classList.toggle('active', inst));
-      document.getElementById('viewHeading').textContent = inst ? (instTab === 'news' ? 'Market News' : 'Instrument Calendar') : 'Performance Matrix';
+      document.querySelectorAll('.tab-news').forEach(b => b.classList.toggle('active', news));
+      el('viewHeading').textContent = perf ? 'Performance Matrix' : inst ? 'Instrument Calendar' : 'Market News';
+      document.querySelector('.month-selector').style.display = news ? 'none' : '';
       if (inst) renderInstruments();
+      if (news) { renderNewsCats(); updateMarketStatus(); loadNews(false); }
     }
 
     function selectInstrument(key) { instSelected = key; renderInstruments(); }
@@ -2087,58 +2246,57 @@
 
     // keep the instruments view in sync whenever the main dashboard re-renders
     const _origRenderDashboard = renderDashboard;
-    renderDashboard = function () { _origRenderDashboard(); renderInstruments(); };
+    renderDashboard = function () { _origRenderDashboard(); renderInstruments(); if (currentView === 'news') { renderNewsCats(); if (newsCat === 'mine') loadNews(false); } };
 
-    /* ---- Platform launcher ----
-       Note: Kite/Zerodha and most brokers block iframes (X-Frame-Options),
-       so we open them in a new tab or a side-by-side popup instead. */
-    const DEFAULT_SITES = [
-      { name: '🪁 Open Kite', url: 'https://kite.zerodha.com', primary: true },
-      { name: 'TradingView', url: 'https://www.tradingview.com/chart/' },
-      { name: 'Chartink', url: 'https://chartink.com/screener' },
-      { name: 'NSE India', url: 'https://www.nseindia.com' },
-      { name: 'Screener', url: 'https://www.screener.in' }
-    ];
-    function getCustomSites() { try { return JSON.parse(lsGet('quark_custom_sites') || '[]'); } catch (e) { return []; } }
-    function saveCustomSites(a) { try { lsSet('quark_custom_sites', JSON.stringify(a)); } catch (e) {} }
-
+    /* ---- My Platforms: every site is added by the user ---- */
+    const SITES_KEY = 'quark_sites_v2', MAX_SITES = 12;
+    let sites = [], editingSite = -1;
+    function normUrl(raw) {
+      let u = String(raw || '').trim(); if (!u) return null;
+      if (!/^[a-z][a-z0-9+.-]*:/i.test(u)) u = 'https://' + u;
+      try { const x = new URL(u); return (/^https?:$/.test(x.protocol) && (x.hostname.includes('.') || x.hostname === 'localhost')) ? x.href : null; } catch (e) { return null; }
+    }
+    function cleanSites(a) { return (Array.isArray(a) ? a : []).filter(s => s && normUrl(s.url)).map(s => ({ name: String(s.name || '').slice(0, 24), url: normUrl(s.url) })).slice(0, MAX_SITES); }
+    function loadSites() { let a = []; try { a = JSON.parse(lsGet(SITES_KEY) || lsGet('quark_custom_sites') || '[]'); } catch (e) {} sites = cleanSites(a); }
+    function hostOf(u) { return new URL(u).hostname.replace(/^www\./, ''); }
+    function persistSites() {
+      lsSet(SITES_KEY, JSON.stringify(sites));
+      if (currentSessionUser) dbPut(`${currentSessionUser}/sites`, sites).catch(() => console.warn('Could not sync platforms'));
+      renderLauncher();
+    }
     function renderLauncher() {
-      const grid = document.getElementById('launcherGrid');
-      if (!grid) return;
-      grid.innerHTML = '';
-      DEFAULT_SITES.concat(getCustomSites()).forEach((s, i) => {
-        const a = document.createElement('a');
-        a.className = 'launch-btn' + (s.primary ? ' primary' : '');
-        a.href = s.url; a.target = '_blank'; a.rel = 'noopener noreferrer';
-        a.textContent = s.name;
-        if (s.custom) {
-          a.title = 'Right-click to remove';
-          a.addEventListener('contextmenu', e => {
-            e.preventDefault();
-            if (confirm(`Remove "${s.name}" from platforms?`)) {
-              saveCustomSites(getCustomSites().filter(x => x.url !== s.url)); renderLauncher();
-            }
-          });
-        }
-        grid.appendChild(a);
-      });
+      const grid = el('launcherGrid'); if (!grid) return;
+      grid.innerHTML = sites.length ? sites.map((s, i) => {
+        const h = hostOf(s.url);
+        return `<div class="site-row"><a class="launch-btn" href="${escHtml(s.url)}" target="_blank" rel="noopener noreferrer"><img src="https://www.google.com/s2/favicons?domain=${encodeURIComponent(h)}&sz=32" alt="" loading="lazy"><span>${escHtml(s.name || h)}</span></a>
+          <button type="button" class="site-act" title="Edit" aria-label="Edit ${escHtml(s.name || h)}" onclick="openSiteForm(${i})">✎</button>
+          <button type="button" class="site-act del" title="Remove" aria-label="Remove ${escHtml(s.name || h)}" onclick="removeSite(${i})">×</button></div>`;
+      }).join('') : '<div class="launch-empty">No sites yet. Add the broker, charting or research sites you use and open them in one tap.</div>';
+      grid.querySelectorAll('img').forEach(im => im.addEventListener('error', () => { im.style.display = 'none'; }));
+      const menu = el('navSitesMenu');
+      if (menu) {
+        menu.innerHTML = sites.map(s => `<a href="${escHtml(s.url)}" target="_blank" rel="noopener noreferrer">${escHtml(s.name || hostOf(s.url))}<small>${escHtml(hostOf(s.url))}</small></a>`).join('')
+          + `<button type="button" onclick="navGo('sites')">${sites.length ? 'Manage platforms' : 'Add your first site'}<small>Saved to your account</small></button>`;
+      }
     }
-    function addLauncherSite() {
-      const name = prompt('Site name (e.g. Groww):'); if (!name) return;
-      let url = prompt('Site URL (e.g. https://groww.in):'); if (!url) return;
-      if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
-      try { new URL(url); } catch (e) { alert('That URL does not look valid.'); return; }
-      const list = getCustomSites(); list.push({ name: name.trim().slice(0, 20), url, custom: true });
-      saveCustomSites(list); renderLauncher();
+    function openSiteForm(i = -1) {
+      if (i < 0 && sites.length >= MAX_SITES) { alert(`You can keep up to ${MAX_SITES} sites. Remove one first.`); return; }
+      editingSite = i;
+      el('siteName').value = i >= 0 ? sites[i].name : ''; el('siteUrl').value = i >= 0 ? sites[i].url : ''; el('siteErr').textContent = '';
+      el('siteForm').style.display = 'flex'; el('siteUrl').focus();
     }
-    function splitWithKite() {
-      // Put Quark on the left half and Kite on the right half of the screen
-      const w = Math.floor(screen.availWidth / 2), h = screen.availHeight;
-      const pop = window.open('https://kite.zerodha.com', 'quark_kite', `width=${w},height=${h},left=${w},top=0`);
-      if (!pop) alert('Popup blocked. Allow popups for this site, or use the "Open Kite" button.');
-      else { try { window.moveTo(0, 0); window.resizeTo(w, h); } catch (e) {} }
+    function closeSiteForm() { editingSite = -1; el('siteForm').style.display = 'none'; }
+    function saveSite(e) {
+      e.preventDefault();
+      const url = normUrl(el('siteUrl').value);
+      if (!url) { el('siteErr').textContent = 'Enter a valid website, for example groww.in'; return; }
+      if (sites.some((s, i) => i !== editingSite && s.url === url)) { el('siteErr').textContent = 'That site is already in your list.'; return; }
+      const site = { name: el('siteName').value.trim().slice(0, 24) || hostOf(url), url };
+      if (editingSite >= 0) sites[editingSite] = site; else sites.push(site);
+      closeSiteForm(); persistSites();
     }
-
+    function removeSite(i) { if (confirm(`Remove "${sites[i].name}" from your platforms?`)) { sites.splice(i, 1); persistSites(); } }
+    loadSites();
     renderLauncher();
     renderInstruments();
   
@@ -2154,16 +2312,20 @@
       document.querySelectorAll('.nav-item.open').forEach(i => i.classList.remove('open'));
       document.getElementById('siteNav').classList.remove('menu-open');
       if (target === 'inst' || target === 'perf') setView(target);
-      if (target === 'news') { setView('inst'); setInstTab('news'); }
+      if (target === 'news') setView('news');
+      if (target === 'sites') setTimeout(() => { el('platformsCard').scrollIntoView({ behavior: 'smooth', block: 'center' }); openSiteForm(); }, 450);
       document.getElementById('workspace').scrollIntoView({ behavior: 'smooth' });
       if (target === 'audit') setTimeout(() => { const b = document.getElementById('openAiReportBtn'); if (b) b.click(); }, 500);
     }
   
 
     /* ===== Market News (added) ===== */
-    const RSS2JSON_API_KEY = '';          // optional: free key from rss2json.com raises the fallback limit from 10 to 40 headlines
-    const NEWS_TTL = 30 * 60 * 1000;      // refresh headlines after 30 minutes
-    let newsCat = 'india', newsItems = [], newsReq = 0, newsUpdatedAt = null, newsInstLoaded = null, newsTimer = null;
+    const RSS2JSON_API_KEY = '';      // optional rss2json.com key (raises the fallback from 10 to 40 headlines)
+    const NEWS_TTL = 20 * 60 * 1000;
+    let newsCat = 'top', newsItems = [], newsReq = 0, newsUpdatedAt = null, visibleNews = [];
+    const NEWS_CATS = [['top', 'Top stories'], ['idx', 'Nifty & Bank Nifty'], ['stocks', 'Stocks in focus'], ['results', ''], ['global', 'Global cues'], ['macro', 'Economy & RBI'], ['comm', 'Commodities & rupee'], ['ipo', 'IPOs'], ['crypto', 'Crypto'], ['mine', '🎯 My symbols'], ['saved', '🔖 Saved']];
+    function readJ(k, d) { try { const v = JSON.parse(lsGet(k) || 'null'); return v == null ? d : v; } catch (e) { return d; } }
+    function mySyms() { const c = {}; trades.forEach(t => { const s = symKey(t.symbol).split(/\s+/)[0]; if (s.length >= 3 && !/^\d+$/.test(s)) c[s] = (c[s] || 0) + 1; }); return Object.keys(c).sort((a, b) => c[b] - c[a]).slice(0, 6); }
 
     function resultsQuarter() {
       const d = new Date(), m = d.getMonth() + 1, y = d.getFullYear();
@@ -2173,10 +2335,11 @@
     }
 
     function newsSpec(cat) {
-      if (cat === 'global') return { q: 'global cues Sensex Nifty Wall Street Fed crude oil dollar FII', when: '1d' };
-      if (cat === 'results') return { q: `${resultsQuarter()} results India net profit`, when: '7d' };
-      if (cat === 'inst') return { q: `${instSelected} stock news`, when: '3d' };
-      return { q: 'Sensex Nifty Indian stock market', when: '1d' };
+      const S = { top: ['Sensex Nifty Indian stock market', '1d'], idx: ['Nifty Bank Nifty outlook levels', '1d'], stocks: ['stocks in focus India buzzing', '1d'],
+        results: [resultsQuarter() + ' results India net profit', '7d'], global: ['global cues Wall Street Fed crude dollar Asian markets', '1d'],
+        macro: ['RBI inflation GDP India economy', '3d'], comm: ['crude oil gold silver rupee dollar', '1d'], ipo: ['IPO India subscription listing', '7d'], crypto: ['bitcoin ethereum crypto market', '1d'] };
+      if (cat === 'mine') { const m = mySyms(); return m.length ? { q: '(' + m.join(' OR ') + ') share news', when: '3d' } : null; }
+      return S[cat] ? { q: S[cat][0], when: S[cat][1] } : null;
     }
 
     function stripTitle(raw) {
@@ -2201,63 +2364,54 @@
       const c = new AbortController(); const t = setTimeout(() => c.abort(), ms);
       return fetch(url, { signal: c.signal }).finally(() => clearTimeout(t));
     }
-
+    const PROXIES = [u => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u), u => 'https://corsproxy.io/?url=' + encodeURIComponent(u), u => 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(u)];
     async function fetchFeedItems(spec) {
       const rss = `https://news.google.com/rss/search?q=${encodeURIComponent(spec.q + ' when:' + spec.when)}&hl=en-IN&gl=IN&ceid=IN:en`;
-      // 1) full feed through a public CORS proxy
-      try {
-        const r = await fetchTimeout('https://api.allorigins.win/raw?url=' + encodeURIComponent(rss), 9000);
-        if (r.ok) { const items = parseRss(await r.text()); if (items.length) return items; }
+      try {   // race all relays, first good answer wins
+        return await Promise.any(PROXIES.map(async p => {
+          const r = await fetchTimeout(p(rss), 8000); if (!r.ok) throw new Error('relay');
+          const items = parseRss(await r.text()); if (!items.length) throw new Error('empty'); return items;
+        }));
       } catch (e) {}
-      // 2) fallback: rss2json (CORS enabled; 10 headlines without a key)
-      const url = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(rss) + (RSS2JSON_API_KEY ? '&count=40&api_key=' + encodeURIComponent(RSS2JSON_API_KEY) : '');
-      const r2 = await fetchTimeout(url, 9000);
+      const r2 = await fetchTimeout('https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(rss) + (RSS2JSON_API_KEY ? '&count=40&api_key=' + encodeURIComponent(RSS2JSON_API_KEY) : ''), 9000);
       const j = await r2.json();
       if (j.status !== 'ok' || !Array.isArray(j.items)) throw new Error('feed error');
       return j.items.map(i => makeItem(i.title, i.link, String(i.pubDate || '').replace(' ', 'T') + 'Z', '')).filter(Boolean);
     }
-
-    function cacheKey(cat) { return 'quark_news_v1_' + cat + '_' + (cat === 'inst' ? (instSelected || '') : ''); }
-    function readNewsCache(cat) { try { return JSON.parse(lsGet(cacheKey(cat)) || 'null'); } catch (e) { return null; } }
+    const STOP = new Set(['the', 'and', 'for', 'with', 'from', 'after', 'amid', 'over', 'today', 'live', 'updates', 'update', 'stock', 'stocks', 'share', 'shares']);
+    function toks(t) { return new Set(t.toLowerCase().replace(/[^a-z0-9 ]/g, ' ').split(/\s+/).filter(w => w.length > 2 && !STOP.has(w))); }
+    function dedupe(items) {   // merge the same story reported by several outlets
+      const out = []; items.sort((a, b) => b.ts - a.ts);
+      for (const it of items) {
+        const tk = toks(it.title);
+        const dup = out.find(o => { let n = 0; tk.forEach(w => { if (o._t.has(w)) n++; }); return n >= 4 && n / Math.min(tk.size, o._t.size) >= 0.7; });
+        if (dup) { if (it.source && it.source !== dup.source && !dup.also.includes(it.source) && dup.also.length < 3) dup.also.push(it.source); }
+        else { it._t = tk; it.also = []; out.push(it); }
+      }
+      return out;
+    }
+    const ck = c => 'quark_news_v2_' + c + (c === 'mine' ? '_' + mySyms().join('') : '');
 
     async function loadNews(force) {
-      const list = document.getElementById('newsList');
-      if (!list) return;
-      const note = document.getElementById('newsNote');
-      note.style.display = 'none';
-      if (newsCat === 'inst' && !instSelected) {
-        newsItems = []; list.innerHTML = '<div class="news-empty">Log a trade first, then pick one of your instruments above to see news for it.</div>';
-        document.getElementById('newsUpdated').textContent = ''; return;
-      }
-      const cached = readNewsCache(newsCat);
-      if (!force && cached && Date.now() - cached.t < NEWS_TTL) {
-        newsItems = cached.items; newsUpdatedAt = cached.t; newsInstLoaded = instSelected; renderNewsList(); return;
-      }
-      const reqId = ++newsReq;
-      list.innerHTML = '<div class="news-skel"></div>'.repeat(6);
-      document.getElementById('newsRefreshBtn').disabled = true;
+      const list = el('newsList'); if (!list) return;
+      const note = el('newsNote'); note.style.display = 'none';
+      if (newsCat === 'saved') { newsItems = Object.values(readJ('quark_news_saved', {})).sort((a, b) => b.ts - a.ts); newsUpdatedAt = null; renderNewsList(); return; }
+      const spec = newsSpec(newsCat);
+      if (!spec) { newsItems = []; newsUpdatedAt = null; list.innerHTML = '<div class="news-empty">Log a trade first. Headlines for the symbols you trade appear here.</div>'; el('newsUpdated').textContent = ''; return; }
+      const cached = readJ(ck(newsCat), null), fresh = cached && Date.now() - cached.t < NEWS_TTL;
+      if (cached) { newsItems = cached.items; newsUpdatedAt = cached.t; renderNewsList(); if (fresh && !force) return; }
+      else { newsItems = []; list.innerHTML = '<div class="news-skel"></div>'.repeat(6); }
+      const id = ++newsReq, cat = newsCat; el('newsRefreshBtn').disabled = true;
       try {
-        let items = await fetchFeedItems(newsSpec(newsCat));
-        const seen = new Set();
-        items = items.filter(i => { const k = i.title.toLowerCase().slice(0, 60); if (seen.has(k)) return false; seen.add(k); return true; })
-                     .sort((a, b) => b.ts - a.ts).slice(0, 40);
-        if (reqId !== newsReq) return;
-        newsItems = items; newsUpdatedAt = Date.now(); newsInstLoaded = instSelected;
-        lsSet(cacheKey(newsCat), JSON.stringify({ t: newsUpdatedAt, items }));
-        renderNewsList();
+        const items = dedupe(await fetchFeedItems(spec)).slice(0, 50);
+        lsSet(ck(cat), JSON.stringify({ t: Date.now(), items: items.map(({ _t, ...r }) => r) }));
+        if (id !== newsReq || cat !== newsCat) return;
+        newsItems = items; newsUpdatedAt = Date.now(); renderNewsList();
       } catch (err) {
-        if (reqId !== newsReq) return;
-        if (cached && cached.items && cached.items.length) {
-          newsItems = cached.items; newsUpdatedAt = cached.t; renderNewsList();
-          note.textContent = 'Could not reach the news feed, so these are the last headlines saved on this device.'; note.style.display = 'block';
-        } else {
-          newsItems = [];
-          list.innerHTML = '<div class="news-empty">Could not load news right now. The feed is fetched through free public services that are sometimes busy.<br><button type="button" class="nav-btn-ghost" onclick="loadNews(true)">Try again</button></div>';
-          document.getElementById('newsUpdated').textContent = '';
-        }
-      } finally {
-        if (reqId === newsReq) document.getElementById('newsRefreshBtn').disabled = false;
-      }
+        if (id !== newsReq || cat !== newsCat) return;
+        if (cached) { note.textContent = 'Could not reach the news feed. Showing headlines saved on this device.'; note.style.display = 'block'; }
+        else list.innerHTML = '<div class="news-empty">Could not load headlines. The feed uses free public relays that are sometimes busy.<br><button type="button" class="nav-btn-ghost" onclick="loadNews(true)">Try again</button></div>';
+      } finally { if (id === newsReq) el('newsRefreshBtn').disabled = false; }
     }
 
     const NEWS_TAGS = [
@@ -2293,42 +2447,43 @@
     }
 
     function renderNewsList() {
-      const list = document.getElementById('newsList');
-      if (!list) return;
-      const q = (document.getElementById('newsSearch').value || '').trim().toLowerCase();
-      const items = q ? newsItems.filter(i => (i.title + ' ' + i.source).toLowerCase().includes(q)) : newsItems;
-      document.getElementById('newsUpdated').textContent = newsUpdatedAt ? `Updated ${timeAgo(newsUpdatedAt)} · ${newsItems.length} headlines` : '';
-      if (!items.length) {
-        list.innerHTML = `<div class="news-empty">${q ? 'No headlines match your search.' : 'No fresh headlines found for this topic right now. Try another tab or refresh later.'}</div>`;
-        return;
-      }
-      const mine = userSymbols();
-      let html = '', lastDay = '';
-      items.forEach(i => {
-        const dl = dayLabel(i.ts);
-        if (dl !== lastDay) { html += `<div class="news-day">${escHtml(dl)}</div>`; lastDay = dl; }
+      const list = el('newsList'); if (!list) return;
+      const q = (el('newsSearch').value || '').trim().toLowerCase(), age = +el('newsAge').value, only = el('newsMineOnly').checked;
+      const mine = userSymbols(), read = readJ('quark_news_read', {}), saved = readJ('quark_news_saved', {});
+      const hitOf = i => { const f = i.title.toUpperCase().replace(/\s+/g, ''); return mine.find(s => f.includes(s)); };
+      const items = newsItems.filter(i => (!q || (i.title + ' ' + i.source).toLowerCase().includes(q)) && (!age || !i.ts || Date.now() - i.ts < age * 3600000) && (!only || hitOf(i)));
+      visibleNews = items;
+      el('newsUpdated').textContent = newsUpdatedAt ? `Updated ${timeAgo(newsUpdatedAt)} · ${items.length} of ${newsItems.length} stories` : (newsCat === 'saved' ? `${newsItems.length} saved` : '');
+      if (!items.length) { list.innerHTML = `<div class="news-empty">${newsCat === 'saved' ? 'Nothing saved yet. Tap 🔖 on any story to keep it here.' : (q || age || only) ? 'No stories match your filters.' : 'No fresh headlines for this section right now. Try another section or refresh later.'}</div>`; return; }
+      let html = '', last = '';
+      items.forEach((i, n) => {
+        const dl = dayLabel(i.ts); if (dl !== last) { html += `<div class="news-day">${escHtml(dl)}</div>`; last = dl; }
         const tags = []; NEWS_TAGS.forEach(([re, label]) => { if (tags.length < 3 && re.test(i.title)) tags.push(label); });
-        const flat = i.title.toUpperCase().replace(/\s+/g, '');
-        const hit = mine.find(s => flat.includes(s.replace(/\s+/g, '')));
-        html += `<a class="news-item ${hit ? 'mine' : ''}" href="${escHtml(i.link)}" target="_blank" rel="noopener noreferrer">
-          <div class="news-title">${escHtml(i.title)}</div>
+        const hit = hitOf(i);
+        html += `<article class="news-item ${hit ? 'mine' : ''} ${read[i.link] ? 'read' : ''}">
+          <a class="news-title" href="${escHtml(i.link)}" target="_blank" rel="noopener noreferrer" data-n="${n}">${escHtml(i.title)}</a>
           <div class="news-meta">${i.source ? `<span class="news-src">${escHtml(i.source)}</span>·` : ''}<span>${escHtml(timeAgo(i.ts))}</span>
-            ${hit ? `<span class="news-tag mine">★ ${escHtml(hit)}</span>` : ''}${tags.map(t => `<span class="news-tag">${escHtml(t)}</span>`).join('')}</div>
-        </a>`;
+            ${i.also && i.also.length ? `<span class="news-also">also ${escHtml(i.also.join(', '))}</span>` : ''}
+            ${hit ? `<span class="news-tag mine">★ ${escHtml(hit)}</span>` : ''}${tags.map(t => `<span class="news-tag">${escHtml(t)}</span>`).join('')}
+            <button type="button" class="news-save ${saved[i.link] ? 'on' : ''}" data-n="${n}" title="Save for later" aria-label="Save for later">🔖</button></div>
+        </article>`;
       });
       list.innerHTML = html;
     }
-
+    el('newsList').addEventListener('click', ev => {
+      const b = ev.target.closest('.news-save'), a = ev.target.closest('.news-title');
+      const it = visibleNews[+((b || a) && (b || a).dataset.n)]; if (!it) return;
+      if (a) { const r = readJ('quark_news_read', {}); r[it.link] = 1; const ks = Object.keys(r); if (ks.length > 400) delete r[ks[0]]; lsSet('quark_news_read', JSON.stringify(r)); a.closest('.news-item').classList.add('read'); }
+      if (b) {
+        const s = readJ('quark_news_saved', {});
+        if (s[it.link]) delete s[it.link]; else { const { _t, ...c } = it; s[it.link] = c; }
+        lsSet('quark_news_saved', JSON.stringify(s));
+        if (newsCat === 'saved') loadNews(false); else b.classList.toggle('on');
+      }
+    });
     function renderNewsCats() {
-      const box = document.getElementById('newsCats');
-      if (!box) return;
-      const cats = [
-        ['india', '🇮🇳 India Markets', false],
-        ['global', '🌍 Global Impact', false],
-        ['results', `📊 ${resultsQuarter()} Results`, false],
-        ['inst', instSelected ? `🎯 ${instSelected}` : '🎯 My Instrument', !instSelected]
-      ];
-      box.innerHTML = cats.map(([id, label, off]) => `<button type="button" class="news-cat ${newsCat === id ? 'active' : ''}" data-cat="${id}" ${off ? 'disabled' : ''} onclick="setNewsCat('${id}')">${escHtml(label)}</button>`).join('');
+      const box = el('newsCats'); if (!box) return;
+      box.innerHTML = NEWS_CATS.map(([id, l]) => `<button type="button" class="news-cat ${newsCat === id ? 'active' : ''}" onclick="setNewsCat('${id}')">${escHtml(l || resultsQuarter() + ' results')}</button>`).join('');
     }
     function setNewsCat(c) { newsCat = c; renderNewsCats(); loadNews(false); }
 
@@ -2345,39 +2500,16 @@
       el.textContent = txt + ' · IST ' + ist.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     }
 
-    function setInstTab(tab) {
-      instTab = tab;
-      const news = tab === 'news';
-      document.getElementById('instCalPane').style.display = news ? 'none' : '';
-      document.getElementById('instNewsPane').style.display = news ? 'block' : 'none';
-      document.getElementById('subCal').classList.toggle('active', !news);
-      document.getElementById('subNews').classList.toggle('active', news);
-      if (currentView === 'inst') document.getElementById('viewHeading').textContent = news ? 'Market News' : 'Instrument Calendar';
-      if (news) { renderNewsCats(); updateMarketStatus(); loadNews(false); }
-    }
-
-    // when the instrument changes, keep the "My Instrument" tab in step
-    const _origRenderInstruments = renderInstruments;
-    renderInstruments = function () {
-      _origRenderInstruments();
-      if (instTab === 'news') {
-        renderNewsCats();
-        if (newsCat === 'inst' && newsInstLoaded !== instSelected) loadNews(false);
-        else renderNewsList();
-      }
-    };
-
-    // clock + automatic daily refresh while the news tab is open
     setInterval(() => {
-      if (currentView !== 'inst' || instTab !== 'news') return;
+      if (currentView !== 'news') return;
       updateMarketStatus();
-      if (newsUpdatedAt && Date.now() - newsUpdatedAt > NEWS_TTL) loadNews(true); else renderNewsList();
+      if (newsCat !== 'saved' && newsUpdatedAt && Date.now() - newsUpdatedAt > NEWS_TTL) loadNews(true); else renderNewsList();
     }, 60000);
 
     document.addEventListener('keydown', (e) => {
       if (e.key !== 'Escape') return;
       tradeModalOverlay.style.display = 'none'; aiModalOverlay.style.display = 'none'; lightboxOverlay.style.display = 'none';
-      if (currentSessionUser) authGateOverlay.style.display = 'none';
+      authGateOverlay.style.display = 'none';
       resetFormState(); closeProfileDropdown();
     });
     document.addEventListener('click', (e) => { if (!e.target.closest('#profileWrapper')) closeProfileDropdown(); });
