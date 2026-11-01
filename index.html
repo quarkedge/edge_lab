@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- SECURITY: Content-Security-Policy. 'unsafe-inline' stays only because the page uses inline onclick handlers. Also set real HTTP headers on your host (see SECURITY-NOTES.md). -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.google.com https://*.gstatic.com https://*.googleusercontent.com; connect-src https://*.firebaseio.com wss://*.firebaseio.com https://*.googleapis.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.rss2json.com; frame-src https://*.firebaseapp.com https://accounts.google.com https://appleid.apple.com; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>Quark — The Institutional Trading Terminal</title>
   
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22 fill=%22none%22><circle cx=%2250%22 cy=%2250%22 r=%2244%22 stroke=%22%23d4af37%22 stroke-width=%223%22 stroke-opacity=%220.5%22 stroke-dasharray=%224 4%22/><circle cx=%2250%22 cy=%2246%22 r=%2232%22 stroke=%22%23d4af37%22 stroke-width=%228%22/><path d=%22M56 52 L78 78%22 stroke=%22%23d4af37%22 stroke-width=%229%22 stroke-linecap=%22round%22/><circle cx=%2250%22 cy=%2246%22 r=%229%22 fill=%22%23d4af37%22/><circle cx=%2250%22 cy=%2246%22 r=%223.5%22 fill=%22%23ffffff%22/></svg>">
@@ -698,6 +701,56 @@
     .ai-table td { padding: 7px 6px; text-align: right; border-bottom: 1px solid var(--border-subtle); font-family: var(--mono); }
     .ai-table th:first-child, .ai-table td:first-child { text-align: left; }
     .ai-table td:first-child { font-family: var(--sans); font-weight: 600; }
+    /* ===== Apple-style motion & glass ===== */
+    :root { --spring: cubic-bezier(.32,.72,0,1); }
+    button, .day-cell, .launch-btn, .about-card, .view-tab, .inst-chip { -webkit-tap-highlight-color: transparent; transition: transform .4s var(--spring), background .25s, border-color .25s, box-shadow .3s, opacity .25s; touch-action: manipulation; }
+    button:active, .day-cell:active, .launch-btn:active, .inst-chip:active { transform: scale(.96); }
+    .about-card:hover, .day-cell:hover { transform: translateY(-2px); }
+    #siteNav { -webkit-backdrop-filter: saturate(180%) blur(22px); backdrop-filter: saturate(180%) blur(22px); }
+    .modal-overlay, .auth-gate-overlay { animation: ovIn .35s ease backwards; }
+    .modal, .auth-card { animation: sheetIn .55s var(--spring) backwards; will-change: transform; overscroll-behavior: contain; }
+    @keyframes ovIn { from { opacity: 0; } }
+    @keyframes sheetIn { from { opacity: 0; transform: translateY(40px) scale(.95); } }
+    .reveal { opacity: 0; transform: translateY(26px); transition: opacity .8s var(--spring), transform .8s var(--spring); }
+    .reveal.in { opacity: 1; transform: none; }
+    .swL { animation: swL .5s var(--spring); } .swR { animation: swR .5s var(--spring); }
+    @keyframes swL { from { opacity: .2; transform: translateX(46px); } } @keyframes swR { from { opacity: .2; transform: translateX(-46px); } }
+    .site-row .launch-btn img { width: 26px; height: 26px; padding: 3px; border-radius: 8px; background: #fff; object-fit: contain; box-shadow: 0 1px 4px rgba(0,0,0,.35), inset 0 0 0 1px rgba(0,0,0,.06); image-rendering: auto; }
+    .ico-fb { width: 26px; height: 26px; border-radius: 8px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; background: var(--gold-gradient); color: #05070b; font-weight: 800; font-size: .8rem; }
+    /* About view */
+    .about-hero { text-align: center; padding: 38px 18px 30px; max-width: 760px; margin: 0 auto; }
+    .about-kicker { display: inline-block; font-size: .7rem; letter-spacing: 2px; text-transform: uppercase; font-weight: 800; color: var(--gold); background: var(--gold-soft); padding: 6px 12px; border-radius: 99px; }
+    .about-hero h2 { font-size: clamp(1.7rem, 4.5vw, 2.6rem); line-height: 1.12; margin: 16px 0 12px; letter-spacing: -.02em; }
+    .about-hero p { color: var(--text-muted); line-height: 1.7; font-size: .98rem; }
+    .about-cta { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 22px; }
+    .about-grid2 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 8px; }
+    .about-h { text-align: center; margin: 34px 0 16px; font-size: 1.15rem; }
+    .about-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .about-step { display: flex; gap: 14px; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 16px; padding: 20px; }
+    .about-step b { flex: 0 0 34px; height: 34px; border-radius: 50%; background: var(--gold-gradient); color: #05070b; display: flex; align-items: center; justify-content: center; }
+    .about-step h4 { margin-bottom: 4px; } .about-step p { font-size: .84rem; color: var(--text-muted); line-height: 1.55; }
+    @media (max-width: 800px) { .about-grid2, .about-steps { grid-template-columns: 1fr; } }
+    /* AI audit */
+    .ai-report-body > * { animation: fadeUp .6s var(--spring) backwards; }
+    .ai-report-body > *:nth-child(2) { animation-delay: .05s; } .ai-report-body > *:nth-child(3) { animation-delay: .1s; } .ai-report-body > *:nth-child(4) { animation-delay: .15s; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } }
+    .ai-hero { display: flex; gap: 20px; align-items: center; padding: 18px; border-radius: 16px; border: 1px solid var(--border-focus); background: linear-gradient(160deg, var(--gold-soft), transparent); }
+    .ai-ring { position: relative; width: 112px; height: 112px; flex: 0 0 112px; }
+    .ai-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); fill: none; stroke-width: 8; stroke-linecap: round; }
+    .ai-ring .trk { stroke: var(--border-subtle); }
+    .ai-ring .bar { stroke-dasharray: var(--c); stroke-dashoffset: var(--o); animation: ringIn 1.2s var(--spring) backwards; }
+    @keyframes ringIn { from { stroke-dashoffset: var(--c); } }
+    .ai-ring-n { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .ai-ring-n b { font-size: 2rem; line-height: 1; font-family: var(--mono); } .ai-ring-n span { font-size: .72rem; color: var(--text-muted); font-weight: 700; margin-top: 4px; }
+    .ai-verdict { font-weight: 800; font-size: 1.15rem; margin-bottom: 8px; }
+    .ai-focus { font-size: .86rem; line-height: 1.55; } .ai-focus span { display: block; font-size: .64rem; letter-spacing: 1.2px; text-transform: uppercase; color: var(--gold); font-weight: 800; margin-bottom: 3px; }
+    .ai-bars { display: flex; flex-direction: column; gap: 8px; }
+    .ai-bar-row { display: grid; grid-template-columns: 84px 1fr 92px; gap: 10px; align-items: center; font-size: .78rem; }
+    .ai-bar-row span { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .ai-bar-row em { font-style: normal; font-family: var(--mono); text-align: right; }
+    .ai-bar-track { height: 8px; border-radius: 99px; background: var(--border-subtle); overflow: hidden; }
+    .ai-bar-track i { display: block; height: 100%; border-radius: 99px; animation: barIn .9s var(--spring) backwards; } @keyframes barIn { from { width: 0 !important; } }
+    @media (max-width: 520px) { .ai-hero { flex-direction: column; text-align: center; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } .reveal { opacity: 1; transform: none; } }
   </style>
 </head>
 <body>
@@ -746,10 +799,11 @@
       <div class="auth-error" id="authErrorBox"></div>
       <div class="auth-success" id="authSuccessBox"></div>
 
-      <form class="auth-form" id="authForm">
+      <form class="auth-form" id="authForm" autocomplete="on">
+        <input type="text" id="authWebsite" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;">
         <div class="form-group">
-          <label id="usernameLabel">Trader ID / Email</label>
-          <input type="text" id="authUsername" placeholder="e.g. trader@quark.io" autocomplete="username" autocapitalize="off" spellcheck="false" maxlength="60" required />
+          <label id="usernameLabel">Email</label>
+          <input type="email" id="authUsername" placeholder="e.g. trader@quark.io" autocomplete="username" autocapitalize="off" spellcheck="false" maxlength="254" required />
         </div>
 
         <!-- Current Password (shown only when changing password) -->
@@ -835,7 +889,7 @@
       </a>
 
       <div class="nav-group right">
-        <div class="nav-item nav-extra"><a class="nav-link" href="#about" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'});return false;">About</a></div>
+        <div class="nav-item nav-extra"><a class="nav-link" href="#about" onclick="navGo('about');return false;">About</a></div>
         <div class="nav-item nav-extra">
           <button class="nav-link" type="button" onclick="toggleNavItem(this)">More <span class="caret">•••</span></button>
           <div class="nav-menu">
@@ -844,7 +898,6 @@
           </div>
         </div>
         <button class="nav-btn-ghost" type="button" onclick="openLoginModalFromProfile()">Sign In</button>
-        <button class="nav-btn-solid" type="button" onclick="openLoginModalFromProfile(); switchAuthTab('signup');">Join Quark <span class="arrow">→</span></button>
         <button class="nav-burger" type="button" aria-label="Menu" onclick="document.getElementById('siteNav').classList.toggle('menu-open')">☰</button>
       </div>
     </nav>
@@ -857,18 +910,11 @@
       </p>
       <div class="hero-actions">
         <a href="#workspace" class="btn-enter" id="slideDownBtn">Open Dashboard <span class="arrow">→</span></a>
-        <a href="#about" class="btn-outline" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'});return false;">Explore More</a>
+        <a href="#about" class="btn-outline" onclick="navGo('about');return false;">Explore More</a>
       </div>
     </div>
   </section>
 
-  <section class="about-strip" id="about">
-    <div class="about-grid">
-      <div class="about-card"><div class="ic">📅</div><h3>Institutional Calendar</h3><p>Every session colour-coded by P&amp;L, with weekly totals and one-click trade logging.</p></div>
-      <div class="about-card"><div class="ic">🎯</div><h3>Instrument Tracking</h3><p>See which instruments make you money and which ones leak it, each with its own calendar.</p></div>
-      <div class="about-card"><div class="ic">✨</div><h3>AI Edge Audit</h3><p>A monthly scan of execution leaks, expectancy and discipline score.</p></div>
-    </div>
-  </section>
 
   <div class="app-workspace" id="workspace">
     <aside>
@@ -891,6 +937,7 @@
         <button type="button" class="view-tab tab-perf active" id="tabPerf" onclick="setView('perf')">Performance</button>
         <button type="button" class="view-tab tab-inst" id="tabInst" onclick="setView('inst')">Instruments</button>
         <button type="button" class="view-tab tab-news" onclick="setView('news')">News</button>
+        <button type="button" class="view-tab tab-about" onclick="setView('about')">About</button>
       </div>
 
       <!-- Clean Profile & Dropdown Section -->
@@ -951,6 +998,7 @@
         <button type="button" class="view-tab tab-perf active" onclick="setView('perf')">Performance</button>
         <button type="button" class="view-tab tab-inst" onclick="setView('inst')">Instruments</button>
         <button type="button" class="view-tab tab-news" onclick="setView('news')">News</button>
+        <button type="button" class="view-tab tab-about" onclick="setView('about')">About</button>
       </div>
       <div class="header-bar">
         <div class="header-title-wrap">
@@ -985,7 +1033,27 @@
         <div class="calendar-days" id="calendarDays"></div>
       </div>
     
-      <section id="instView" style="display:none;">
+      <section id="aboutView" style="display:none;">
+      <div class="about-hero reveal"><span class="about-kicker">About Quark</span><h2>A trading journal that tells you the truth.</h2>
+        <p>Quark turns every trade you log into a clear picture of your edge: where you make money, where you leak it, and what to fix first. Built for discretionary traders in Indian and global markets.</p>
+        <div class="about-cta"><button type="button" class="nav-btn-solid" onclick="setView('perf')">Open my calendar <span class="arrow">→</span></button><button type="button" class="nav-btn-ghost" onclick="navGo('audit')">See the AI audit</button></div></div>
+      <div class="about-grid2">
+        <div class="about-card reveal"><div class="ic">📅</div><h3>Institutional Calendar</h3><p>Every session colour-coded by P&amp;L, with weekly totals and one-tap trade logging.</p></div>
+        <div class="about-card reveal"><div class="ic">🎯</div><h3>Instrument Tracking</h3><p>See which instruments pay you and which ones leak, each with its own calendar.</p></div>
+        <div class="about-card reveal"><div class="ic">✨</div><h3>AI Edge Audit</h3><p>Execution score, expectancy, drawdown and your costliest mistakes, with one clear fix to work on.</p></div>
+        <div class="about-card reveal"><div class="ic">📰</div><h3>Market News</h3><p>Headlines for the symbols you actually trade, with saved stories and read tracking.</p></div>
+        <div class="about-card reveal"><div class="ic">🚀</div><h3>My Platforms</h3><p>Your broker, charting and research sites one tap away, saved to your account.</p></div>
+        <div class="about-card reveal"><div class="ic">🔒</div><h3>Private by design</h3><p>Sign in with email or Google. Database rules let each account read only its own journal.</p></div>
+      </div>
+      <h3 class="about-h">How it works</h3>
+      <div class="about-steps">
+        <div class="about-step reveal"><b>1</b><div><h4>Log a trade</h4><p>Tap any day, add symbol, P&amp;L, setup, mistake tag and a chart screenshot.</p></div></div>
+        <div class="about-step reveal"><b>2</b><div><h4>Review your edge</h4><p>The calendar and instrument views show patterns across days, weeks and symbols.</p></div></div>
+        <div class="about-step reveal"><b>3</b><div><h4>Fix one leak</h4><p>The audit ranks what is costing you most and gives a rule to follow next session.</p></div></div>
+      </div>
+      <p class="ai-sub" style="text-align:center;margin-top:22px;">Quark is a journaling and analytics tool, not investment advice. Audit figures are calculated on your device.</p>
+    </section>
+    <section id="instView" style="display:none;">
         <div class="inst-title"><span id="instTitleText">Instruments</span><span class="ticker-chip" id="instTitleChip">—</span></div>
         <div class="inst-chips" id="instList"></div>
         <div id="instCalPane">
@@ -1035,6 +1103,7 @@
       </div>
       <div class="inst-subtabs" style="align-self:flex-start;"><button type="button" class="sub-tab active" id="scopeMonth" onclick="setAuditScope('month')">Selected month</button><button type="button" class="sub-tab" id="scopeAll" onclick="setAuditScope('all')">All time</button></div>
       <div class="ai-report-body" id="aiReportContent"></div>
+      <button type="button" class="nav-btn-ghost" id="auditCopy" onclick="copyAudit()" style="align-self:flex-end;margin-top:6px;">Copy summary</button>
     </div>
   </div>
 
@@ -1106,7 +1175,7 @@
        2. Authentication > Sign-in method > enable Google (free) and/or Apple (needs an Apple Developer account).
        3. Authentication > Settings > Authorized domains > add the domain where this site is hosted.
        4. Social login does NOT work when this file is opened directly (file://). Host it (Netlify, GitHub Pages, Firebase Hosting) or run on localhost.
-       5. Recommended Realtime Database rules, so social accounts can only read/write their own data
+       5. DEPLOY database.rules.json (included) so every account can only touch its own data. These older rules, for social accounts can only read/write their own data
           (test them in the Rules Playground first; password accounts keep working as before):
           { "rules": { "quark_vault": { "users": { "$u": {
               ".read":  "!$u.beginsWith('fb_') || (auth != null && $u === 'fb_' + auth.uid)",
@@ -1114,6 +1183,7 @@
        ===================================================================== */
     // projectId and authDomain below are inferred from your database URL. Verify them in the console, then paste apiKey and appId.
     // Until apiKey is filled in, the Google / Apple buttons stay hidden so visitors never see a setup error.
+    // apiKey is public by design. Restrict it to your domain in Google Cloud > APIs & Services > Credentials.
     const FIREBASE_WEB_CONFIG = { apiKey: '', authDomain: 'quark-journal.firebaseapp.com', projectId: 'quark-journal', appId: '' };
     // Apple sign-in needs a paid Apple Developer account. Set apple: true only after you configured it in Firebase.
     const SOCIAL_LOGIN = { google: true, apple: false };
@@ -1153,6 +1223,7 @@
 
     let currentSessionUser = lsGet('quark_active_user') || null;
     let authMode = 'login';
+    let authOpenedAt = Date.now();
     let trades = [];
     let selectedDate = null;
 
@@ -1186,6 +1257,14 @@
       closeProfileDropdown();
     }
 
+    const IMG_RE = /^data:image\/(jpeg|png|webp|gif);base64,[A-Za-z0-9+\/=]+$/;
+    function sanitizeTrades(list) {
+      return list.filter(t => t && typeof t === 'object' && /^\d{4}-\d{2}-\d{2}$/.test(String(t.date))).map(t => ({
+        id: Number(t.id) || 0, date: String(t.date), symbol: String(t.symbol || '').slice(0, 30),
+        direction: t.direction === 'Short' ? 'Short' : 'Long', pnl: Number(t.pnl) || 0, riskR: Number(t.riskR) || null,
+        setup: String(t.setup || '').slice(0, 60), mistake: String(t.mistake || 'None').slice(0, 60),
+        notes: String(t.notes || '').slice(0, 5000), imageBase64: IMG_RE.test(String(t.imageBase64 || '')) ? t.imageBase64 : undefined }));
+    }
     function cleanUserKey(username) {
       return username.trim().toLowerCase().replace(/[^a-z0-9]/g, '_');
     }
@@ -1208,8 +1287,8 @@
         renderDashboard();
         return;
       }
-      if (currentSessionUser) { loadUserProfileAndTrades(currentSessionUser); }
-      else { authGateOverlay.style.display = 'none'; renderDashboard(); }
+      lsRemove('quark_active_user'); currentSessionUser = null;
+      authGateOverlay.style.display = 'none'; renderDashboard();
     }
 
     // One-Click Google & Apple Sign In Handler
@@ -1221,8 +1300,8 @@
       if (!FIREBASE_WEB_CONFIG.apiKey) return Promise.reject(new Error('NO_CONFIG'));
       if (!fbAuthReady) {
         fbAuthReady = (async () => {
-          await loadExternalScript('https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js');
-          await loadExternalScript('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js');
+          await loadExternalScript('https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js');
+          await loadExternalScript('https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js');
           if (!firebase.apps.length) firebase.initializeApp(FIREBASE_WEB_CONFIG);
           firebase.auth().onIdTokenChanged(async u => { authToken = u ? await u.getIdToken() : null; });
           return firebase.auth();
@@ -1276,7 +1355,7 @@
     }
 
     function switchAuthTab(mode) {
-      authMode = mode;
+      authMode = mode; authOpenedAt = Date.now();
       authErrorBox.style.display = 'none';
       authSuccessBox.style.display = 'none';
 
@@ -1298,6 +1377,9 @@
       recoveryPinGroup.style.display = 'none';
       backToLoginBtn.style.display = 'none';
       usernameInput.readOnly = false;
+      document.getElementById('passwordGroup').style.display = mode === 'forgot' ? 'none' : '';
+      document.getElementById('authPassword').required = mode !== 'forgot';
+      usernameInput.required = mode !== 'change_password';
 
       if (mode === 'login') {
         document.getElementById('authSubText').textContent = loginSubText();
@@ -1305,17 +1387,17 @@
         passLabel.textContent = "Password";
         forgotPassRow.style.display = 'flex';
       } else if (mode === 'signup') {
-        document.getElementById('authSubText').textContent = "Create an account. The Recovery PIN is the only way to reset a forgotten password.";
+        document.getElementById('authSubText').textContent = "Create an account with your email. Use 10+ characters with letters and numbers.";
         document.getElementById('authSubmitBtn').textContent = "Create Account →";
         passLabel.textContent = "Create Password";
-        recoveryPinGroup.style.display = 'flex';
+        recoveryPinGroup.style.display = 'none';
         document.getElementById('recoveryPinLabel').textContent = "Set 4-Digit Recovery PIN (For Password Reset)";
         forgotPassRow.style.display = 'none';
       } else if (mode === 'forgot') {
-        document.getElementById('authSubText').textContent = "Enter your Trader ID and Recovery PIN to choose a new password.";
-        document.getElementById('authSubmitBtn').textContent = "Save New Password →";
+        document.getElementById('authSubText').textContent = "Enter your account email and we will send you a reset link.";
+        document.getElementById('authSubmitBtn').textContent = "Send Reset Link →";
         passLabel.textContent = "New Password";
-        recoveryPinGroup.style.display = 'flex';
+        recoveryPinGroup.style.display = 'none';
         document.getElementById('recoveryPinLabel').textContent = "Recovery PIN";
         forgotPassRow.style.display = 'none';
         backToLoginBtn.style.display = 'block';
@@ -1323,13 +1405,13 @@
         document.getElementById('authSubText').textContent = "Update your account password below.";
         document.getElementById('authSubmitBtn').textContent = "Update Password →";
         currentPassGroup.style.display = 'flex';
-        recoveryPinGroup.style.display = 'flex';
+        recoveryPinGroup.style.display = 'none';
         document.getElementById('recoveryPinLabel').textContent = "New Recovery PIN (optional, 4 to 8 digits)";
         passLabel.textContent = "New Password";
         forgotPassRow.style.display = 'none';
         backToLoginBtn.style.display = 'block';
         if (currentSessionUser) {
-          usernameInput.value = document.getElementById('displayUsername').textContent;
+          usernameInput.value = (window.firebase && firebase.apps.length && firebase.auth().currentUser && firebase.auth().currentUser.email) || ''; usernameInput.readOnly = true;
         }
       }
     }
@@ -1388,7 +1470,7 @@
       if (!file || !currentSessionUser) return;
       if (!file.type.startsWith('image/')) { alert('Please choose an image file.'); return; }
       // shrink to 256px so it stays small in the database
-      compressImageFile(file, async (dataUrl) => {
+      compressImageFile(file, async (dataUrl) => { if (!dataUrl) return;
         try {
           await dbPut(`${currentSessionUser}/avatar`, dataUrl);
           applyAvatarToUI(dataUrl);
@@ -1400,7 +1482,7 @@
         function applyAvatarToUI(avatarData) {
       const box = document.getElementById('userAvatar');
       box.textContent = '';
-      if (avatarData && /^(data:image\/|https:\/\/)/i.test(avatarData)) {
+      if (avatarData && (/^data:image\/(jpeg|png|webp|gif);base64,/i.test(avatarData) || /^https:\/\//i.test(avatarData))) {
         const img = document.createElement('img');
         img.alt = 'Profile Avatar'; img.referrerPolicy = 'no-referrer'; img.src = avatarData;
         box.appendChild(img);
@@ -1410,113 +1492,87 @@
       }
     }
 
-        const PASS_PREFIX = 'h2:', PBKDF2_ITER = 150000;
-    const hex = u => Array.from(u).map(b => b.toString(16).padStart(2, '0')).join('');
-    const unhex = h => new Uint8Array((h.match(/../g) || []).map(x => parseInt(x, 16)));
-    function needCrypto() { if (!(window.crypto && crypto.subtle)) throw new Error('NO_CRYPTO'); }
-    function legacyHash(pass) { try { return btoa(pass); } catch (e) { return btoa(unescape(encodeURIComponent(pass))); } }
-    async function pbkdf2(secret, salt, iter) {
-      needCrypto();
-      const k = await crypto.subtle.importKey('raw', new TextEncoder().encode(secret), 'PBKDF2', false, ['deriveBits']);
-      return new Uint8Array(await crypto.subtle.deriveBits({ name: 'PBKDF2', hash: 'SHA-256', salt, iterations: iter }, k, 256));
-    }
-    async function hashPass(userKey, pass) {
-      const salt = crypto.getRandomValues(new Uint8Array(16));
-      return `h3:${PBKDF2_ITER}:${hex(salt)}:${hex(await pbkdf2(`${userKey}:${pass}`, salt, PBKDF2_ITER))}`;
-    }
-    async function checkPassword(userKey, stored, pass) {
-      if (!stored) return { ok: false, legacy: false };
-      if (stored.indexOf('h3:') === 0) {
-        const [, it, salt, h] = stored.split(':');
-        return { ok: hex(await pbkdf2(`${userKey}:${pass}`, unhex(salt), +it)) === h, legacy: false };
-      }
-      if (stored.indexOf(PASS_PREFIX) === 0) {
-        needCrypto();
-        const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`quark:${userKey}:${pass}`));
-        return { ok: stored === PASS_PREFIX + hex(new Uint8Array(buf)), legacy: true };
-      }
-      return { ok: stored === legacyHash(pass), legacy: true };   // very old accounts
-    }
-    async function pinMatches(u, key, pin) {
-      if (u.recoveryPinHash) return (await checkPassword(key, u.recoveryPinHash, 'pin:' + pin)).ok;
-      return !!u.recoveryPin && String(u.recoveryPin) === pin;
-    }
-    // client-side brake against guessing (a real limit needs server-side auth, see notes)
+        // client-side brake against guessing (a real limit needs server-side auth, see notes)
     function triesGet() { try { return JSON.parse(lsGet('quark_tries') || '{}'); } catch (e) { return {}; } }
     function throttleLeft(k) { const r = triesGet()[k]; return r && r.until > Date.now() ? Math.ceil((r.until - Date.now()) / 1000) : 0; }
     function throttleFail(k) { const s = triesGet(), r = s[k] || { n: 0 }; r.n++; if (r.n >= 5) r.until = Date.now() + 30000 * Math.min(r.n - 4, 20); s[k] = r; lsSet('quark_tries', JSON.stringify(s)); }
     function throttleClear(k) { const s = triesGet(); delete s[k]; lsSet('quark_tries', JSON.stringify(s)); }
 
+    const COMMON_PW = ['password','123456','qwerty','letmein','welcome','admin','iloveyou','trading','quark'];
+    function passwordProblem(pw, email) {
+      if (pw.length < 10) return 'Password must be at least 10 characters.';
+      if (!/[a-z]/i.test(pw) || !/\d/.test(pw)) return 'Use both letters and numbers in your password.';
+      const low = pw.toLowerCase(), local = (email || '').split('@')[0];
+      if (COMMON_PW.some(w => low.includes(w)) || (local.length > 3 && low.includes(local))) return 'That password is too easy to guess. Pick something less obvious.';
+      return '';
+    }
     authForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const rawUser = document.getElementById('authUsername').value.trim();
-      const userKey = (authMode === 'change_password' && currentSessionUser) ? currentSessionUser : cleanUserKey(rawUser);
+      // bot checks: hidden honeypot field, too-fast submit, and a cap on sign-ups per browser
+      if (document.getElementById('authWebsite').value) return;
+      if (Date.now() - authOpenedAt < 1500) { showAuthError('Please take a moment, then try again.'); return; }
+      if (authMode === 'signup') {
+        let su = []; try { su = JSON.parse(lsGet('quark_su') || '[]').filter(t => Date.now() - t < 3600000); } catch (x) {}
+        if (su.length >= 3) { showAuthError('Too many sign-ups from this browser. Try again later.'); return; }
+        su.push(Date.now()); lsSet('quark_su', JSON.stringify(su));
+      }
+      const email = document.getElementById('authUsername').value.trim().toLowerCase();
       const pass = document.getElementById('authPassword').value;
-      const pin = document.getElementById('authRecoveryPin').value.trim();
       const currentPass = document.getElementById('authCurrentPassword').value;
       const btn = document.getElementById('authSubmitBtn');
-      const pinValid = /^\d{4,8}$/.test(pin);
-
-      if (!userKey || /^_+$/.test(userKey)) { showAuthError('Please enter a valid Trader ID (letters or numbers).'); return; }
-      if (userKey.length > 40) { showAuthError('Trader ID must be 40 characters or fewer.'); return; }
-      if (authMode === 'signup' && userKey.indexOf('fb_') === 0) { showAuthError("Trader IDs can't start with 'fb_'. Please choose another."); return; }
-      if (['signup', 'forgot', 'change_password'].includes(authMode) && pass.length < 6) { showAuthError('Password must be at least 6 characters.'); return; }
-      if ((authMode === 'signup' || authMode === 'forgot' || (authMode === 'change_password' && pin)) && !pinValid) { showAuthError('Recovery PIN must be 4 to 8 digits.'); return; }
-      const wait = throttleLeft(userKey);
+      if (!FIREBASE_WEB_CONFIG.apiKey) { showAuthError('Sign-in is not configured yet. Add your Firebase apiKey and appId (see the SETUP note in the code).'); return; }
+      if (authMode !== 'change_password' && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { showAuthError('Please enter a valid email address.'); return; }
+      if (authMode === 'signup' || authMode === 'change_password') { const p = passwordProblem(pass, email); if (p) { showAuthError(p); return; } }
+      const tk = email || 'session';
+      const wait = throttleLeft(tk);
       if (wait) { showAuthError(`Too many failed attempts. Try again in ${wait}s.`); return; }
-
       btn.disabled = true;
       let keepDisabled = false;
       try {
-        const userData = await dbGetUser(userKey);
-
+        const auth = await ensureFirebaseAuth();
+        if (authMode === 'forgot') {
+          try { await auth.sendPasswordResetEmail(email); } catch (err) { if (err.code !== 'auth/user-not-found' && err.code !== 'auth/invalid-email') throw err; }
+          showAuthSuccess('If that email has an account, a password reset link is on its way.');
+          return;
+        }
         if (authMode === 'change_password') {
-          if (!userData) { showAuthError('Account record not found.'); return; }
-          if (userData.authProvider) { showAuthError(`This account signs in with ${userData.authProvider}, so it has no password to change.`); return; }
-          const chk = await checkPassword(userKey, userData.passwordHash, currentPass);
-          if (!chk.ok) { throttleFail(userKey); showAuthError('Current password is incorrect.'); return; }
-          throttleClear(userKey);
-          await dbPut(`${userKey}/passwordHash`, await hashPass(userKey, pass));
-          if (pin) { await dbPut(`${userKey}/recoveryPinHash`, await hashPass(userKey, 'pin:' + pin)); await dbPut(`${userKey}/recoveryPin`, null); }
+          const u = auth.currentUser;
+          if (!u || !u.email) { showAuthError('Please sign in again, then change your password.'); return; }
+          await u.reauthenticateWithCredential(firebase.auth.EmailAuthProvider.credential(u.email, currentPass));
+          await u.updatePassword(pass);
+          throttleClear(tk);
           showAuthSuccess('Password updated! Closing window...');
           keepDisabled = true;
           setTimeout(() => { closeAuthModal(); btn.disabled = false; }, 1200);
           return;
         }
-
-        if (authMode === 'forgot') {
-          if (!userData || !userData.passwordHash) { showAuthError('Trader ID not found.'); return; }
-          if (!userData.recoveryPinHash && !userData.recoveryPin) { showAuthError('This account has no Recovery PIN, so the password cannot be reset here. If you remember the password, sign in and add a PIN under Change Password.'); return; }
-          if (!(await pinMatches(userData, userKey, pin))) { throttleFail(userKey); showAuthError('Invalid Recovery PIN.'); return; }
-          throttleClear(userKey);
-          await dbPut(`${userKey}/passwordHash`, await hashPass(userKey, pass));
-          if (!userData.recoveryPinHash) { await dbPut(`${userKey}/recoveryPinHash`, await hashPass(userKey, 'pin:' + pin)); await dbPut(`${userKey}/recoveryPin`, null); }
-          showAuthSuccess('Password reset successfully! Switching to login...');
-          keepDisabled = true;
-          setTimeout(() => { switchAuthTab('login'); btn.disabled = false; }, 1400);
-          return;
-        }
-
+        let cred;
         if (authMode === 'signup') {
-          if (userData) { showAuthError("This Trader ID already exists! Switch to 'Login Terminal' to sign in."); return; }
-          const rec = { displayName: rawUser, passwordHash: await hashPass(userKey, pass), recoveryPinHash: await hashPass(userKey, 'pin:' + pin), createdAt: Date.now(), trades: [], avatar: null };
-          await dbPut(userKey, rec);
-          loadUserProfileAndTrades(userKey, rawUser, [], null);
-          return;
+          cred = await auth.createUserWithEmailAndPassword(email, pass);
+          try { await cred.user.sendEmailVerification(); } catch (err) {}
+        } else {
+          cred = await auth.signInWithEmailAndPassword(email, pass);
         }
-
-        if (!userData || !userData.passwordHash) { showAuthError("Trader ID not found. Switch to 'Create Account' to register."); return; }
-        const chk = await checkPassword(userKey, userData.passwordHash, pass);
-        if (!chk.ok) { throttleFail(userKey); showAuthError("Invalid Password. Click 'Forgot Password?' if you need to reset it."); return; }
-        throttleClear(userKey);
-        if (chk.legacy) { try { await dbPut(`${userKey}/passwordHash`, await hashPass(userKey, pass)); } catch (err) {} }
-        loadUserProfileAndTrades(userKey, userData.displayName || rawUser, userData.trades || [], userData.avatar || null);
+        throttleClear(tk);
+        authToken = await cred.user.getIdToken();
+        const userKey = 'fb_' + cred.user.uid;
+        let userData = await dbGetUser(userKey);
+        if (!userData) {
+          userData = { displayName: email.split('@')[0].slice(0, 40), email, createdAt: Date.now(), trades: [], avatar: null };
+          await dbPut(userKey, userData);
+        }
+        loadUserProfileAndTrades(userKey, userData.displayName, userData.trades || [], userData.avatar || null);
       } catch (err) {
-        const m = String(err && err.message);
-        showAuthError(/NO_CRYPTO/.test(m) ? 'Secure sign-in needs https:// or localhost. Open the hosted site instead.'
-          : /Database error (401|403)/.test(m) ? 'The database refused the request. Check your Firebase Realtime Database rules.'
-          : 'Connection error. Check your internet and try again.');
-        console.error(err);
+        const c = (err && err.code) || '', m = String(err && err.message);
+        if (['auth/invalid-credential', 'auth/wrong-password', 'auth/user-not-found', 'auth/invalid-login-credentials'].includes(c)) { throttleFail(tk); showAuthError('Incorrect email or password.'); }
+        else if (c === 'auth/email-already-in-use') showAuthError('An account with this email already exists. Try logging in.');
+        else if (c === 'auth/weak-password') showAuthError('That password is too weak.');
+        else if (c === 'auth/too-many-requests') showAuthError('Too many attempts. Please wait a few minutes and try again.');
+        else if (c === 'auth/requires-recent-login') showAuthError('Please log out, sign in again and retry.');
+        else if (c === 'auth/multi-factor-auth-required') showAuthError('This account uses two-step verification, which this page does not prompt for yet.');
+        else if (/Database error (401|403)/.test(m)) showAuthError('The database refused the request. Check your Firebase Realtime Database rules.');
+        else showAuthError('Connection error. Check your internet and try again.');
+        console.error(c || m);
       } finally {
         if (!keepDisabled) btn.disabled = false;
       }
@@ -1556,7 +1612,7 @@
       document.getElementById('topAuthBtn').style.display = 'none';
 
       const list = Array.isArray(initialTrades) ? initialTrades : Object.values(initialTrades || {});
-      trades = list.filter(t => t && t.date);
+      trades = sanitizeTrades(list);
       renderDashboard();
     }
 
@@ -1853,6 +1909,21 @@
     const row = (name, s) => `<tr><td>${escHtml(name)}</td><td>${s.n}</td><td>${Math.round(s.wr * 100)}%</td><td style="color:${pnlColor(s.net)}">${formatCurrencyPlain(s.net)}</td><td style="color:${pnlColor(s.exp)}">${formatCurrencyPlain(s.exp)}</td></tr>`;
     const TH = ['', 'Trades', 'Win', 'Net', 'Per trade'];
 
+    function auditHero(score, grade, ins) {
+      const col = score >= 70 ? 'var(--emerald)' : score >= 55 ? 'var(--amber)' : 'var(--rose)', C = 2 * Math.PI * 42;
+      const verdict = score >= 80 ? 'Elite execution' : score >= 70 ? 'Solid and disciplined' : score >= 55 ? 'Inconsistent, fixable' : 'Your edge is leaking';
+      const f = ins.find(i => i.sev !== 'good');
+      return `<div class="ai-hero"><div class="ai-ring"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" class="trk"/><circle cx="50" cy="50" r="42" class="bar" style="stroke:${col};--c:${C.toFixed(1)};--o:${(C * (1 - Math.min(score, 100) / 100)).toFixed(1)}"/></svg><div class="ai-ring-n"><b style="color:${col}">${score}</b><span>${escHtml(grade)}</span></div></div>
+        <div class="ai-hero-t"><div class="ai-verdict" style="color:${col}">${verdict}</div>${f ? `<div class="ai-focus"><span>Focus first</span>${f.t}</div>` : '<div class="ai-focus"><span>Focus first</span>Keep logging. Patterns appear after about 20 trades.</div>'}</div></div>`;
+    }
+    function auditBars(rows) {
+      const mx = Math.max(1, ...rows.map(r => Math.abs(r.net)));
+      return `<div class="ai-bars">${rows.map(r => `<div class="ai-bar-row"><span>${escHtml(r.k)}</span><div class="ai-bar-track"><i style="width:${(Math.abs(r.net) / mx * 100).toFixed(0)}%;background:${r.net >= 0 ? 'var(--emerald)' : 'var(--rose)'}"></i></div><em style="color:${pnlColor(r.net)}">${formatCurrencyPlain(r.net)}</em></div>`).join('')}</div>`;
+    }
+    function copyAudit() {
+      const t = el('aiReportContent').innerText.replace(/\n{3,}/g, '\n\n');
+      (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => { el('auditCopy').textContent = 'Copied ✓'; setTimeout(() => el('auditCopy').textContent = 'Copy summary', 1500); }).catch(() => {});
+    }
     function setAuditScope(s) { auditScope = s; renderAudit(); }
     function generateMonthlyAudit() { aiModalOverlay.style.display = 'flex'; renderAudit(); }
 
@@ -1907,8 +1978,10 @@
       if (disc >= 90 && s.n >= 5) add('good', `Discipline is ${disc}%. Almost every trade followed the plan.`);
       ins.sort((a, b) => ({ bad: 0, warn: 1, good: 2 }[a.sev] - { bad: 0, warn: 1, good: 2 }[b.sev]));
 
+      const bestD = dates.reduce((a, d) => byDay[d] > byDay[a] ? d : a, dates[0]), worstD = dates.reduce((a, d) => byDay[d] < byDay[a] ? d : a, dates[0]);
       const card = (l, v, sub, col) => `<div class="ai-stat-card"><div class="label">${l}</div><div class="val" style="${col ? 'color:' + col : ''}">${v}</div><div class="ai-sub">${sub}</div></div>`;
       content.innerHTML = `
+        ${auditHero(score, grade, ins)}
         <div class="ai-headline-box"><strong>${s.n} trades</strong> over <strong>${dates.length} sessions</strong> netted <strong style="color:${pnlColor(s.net)}">${formatCurrencyPlain(s.net)}</strong>. ${leaks.length ? `<strong>${list.length - list.filter(isClean).length}</strong> broke your rules, costing <strong>${formatCurrencyPlain(sum(leaks.map(l => l.cost)))}</strong> in losses.` : 'No rule breaks were logged.'}${prevTxt}</div>
         <div class="ai-grid-stats">
           ${card('Execution score', `${grade} · ${score}`, 'Discipline 50%, profit factor 30%, profitable 20%', score >= 70 ? 'var(--emerald)' : score >= 55 ? 'var(--amber)' : 'var(--rose)')}
@@ -1916,14 +1989,18 @@
           ${card('Win rate', Math.round(s.wr * 100) + '%', `Break-even at ${Math.round(s.be * 100)}%`)}
           ${card('Profit factor', pfTxt(s.pf), `${formatCurrencyPlain(s.gp)} / ${formatCurrencyPlain(s.gl)}`)}
           ${card('Max drawdown', formatCurrencyPlain(-dd), 'Peak to trough, by day', dd ? 'var(--rose)' : '')}
+          ${card('Best day', formatCurrencyPlain(byDay[bestD]), bestD, pnlColor(byDay[bestD]))}
+          ${card('Worst day', formatCurrencyPlain(byDay[worstD]), worstD, pnlColor(byDay[worstD]))}
           ${card('Streaks', `${ws}W / ${ls}L`, rs.length ? `Avg ${(sum(rs) / rs.length).toFixed(2)}R over ${rs.length} trades` : 'Add planned risk to see R')}
         </div>
         ${eq.length > 1 ? `<div class="ai-sec">Equity curve</div>${eqSvg(eq)}` : ''}
         <div class="ai-sec">What to work on</div>
         <div class="ai-ins">${ins.length ? ins.slice(0, 7).map(i => `<div class="${i.sev}">${i.t}</div>`).join('') : '<div>Not enough data for a pattern yet. Keep logging.</div>'}</div>
         ${leaks.length ? `<div class="ai-sec">Leak cost</div>${tbl(['Mistake', 'Trades', 'Loss cost', 'Lucky wins'], leaks.map(L => `<tr><td>${escHtml(L.k)}</td><td>${L.n}</td><td style="color:var(--rose)">${formatCurrencyPlain(L.cost)}</td><td style="color:var(--amber)">${formatCurrencyPlain(sum(list.filter(t => t.mistake === L.k && Number(t.pnl) > 0).map(t => Number(t.pnl))))}</td></tr>`))}` : ''}
+        <div class="ai-sec">Setup P&amp;L</div>${auditBars(setups.slice(0, 8))}
         <div class="ai-sec">By setup</div>${tbl(['Setup', ...TH.slice(1)], setups.map(x => row(x.k, x)))}
         <div class="ai-sec">By instrument</div>${tbl(['Symbol', ...TH.slice(1)], syms.slice(0, 8).map(x => row(x.k, x)))}
+        <div class="ai-sec">Weekday P&amp;L</div>${auditBars(wd)}
         <div class="ai-sec">By weekday</div>${tbl(['Day', ...TH.slice(1)], wd.map(x => row(x.k, x)))}
         <p class="ai-sub">${s.n < 20 ? `Only ${s.n} trades: treat these as hints, not proof. ` : ''}Calculated on this device from your journal with fixed rules. No data leaves your browser. Not investment advice.</p>`;
     }
@@ -2002,8 +2079,8 @@
             </div>
             <div class="trade-row-actions">
               <span class="trade-pnl-pill" style="color:${Number(t.pnl) >= 0 ? 'var(--emerald)' : 'var(--rose)'}">${formatCurrency(Number(t.pnl))}${rDisplay}</span>
-              <button class="action-btn edit" onclick="startEditTrade(${t.id})">✏️ Edit</button>
-              <button class="action-btn delete" onclick="deleteTrade(${t.id})">🗑️</button>
+              <button class="action-btn edit" onclick="startEditTrade(${Number(t.id)})">✏️ Edit</button>
+              <button class="action-btn delete" onclick="deleteTrade(${Number(t.id)})">🗑️</button>
             </div>
           </div>
           ${mistakeDisplay} ${notesDisplay} ${photoThumb}
@@ -2032,6 +2109,7 @@
     }
 
         function compressImageFile(file, callback, maxWidth = 1280) {
+      if (!file || !['image/jpeg', 'image/png', 'image/webp', 'image/gif'].includes(file.type) || file.size > 8 * 1024 * 1024) { alert('Please use a JPG, PNG, WebP or GIF image under 8 MB.'); return callback(null); }
       const reader = new FileReader();
       reader.onerror = () => callback(null);
       reader.onload = function (event) {
@@ -2131,7 +2209,9 @@
 
     function setView(v) {
       currentView = v;
-      const perf = v === 'perf', inst = v === 'inst', news = v === 'news';
+      const perf = v === 'perf', inst = v === 'inst', news = v === 'news', about = v === 'about';
+      el('aboutView').style.display = about ? 'block' : 'none';
+      document.querySelectorAll('.tab-about').forEach(b => b.classList.toggle('active', about));
       el('perfKpis').style.display = perf ? '' : 'none';
       el('perfCalendar').style.display = perf ? '' : 'none';
       el('instView').style.display = inst ? 'block' : 'none';
@@ -2139,8 +2219,8 @@
       document.querySelectorAll('.tab-perf').forEach(b => b.classList.toggle('active', perf));
       document.querySelectorAll('.tab-inst').forEach(b => b.classList.toggle('active', inst));
       document.querySelectorAll('.tab-news').forEach(b => b.classList.toggle('active', news));
-      el('viewHeading').textContent = perf ? 'Performance Matrix' : inst ? 'Instrument Calendar' : 'Market News';
-      document.querySelector('.month-selector').style.display = news ? 'none' : '';
+      el('viewHeading').textContent = perf ? 'Performance Matrix' : inst ? 'Instrument Calendar' : about ? 'About Quark' : 'Market News';
+      document.querySelector('.month-selector').style.display = (news || about) ? 'none' : '';
       if (inst) renderInstruments();
       if (news) { renderNewsCats(); updateMarketStatus(); loadNews(false); }
     }
@@ -2254,7 +2334,7 @@
     function normUrl(raw) {
       let u = String(raw || '').trim(); if (!u) return null;
       if (!/^[a-z][a-z0-9+.-]*:/i.test(u)) u = 'https://' + u;
-      try { const x = new URL(u); return (/^https?:$/.test(x.protocol) && (x.hostname.includes('.') || x.hostname === 'localhost')) ? x.href : null; } catch (e) { return null; }
+      try { const x = new URL(u); return (/^https?:$/.test(x.protocol) && !x.username && !x.password && x.hostname.includes('.') && !/^(127\.|10\.|0\.|169\.254\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(x.hostname) && !/\.(local|internal|localhost)$/.test(x.hostname)) ? x.href : null; } catch (e) { return null; }
     }
     function cleanSites(a) { return (Array.isArray(a) ? a : []).filter(s => s && normUrl(s.url)).map(s => ({ name: String(s.name || '').slice(0, 24), url: normUrl(s.url) })).slice(0, MAX_SITES); }
     function loadSites() { let a = []; try { a = JSON.parse(lsGet(SITES_KEY) || lsGet('quark_custom_sites') || '[]'); } catch (e) {} sites = cleanSites(a); }
@@ -2268,11 +2348,11 @@
       const grid = el('launcherGrid'); if (!grid) return;
       grid.innerHTML = sites.length ? sites.map((s, i) => {
         const h = hostOf(s.url);
-        return `<div class="site-row"><a class="launch-btn" href="${escHtml(s.url)}" target="_blank" rel="noopener noreferrer"><img src="https://www.google.com/s2/favicons?domain=${encodeURIComponent(h)}&sz=32" alt="" loading="lazy"><span>${escHtml(s.name || h)}</span></a>
+        return `<div class="site-row"><a class="launch-btn" href="${escHtml(s.url)}" target="_blank" rel="noopener noreferrer"><img src="https://www.google.com/s2/favicons?domain=${encodeURIComponent(h)}&sz=128" alt="" loading="lazy"><span>${escHtml(s.name || h)}</span></a>
           <button type="button" class="site-act" title="Edit" aria-label="Edit ${escHtml(s.name || h)}" onclick="openSiteForm(${i})">✎</button>
           <button type="button" class="site-act del" title="Remove" aria-label="Remove ${escHtml(s.name || h)}" onclick="removeSite(${i})">×</button></div>`;
       }).join('') : '<div class="launch-empty">No sites yet. Add the broker, charting or research sites you use and open them in one tap.</div>';
-      grid.querySelectorAll('img').forEach(im => im.addEventListener('error', () => { im.style.display = 'none'; }));
+      grid.querySelectorAll('img').forEach(im => im.addEventListener('error', () => { const f = document.createElement('span'); f.className = 'ico-fb'; f.textContent = (im.parentNode.textContent.trim()[0] || '?').toUpperCase(); im.replaceWith(f); }));
       const menu = el('navSitesMenu');
       if (menu) {
         menu.innerHTML = sites.map(s => `<a href="${escHtml(s.url)}" target="_blank" rel="noopener noreferrer">${escHtml(s.name || hostOf(s.url))}<small>${escHtml(hostOf(s.url))}</small></a>`).join('')
@@ -2313,6 +2393,7 @@
       document.getElementById('siteNav').classList.remove('menu-open');
       if (target === 'inst' || target === 'perf') setView(target);
       if (target === 'news') setView('news');
+      if (target === 'about') setView('about');
       if (target === 'sites') setTimeout(() => { el('platformsCard').scrollIntoView({ behavior: 'smooth', block: 'center' }); openSiteForm(); }, 450);
       document.getElementById('workspace').scrollIntoView({ behavior: 'smooth' });
       if (target === 'audit') setTimeout(() => { const b = document.getElementById('openAiReportBtn'); if (b) b.click(); }, 500);
@@ -2513,6 +2594,33 @@
       resetFormState(); closeProfileDropdown();
     });
     document.addEventListener('click', (e) => { if (!e.target.closest('#profileWrapper')) closeProfileDropdown(); });
+
+    /* ===== Gestures (swipe months, drag sheets down to close, scroll reveal, tap haptics) ===== */
+    (function () {
+      const haptic = () => { try { navigator.vibrate && navigator.vibrate(6); } catch (e) {} };
+      document.addEventListener('pointerdown', e => { if (e.pointerType === 'touch' && e.target.closest('button, .day-cell, .launch-btn')) haptic(); }, { passive: true });
+      const cd = document.getElementById('calendarDays'); let sx = 0, sy = 0, st = 0;
+      cd.addEventListener('touchstart', e => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; st = Date.now(); }, { passive: true });
+      cd.addEventListener('touchend', e => {
+        const t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy;
+        if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.6 && Date.now() - st < 700) {
+          changeMonth(dx < 0 ? 1 : -1); cd.classList.remove('swL', 'swR'); void cd.offsetWidth; cd.classList.add(dx < 0 ? 'swL' : 'swR'); haptic();
+        }
+      });
+      document.querySelectorAll('.modal, .auth-card').forEach(box => {
+        let y0 = null, dy = 0;
+        box.addEventListener('touchstart', e => { if (box.scrollTop > 0 || e.touches.length > 1 || !e.target.closest('.modal-header, .auth-logo, .auth-title')) return; y0 = e.touches[0].clientY; dy = 0; box.style.transition = 'none'; }, { passive: true });
+        box.addEventListener('touchmove', e => { if (y0 === null) return; dy = Math.max(0, e.touches[0].clientY - y0); box.style.transform = `translateY(${dy * .8}px) scale(${1 - Math.min(dy, 400) / 4000})`; }, { passive: true });
+        box.addEventListener('touchend', () => {
+          if (y0 === null) return; box.style.transition = 'transform .45s var(--spring)'; box.style.transform = '';
+          if (dy > 110) { const c = box.querySelector('.close-btn, .auth-close-btn'); if (c) { haptic(); c.click(); } } y0 = null;
+        });
+      });
+      const io = 'IntersectionObserver' in window ? new IntersectionObserver(es => es.forEach(x => { if (x.isIntersecting) { x.target.classList.add('in'); io.unobserve(x.target); } }), { threshold: .12 }) : null;
+      document.querySelectorAll('#perfKpis > *, #platformsCard').forEach(n => n.classList.add('reveal'));
+      document.querySelectorAll('.reveal').forEach(n => io ? io.observe(n) : n.classList.add('in'));
+      new MutationObserver(() => document.querySelectorAll('#aboutView .reveal:not(.in)').forEach(n => io && io.observe(n))).observe(document.getElementById('aboutView'), { attributes: true, attributeFilter: ['style'] });
+    })();
 
     initAuthSystem();
   </script>
