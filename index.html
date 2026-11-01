@@ -620,6 +620,39 @@
       aside .view-tabs { display: none; }
       .mobile-tabs { display: grid; margin-bottom: 14px; }
     }
+  
+    /* ===== v5: Market News ===== */
+    .inst-subtabs { display: inline-flex; gap: 6px; background: rgba(120,120,120,0.08); border: 1px solid var(--border-subtle); padding: 4px; border-radius: 12px; margin-bottom: 16px; }
+    .sub-tab { padding: 9px 16px; font-size: 0.8rem; font-weight: 700; color: var(--text-muted); background: transparent; border: 1px solid transparent; border-radius: 9px; cursor: pointer; transition: all .2s; }
+    .sub-tab.active { background: rgba(212,175,55,0.16); color: var(--gold); border-color: rgba(212,175,55,0.35); }
+    .news-top { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 14px; }
+    .mkt-pill { font-size: 0.74rem; font-weight: 700; padding: 6px 12px; border-radius: 50px; border: 1px solid var(--border-subtle); background: var(--bg-card); }
+    .news-updated { font-size: 0.74rem; color: var(--text-muted); margin-right: auto; }
+    .news-controls { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .news-cats { display: flex; flex-wrap: wrap; gap: 8px; }
+    .news-cat { padding: 8px 14px; border-radius: 50px; font-size: 0.78rem; font-weight: 700; background: var(--bg-card); border: 1px solid var(--border-subtle); color: var(--text-muted); cursor: pointer; transition: all .2s; }
+    .news-cat:hover { color: var(--gold); border-color: rgba(212,175,55,0.5); }
+    .news-cat.active { background: var(--gold-soft); color: var(--gold); border-color: var(--gold); }
+    .news-cat:disabled { opacity: .45; cursor: not-allowed; }
+    .news-search { background: var(--bg-card); border: 1px solid var(--border-subtle); color: var(--text-main); padding: 9px 14px; border-radius: 10px; font-size: 0.82rem; min-width: 220px; }
+    .news-search:focus { outline: none; border-color: var(--gold); }
+    .news-note { font-size: 0.8rem; padding: 10px 14px; border-radius: 10px; margin-bottom: 14px; color: var(--amber); background: rgba(245,158,11,.08); border: 1px solid rgba(245,158,11,.35); }
+    .news-list { display: flex; flex-direction: column; gap: 10px; }
+    .news-day { font-size: 0.7rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--gold); margin: 12px 2px 2px; }
+    .news-item { display: block; text-decoration: none; color: var(--text-main); background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 14px; padding: 14px 16px; transition: all .2s; }
+    .news-item:hover { border-color: var(--gold); transform: translateX(3px); }
+    .news-item.mine { border-left: 3px solid var(--gold); }
+    .news-title { font-size: 0.95rem; font-weight: 600; line-height: 1.45; margin-bottom: 8px; }
+    .news-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 0.72rem; color: var(--text-muted); }
+    .news-src { font-weight: 700; color: var(--text-main); opacity: .85; }
+    .news-tag { font-size: 0.64rem; font-weight: 700; padding: 2px 8px; border-radius: 50px; background: rgba(120,120,120,0.14); color: var(--text-muted); }
+    .news-tag.mine { background: var(--gold-soft); color: var(--gold); }
+    .news-skel { height: 74px; border-radius: 14px; background: linear-gradient(90deg, var(--bg-card) 25%, rgba(120,120,120,0.14) 50%, var(--bg-card) 75%); background-size: 200% 100%; animation: skel 1.3s infinite; border: 1px solid var(--border-subtle); }
+    @keyframes skel { to { background-position: -200% 0; } }
+    .news-empty { text-align: center; padding: 40px 16px; color: var(--text-muted); font-size: 0.88rem; line-height: 1.6; background: var(--bg-card); border: 1px dashed var(--border-subtle); border-radius: 14px; }
+    .news-empty button { margin-top: 12px; }
+    .news-foot { font-size: 0.72rem; color: var(--text-muted); line-height: 1.6; margin-top: 18px; }
+    @media (max-width: 760px) { .news-search { width: 100%; } .inst-subtabs { display: flex; } .sub-tab { flex: 1; padding: 9px 6px; } }
   </style>
 </head>
 <body>
@@ -736,6 +769,7 @@
           <button class="nav-link" type="button" onclick="toggleNavItem(this)">Instruments <span class="caret">▼</span></button>
           <div class="nav-menu">
             <button type="button" onclick="navGo('inst')">Instrument Calendar<small>P&amp;L calendar per instrument</small></button>
+            <button type="button" onclick="navGo('news')">Market News<small>India + global news, daily results</small></button>
             <button type="button" onclick="navGo('perf')">Performance Matrix<small>Full month overview</small></button>
           </div>
         </div>
@@ -910,6 +944,11 @@
       <section id="instView" style="display:none;">
         <div class="inst-title"><span id="instTitleText">Instruments</span><span class="ticker-chip" id="instTitleChip">—</span></div>
         <div class="inst-chips" id="instList"></div>
+        <div class="inst-subtabs">
+          <button type="button" class="sub-tab active" id="subCal" onclick="setInstTab('cal')">📅 Calendar</button>
+          <button type="button" class="sub-tab" id="subNews" onclick="setInstTab('news')">📰 Market News</button>
+        </div>
+        <div id="instCalPane">
         <div class="inst-kpis">
           <div class="kpi-card"><div class="kpi-label">Net P&L</div><div class="kpi-value" id="iPnl">$0.00</div><div class="kpi-sub" id="iPnlSub">0 trades</div></div>
           <div class="kpi-card"><div class="kpi-label">Win Rate</div><div class="kpi-value" id="iWin">0%</div><div class="kpi-sub" id="iWinSub">0W / 0L</div></div>
@@ -922,6 +961,22 @@
             <div class="weekday-summary-col">Wk P&L</div>
           </div>
           <div class="calendar-days" id="instCalendarDays"></div>
+        </div>
+        </div>
+
+        <div id="instNewsPane" style="display:none;">
+          <div class="news-top">
+            <span class="mkt-pill" id="mktStatus"></span>
+            <span class="news-updated" id="newsUpdated"></span>
+            <button type="button" class="nav-btn-ghost" id="newsRefreshBtn" onclick="loadNews(true)">⟳ Refresh</button>
+          </div>
+          <div class="news-controls">
+            <div class="news-cats" id="newsCats"></div>
+            <input type="search" id="newsSearch" class="news-search" placeholder="Search headlines…" oninput="renderNewsList()">
+          </div>
+          <div id="newsNote" class="news-note" style="display:none;"></div>
+          <div class="news-list" id="newsList"></div>
+          <p class="news-foot">Headlines come from Google News (India edition) and open on the publisher's site. Fresh headlines load each day; results older than 30 minutes are refreshed automatically. Market status ignores exchange holidays. For information only, not investment advice.</p>
         </div>
       </section>
     </main>
@@ -1001,17 +1056,17 @@
 
     /* =====================================================================
        SETUP — Google / Apple sign-in (real, via Firebase Authentication)
+       1. Firebase console > Project settings > Your apps > Web app > copy the config below.
+       2. Authentication > Sign-in method > enable Google (free) and/or Apple (needs an Apple Developer account).
+       3. Authentication > Settings > Authorized domains > add the domain where this site is hosted.
+       4. Social login does NOT work when this file is opened directly (file://). Host it (Netlify, GitHub Pages, Firebase Hosting) or run on localhost.
+       5. Recommended Realtime Database rules, so social accounts can only read/write their own data
+          (test them in the Rules Playground first; password accounts keep working as before):
+          { "rules": { "quark_vault": { "users": { "$u": {
+              ".read":  "!$u.beginsWith('fb_') || (auth != null && $u === 'fb_' + auth.uid)",
+              ".write": "!$u.beginsWith('fb_') || (auth != null && $u === 'fb_' + auth.uid)" } } } } }
        ===================================================================== */
-    const FIREBASE_WEB_CONFIG = {
-      apiKey: "AIzaSyCuqvtB-KoFDgzuKPtvUbh6LDIvjA62WAw",
-      authDomain: "quark-journal.firebaseapp.com",
-      databaseURL: "https://quark-journal-default-rtdb.firebaseio.com",
-      projectId: "quark-journal",
-      storageBucket: "quark-journal.firebasestorage.app",
-      messagingSenderId: "914889019168",
-      appId: "1:914889019168:web:df0f07209df2ef11265145",
-      measurementId: "G-JNVB1VXGKW"
-    };
+    const FIREBASE_WEB_CONFIG = { apiKey: '', authDomain: '', projectId: '', appId: '' };
 
     function lsGet(k) { try { return window.localStorage.getItem(k); } catch (e) { return null; } }
     function lsSet(k, v) { try { window.localStorage.setItem(k, v); } catch (e) {} }
@@ -1072,9 +1127,10 @@
       return username.trim().toLowerCase().replace(/[^a-z0-9]/g, '_');
     }
 
-    async function initAuthSystem() {
+        async function initAuthSystem() {
       initTheme();
       if (currentSessionUser && currentSessionUser.indexOf('fb_') === 0) {
+        // restore a Google / Apple session
         try {
           const auth = await ensureFirebaseAuth();
           const user = await new Promise(res => { const off = auth.onAuthStateChanged(u => { off(); res(u); }); });
@@ -1093,7 +1149,8 @@
       else { authGateOverlay.style.display = 'none'; renderDashboard(); }
     }
 
-    let fbAuthReady = null;
+    // One-Click Google & Apple Sign In Handler
+        let fbAuthReady = null;
     function loadExternalScript(url) {
       return new Promise((res, rej) => { const s = document.createElement('script'); s.src = url; s.onload = res; s.onerror = () => rej(new Error('Could not load ' + url)); document.head.appendChild(s); });
     }
@@ -1112,11 +1169,12 @@
       return fbAuthReady;
     }
 
+    // Real Google / Apple sign-in through Firebase Authentication
     async function handleSocialLogin(provider) {
       authErrorBox.style.display = 'none';
       authSuccessBox.style.display = 'none';
       if (!FIREBASE_WEB_CONFIG.apiKey) {
-        showAuthError(`${provider} sign-in is not set up yet. Paste your Firebase web config into FIREBASE_WEB_CONFIG at the top of the script.`);
+        showAuthError(`${provider} sign-in is not set up yet. Paste your Firebase web config into FIREBASE_WEB_CONFIG at the top of the script (see the SETUP note there).`);
         return;
       }
       if (location.protocol === 'file:') {
@@ -1148,7 +1206,7 @@
           'auth/operation-not-allowed': `${provider} sign-in is not enabled. Turn it on in Firebase console > Authentication > Sign-in method.`,
           'auth/network-request-failed': 'Network error. Check your connection and try again.'
         };
-        showAuthError(msgs[code] || `Could not sign in with ${provider}. Please try again.`);
+        showAuthError(msgs[code] || `Could not sign in with ${provider}. ${err && err.message === 'Database error 401' ? 'Database rules rejected the request.' : 'Please try again.'}`);
         console.error(err);
       }
     }
@@ -1257,11 +1315,12 @@
       document.getElementById('avatarFileInput').click();
     }
 
-    function handleAvatarUpload(event) {
+        function handleAvatarUpload(event) {
       const file = event.target.files[0];
       event.target.value = '';
       if (!file || !currentSessionUser) return;
       if (!file.type.startsWith('image/')) { alert('Please choose an image file.'); return; }
+      // shrink to 256px so it stays small in the database
       compressImageFile(file, async (dataUrl) => {
         try {
           await dbPut(`${currentSessionUser}/avatar`, dataUrl);
@@ -1271,7 +1330,7 @@
       }, 256);
     }
 
-    function applyAvatarToUI(avatarData) {
+        function applyAvatarToUI(avatarData) {
       const box = document.getElementById('userAvatar');
       box.textContent = '';
       if (avatarData && /^(data:image\/|https:\/\/)/i.test(avatarData)) {
@@ -1284,7 +1343,7 @@
       }
     }
 
-    const PASS_PREFIX = 'h2:';
+        const PASS_PREFIX = 'h2:';
     function legacyHash(pass) { try { return btoa(pass); } catch (e) { return btoa(unescape(encodeURIComponent(pass))); } }
     async function hashPass(userKey, pass) {
       try {
@@ -1298,7 +1357,7 @@
     async function checkPassword(userKey, stored, pass) {
       if (!stored) return { ok: false, legacy: false };
       if (stored.indexOf(PASS_PREFIX) === 0) return { ok: stored === await hashPass(userKey, pass), legacy: false };
-      return { ok: stored === legacyHash(pass), legacy: true };
+      return { ok: stored === legacyHash(pass), legacy: true };   // accounts created before the upgrade
     }
 
     authForm.addEventListener('submit', async (e) => {
@@ -1352,10 +1411,11 @@
           return;
         }
 
+        // login
         if (!userData || !userData.passwordHash) { showAuthError("Trader ID not found. Switch to 'Create Account' to register."); return; }
         const chk = await checkPassword(userKey, userData.passwordHash, pass);
         if (!chk.ok) { showAuthError("Invalid Password. Click 'Forgot Password?' if you need to reset it."); return; }
-        if (chk.legacy) { try { await dbPut(`${userKey}/passwordHash`, await hashPass(userKey, pass)); } catch (err) {} }
+        if (chk.legacy) { try { await dbPut(`${userKey}/passwordHash`, await hashPass(userKey, pass)); } catch (err) {} }  // silent upgrade
         loadUserProfileAndTrades(userKey, userData.displayName || rawUser, userData.trades || [], userData.avatar || null);
       } catch (err) {
         showAuthError('Connection error. Please try again.');
@@ -1364,6 +1424,8 @@
         if (!keepDisabled) btn.disabled = false;
       }
     });
+
+    
 
     function showAuthError(msg) {
       authSuccessBox.style.display = 'none';
@@ -1377,7 +1439,7 @@
       authSuccessBox.style.display = 'block';
     }
 
-    async function loadUserProfileAndTrades(userKey, fallbackName = null, initialTrades = [], avatarData = null) {
+        async function loadUserProfileAndTrades(userKey, fallbackName = null, initialTrades = [], avatarData = null) {
       currentSessionUser = userKey;
       lsSet('quark_active_user', userKey);
       authGateOverlay.style.display = 'none';
@@ -1401,7 +1463,7 @@
       renderDashboard();
     }
 
-    function logoutTerminal() {
+        function logoutTerminal() {
       lsRemove('quark_active_user');
       currentSessionUser = null;
       authToken = null;
@@ -1416,7 +1478,7 @@
       authGateOverlay.style.display = 'flex';
     }
 
-    async function persistAllTradeData() {
+        async function persistAllTradeData() {
       if (!currentSessionUser) return false;
       try {
         await dbPut(`${currentSessionUser}/trades`, trades);
@@ -1470,7 +1532,7 @@
       yearSelect.appendChild(opt);
     }
 
-    function changeMonth(delta) {
+        function changeMonth(delta) {
       let m = parseInt(monthSelect.value) + delta;
       let y = parseInt(yearSelect.value);
       if (m < 0) { m = 11; y--; } else if (m > 11) { m = 0; y++; }
@@ -1798,13 +1860,13 @@
       });
     }
 
-    function openLightbox(src) {
+        function openLightbox(src) {
       if (!/^data:image\//i.test(src || '')) return;
       lightboxImg.src = src; lightboxOverlay.style.display = 'flex';
     }
     lightboxOverlay.onclick = () => { lightboxOverlay.style.display = 'none'; };
 
-    async function deleteTrade(id) {
+        async function deleteTrade(id) {
       if (!confirm('Delete this execution? This cannot be undone.')) return;
       if (editTradeId.value == id) resetFormState();
       const backup = trades;
@@ -1815,7 +1877,7 @@
       renderModalTrades(); renderDashboard();
     }
 
-    function compressImageFile(file, callback, maxWidth = 1280) {
+        function compressImageFile(file, callback, maxWidth = 1280) {
       const reader = new FileReader();
       reader.onerror = () => callback(null);
       reader.onload = function (event) {
@@ -1905,6 +1967,7 @@
   
     /* ===== Instruments view + Platform launcher (added) ===== */
     let instSelected = null;
+    let instTab = 'cal';
     let currentView = 'perf';
 
     function escHtml(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
@@ -1919,7 +1982,7 @@
       document.getElementById('instView').style.display = inst ? 'block' : 'none';
       document.querySelectorAll('.tab-perf').forEach(b => b.classList.toggle('active', !inst));
       document.querySelectorAll('.tab-inst').forEach(b => b.classList.toggle('active', inst));
-      document.getElementById('viewHeading').textContent = inst ? 'Instrument Calendar' : 'Performance Matrix';
+      document.getElementById('viewHeading').textContent = inst ? (instTab === 'news' ? 'Market News' : 'Instrument Calendar') : 'Performance Matrix';
       if (inst) renderInstruments();
     }
 
@@ -2006,6 +2069,7 @@
       }
       if (dow > 0) { while (dow < 7) addEmpty(); addWeek(); }
 
+      // instrument KPIs
       const wins = all.filter(t => Number(t.pnl) > 0), losses = all.filter(t => Number(t.pnl) < 0);
       const gp = wins.reduce((s, t) => s + Number(t.pnl), 0);
       const gl = Math.abs(losses.reduce((s, t) => s + Number(t.pnl), 0));
@@ -2021,9 +2085,13 @@
       document.getElementById('iDays').textContent = `${green} / ${red}`;
     }
 
+    // keep the instruments view in sync whenever the main dashboard re-renders
     const _origRenderDashboard = renderDashboard;
     renderDashboard = function () { _origRenderDashboard(); renderInstruments(); };
 
+    /* ---- Platform launcher ----
+       Note: Kite/Zerodha and most brokers block iframes (X-Frame-Options),
+       so we open them in a new tab or a side-by-side popup instead. */
     const DEFAULT_SITES = [
       { name: '🪁 Open Kite', url: 'https://kite.zerodha.com', primary: true },
       { name: 'TradingView', url: 'https://www.tradingview.com/chart/' },
@@ -2064,6 +2132,7 @@
       saveCustomSites(list); renderLauncher();
     }
     function splitWithKite() {
+      // Put Quark on the left half and Kite on the right half of the screen
       const w = Math.floor(screen.availWidth / 2), h = screen.availHeight;
       const pop = window.open('https://kite.zerodha.com', 'quark_kite', `width=${w},height=${h},left=${w},top=0`);
       if (!pop) alert('Popup blocked. Allow popups for this site, or use the "Open Kite" button.');
@@ -2073,6 +2142,7 @@
     renderLauncher();
     renderInstruments();
   
+    /* ===== Navbar helpers (added) ===== */
     function toggleNavItem(btn) {
       const item = btn.closest('.nav-item');
       const wasOpen = item.classList.contains('open');
@@ -2084,10 +2154,226 @@
       document.querySelectorAll('.nav-item.open').forEach(i => i.classList.remove('open'));
       document.getElementById('siteNav').classList.remove('menu-open');
       if (target === 'inst' || target === 'perf') setView(target);
+      if (target === 'news') { setView('inst'); setInstTab('news'); }
       document.getElementById('workspace').scrollIntoView({ behavior: 'smooth' });
       if (target === 'audit') setTimeout(() => { const b = document.getElementById('openAiReportBtn'); if (b) b.click(); }, 500);
     }
   
+
+    /* ===== Market News (added) ===== */
+    const RSS2JSON_API_KEY = '';          // optional: free key from rss2json.com raises the fallback limit from 10 to 40 headlines
+    const NEWS_TTL = 30 * 60 * 1000;      // refresh headlines after 30 minutes
+    let newsCat = 'india', newsItems = [], newsReq = 0, newsUpdatedAt = null, newsInstLoaded = null, newsTimer = null;
+
+    function resultsQuarter() {
+      const d = new Date(), m = d.getMonth() + 1, y = d.getFullYear();
+      let q, fy;
+      if (m <= 3) { q = 3; fy = y; } else if (m <= 6) { q = 4; fy = y; } else if (m <= 9) { q = 1; fy = y + 1; } else { q = 2; fy = y + 1; }
+      return `Q${q} FY${String(fy % 100).padStart(2, '0')}`;
+    }
+
+    function newsSpec(cat) {
+      if (cat === 'global') return { q: 'global cues Sensex Nifty Wall Street Fed crude oil dollar FII', when: '1d' };
+      if (cat === 'results') return { q: `${resultsQuarter()} results India net profit`, when: '7d' };
+      if (cat === 'inst') return { q: `${instSelected} stock news`, when: '3d' };
+      return { q: 'Sensex Nifty Indian stock market', when: '1d' };
+    }
+
+    function stripTitle(raw) {
+      let title = String(raw || '').trim(), source = '';
+      const i = title.lastIndexOf(' - ');
+      if (i > 20) { source = title.slice(i + 3).trim(); title = title.slice(0, i).trim(); }
+      return { title, source };
+    }
+    function makeItem(rawTitle, link, dateStr, source) {
+      const t = stripTitle(rawTitle);
+      const ts = Date.parse(dateStr);
+      if (!t.title || !/^https?:\/\//i.test(link || '')) return null;
+      return { title: t.title, source: (source || t.source || '').trim(), link, ts: isFinite(ts) ? ts : 0 };
+    }
+    function parseRss(xml) {
+      const doc = new DOMParser().parseFromString(xml, 'text/xml');
+      if (doc.querySelector('parsererror')) return [];
+      const txt = (el, tag) => { const n = el.getElementsByTagName(tag)[0]; return n ? n.textContent : ''; };
+      return Array.from(doc.getElementsByTagName('item')).map(it => makeItem(txt(it, 'title'), txt(it, 'link'), txt(it, 'pubDate'), txt(it, 'source'))).filter(Boolean);
+    }
+    function fetchTimeout(url, ms) {
+      const c = new AbortController(); const t = setTimeout(() => c.abort(), ms);
+      return fetch(url, { signal: c.signal }).finally(() => clearTimeout(t));
+    }
+
+    async function fetchFeedItems(spec) {
+      const rss = `https://news.google.com/rss/search?q=${encodeURIComponent(spec.q + ' when:' + spec.when)}&hl=en-IN&gl=IN&ceid=IN:en`;
+      // 1) full feed through a public CORS proxy
+      try {
+        const r = await fetchTimeout('https://api.allorigins.win/raw?url=' + encodeURIComponent(rss), 9000);
+        if (r.ok) { const items = parseRss(await r.text()); if (items.length) return items; }
+      } catch (e) {}
+      // 2) fallback: rss2json (CORS enabled; 10 headlines without a key)
+      const url = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(rss) + (RSS2JSON_API_KEY ? '&count=40&api_key=' + encodeURIComponent(RSS2JSON_API_KEY) : '');
+      const r2 = await fetchTimeout(url, 9000);
+      const j = await r2.json();
+      if (j.status !== 'ok' || !Array.isArray(j.items)) throw new Error('feed error');
+      return j.items.map(i => makeItem(i.title, i.link, String(i.pubDate || '').replace(' ', 'T') + 'Z', '')).filter(Boolean);
+    }
+
+    function cacheKey(cat) { return 'quark_news_v1_' + cat + '_' + (cat === 'inst' ? (instSelected || '') : ''); }
+    function readNewsCache(cat) { try { return JSON.parse(lsGet(cacheKey(cat)) || 'null'); } catch (e) { return null; } }
+
+    async function loadNews(force) {
+      const list = document.getElementById('newsList');
+      if (!list) return;
+      const note = document.getElementById('newsNote');
+      note.style.display = 'none';
+      if (newsCat === 'inst' && !instSelected) {
+        newsItems = []; list.innerHTML = '<div class="news-empty">Log a trade first, then pick one of your instruments above to see news for it.</div>';
+        document.getElementById('newsUpdated').textContent = ''; return;
+      }
+      const cached = readNewsCache(newsCat);
+      if (!force && cached && Date.now() - cached.t < NEWS_TTL) {
+        newsItems = cached.items; newsUpdatedAt = cached.t; newsInstLoaded = instSelected; renderNewsList(); return;
+      }
+      const reqId = ++newsReq;
+      list.innerHTML = '<div class="news-skel"></div>'.repeat(6);
+      document.getElementById('newsRefreshBtn').disabled = true;
+      try {
+        let items = await fetchFeedItems(newsSpec(newsCat));
+        const seen = new Set();
+        items = items.filter(i => { const k = i.title.toLowerCase().slice(0, 60); if (seen.has(k)) return false; seen.add(k); return true; })
+                     .sort((a, b) => b.ts - a.ts).slice(0, 40);
+        if (reqId !== newsReq) return;
+        newsItems = items; newsUpdatedAt = Date.now(); newsInstLoaded = instSelected;
+        lsSet(cacheKey(newsCat), JSON.stringify({ t: newsUpdatedAt, items }));
+        renderNewsList();
+      } catch (err) {
+        if (reqId !== newsReq) return;
+        if (cached && cached.items && cached.items.length) {
+          newsItems = cached.items; newsUpdatedAt = cached.t; renderNewsList();
+          note.textContent = 'Could not reach the news feed, so these are the last headlines saved on this device.'; note.style.display = 'block';
+        } else {
+          newsItems = [];
+          list.innerHTML = '<div class="news-empty">Could not load news right now. The feed is fetched through free public services that are sometimes busy.<br><button type="button" class="nav-btn-ghost" onclick="loadNews(true)">Try again</button></div>';
+          document.getElementById('newsUpdated').textContent = '';
+        }
+      } finally {
+        if (reqId === newsReq) document.getElementById('newsRefreshBtn').disabled = false;
+      }
+    }
+
+    const NEWS_TAGS = [
+      [/\bfed\b|federal reserve|fomc|powell/i, 'Fed'],
+      [/crude|brent|opec|\boil\b/i, 'Crude'],
+      [/\bfii\b|\bfpi\b|\bdii\b|foreign (institutional|portfolio)/i, 'FII/DII'],
+      [/\brbi\b|repo rate|monetary policy/i, 'RBI'],
+      [/\bq[1-4]\s?fy\s?\d{2}\b|results|earnings|net profit|quarter|\bq[1-4]\b/i, 'Results'],
+      [/\bipo\b|listing/i, 'IPO'],
+      [/rupee|dollar|\busd\b|forex/i, 'Rupee/USD'],
+      [/\bgold\b|silver/i, 'Metals'],
+      [/tariff|trade deal|sanction|\bwar\b|geopolit/i, 'Geopolitics']
+    ];
+    function userSymbols() {
+      const set = new Set();
+      trades.forEach(t => { const s = symKey(t.symbol); if (!s) return; const w = s.split(/\s+/)[0]; if (w.length >= 3 && !/^\d+$/.test(w)) set.add(w); });
+      return Array.from(set);
+    }
+    function timeAgo(ts) {
+      if (!ts) return '';
+      const m = Math.max(0, Math.round((Date.now() - ts) / 60000));
+      if (m < 1) return 'just now'; if (m < 60) return m + ' min ago';
+      const h = Math.round(m / 60); if (h < 24) return h + ' h ago';
+      return Math.round(h / 24) + ' d ago';
+    }
+    function dayLabel(ts) {
+      if (!ts) return 'Earlier';
+      const d = new Date(ts), t = new Date();
+      const day = x => new Date(x.getFullYear(), x.getMonth(), x.getDate()).getTime();
+      const diff = Math.round((day(t) - day(d)) / 86400000);
+      if (diff <= 0) return 'Today'; if (diff === 1) return 'Yesterday';
+      return d.toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' });
+    }
+
+    function renderNewsList() {
+      const list = document.getElementById('newsList');
+      if (!list) return;
+      const q = (document.getElementById('newsSearch').value || '').trim().toLowerCase();
+      const items = q ? newsItems.filter(i => (i.title + ' ' + i.source).toLowerCase().includes(q)) : newsItems;
+      document.getElementById('newsUpdated').textContent = newsUpdatedAt ? `Updated ${timeAgo(newsUpdatedAt)} · ${newsItems.length} headlines` : '';
+      if (!items.length) {
+        list.innerHTML = `<div class="news-empty">${q ? 'No headlines match your search.' : 'No fresh headlines found for this topic right now. Try another tab or refresh later.'}</div>`;
+        return;
+      }
+      const mine = userSymbols();
+      let html = '', lastDay = '';
+      items.forEach(i => {
+        const dl = dayLabel(i.ts);
+        if (dl !== lastDay) { html += `<div class="news-day">${escHtml(dl)}</div>`; lastDay = dl; }
+        const tags = []; NEWS_TAGS.forEach(([re, label]) => { if (tags.length < 3 && re.test(i.title)) tags.push(label); });
+        const flat = i.title.toUpperCase().replace(/\s+/g, '');
+        const hit = mine.find(s => flat.includes(s.replace(/\s+/g, '')));
+        html += `<a class="news-item ${hit ? 'mine' : ''}" href="${escHtml(i.link)}" target="_blank" rel="noopener noreferrer">
+          <div class="news-title">${escHtml(i.title)}</div>
+          <div class="news-meta">${i.source ? `<span class="news-src">${escHtml(i.source)}</span>·` : ''}<span>${escHtml(timeAgo(i.ts))}</span>
+            ${hit ? `<span class="news-tag mine">★ ${escHtml(hit)}</span>` : ''}${tags.map(t => `<span class="news-tag">${escHtml(t)}</span>`).join('')}</div>
+        </a>`;
+      });
+      list.innerHTML = html;
+    }
+
+    function renderNewsCats() {
+      const box = document.getElementById('newsCats');
+      if (!box) return;
+      const cats = [
+        ['india', '🇮🇳 India Markets', false],
+        ['global', '🌍 Global Impact', false],
+        ['results', `📊 ${resultsQuarter()} Results`, false],
+        ['inst', instSelected ? `🎯 ${instSelected}` : '🎯 My Instrument', !instSelected]
+      ];
+      box.innerHTML = cats.map(([id, label, off]) => `<button type="button" class="news-cat ${newsCat === id ? 'active' : ''}" data-cat="${id}" ${off ? 'disabled' : ''} onclick="setNewsCat('${id}')">${escHtml(label)}</button>`).join('');
+    }
+    function setNewsCat(c) { newsCat = c; renderNewsCats(); loadNews(false); }
+
+    function updateMarketStatus() {
+      const el = document.getElementById('mktStatus');
+      if (!el) return;
+      const ist = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
+      const day = ist.getDay(), mins = ist.getHours() * 60 + ist.getMinutes();
+      let txt;
+      if (day === 0 || day === 6) txt = '🔴 NSE closed (weekend)';
+      else if (mins >= 9 * 60 + 15 && mins <= 15 * 60 + 30) txt = '🟢 NSE open';
+      else if (mins >= 9 * 60 && mins < 9 * 60 + 15) txt = '🟡 NSE pre-open';
+      else txt = '🔴 NSE closed';
+      el.textContent = txt + ' · IST ' + ist.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function setInstTab(tab) {
+      instTab = tab;
+      const news = tab === 'news';
+      document.getElementById('instCalPane').style.display = news ? 'none' : '';
+      document.getElementById('instNewsPane').style.display = news ? 'block' : 'none';
+      document.getElementById('subCal').classList.toggle('active', !news);
+      document.getElementById('subNews').classList.toggle('active', news);
+      if (currentView === 'inst') document.getElementById('viewHeading').textContent = news ? 'Market News' : 'Instrument Calendar';
+      if (news) { renderNewsCats(); updateMarketStatus(); loadNews(false); }
+    }
+
+    // when the instrument changes, keep the "My Instrument" tab in step
+    const _origRenderInstruments = renderInstruments;
+    renderInstruments = function () {
+      _origRenderInstruments();
+      if (instTab === 'news') {
+        renderNewsCats();
+        if (newsCat === 'inst' && newsInstLoaded !== instSelected) loadNews(false);
+        else renderNewsList();
+      }
+    };
+
+    // clock + automatic daily refresh while the news tab is open
+    setInterval(() => {
+      if (currentView !== 'inst' || instTab !== 'news') return;
+      updateMarketStatus();
+      if (newsUpdatedAt && Date.now() - newsUpdatedAt > NEWS_TTL) loadNews(true); else renderNewsList();
+    }, 60000);
+
     document.addEventListener('keydown', (e) => {
       if (e.key !== 'Escape') return;
       tradeModalOverlay.style.display = 'none'; aiModalOverlay.style.display = 'none'; lightboxOverlay.style.display = 'none';
