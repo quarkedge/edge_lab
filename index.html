@@ -1001,17 +1001,17 @@
 
     /* =====================================================================
        SETUP — Google / Apple sign-in (real, via Firebase Authentication)
-       1. Firebase console > Project settings > Your apps > Web app > copy the config below.
-       2. Authentication > Sign-in method > enable Google (free) and/or Apple (needs an Apple Developer account).
-       3. Authentication > Settings > Authorized domains > add the domain where this site is hosted.
-       4. Social login does NOT work when this file is opened directly (file://). Host it (Netlify, GitHub Pages, Firebase Hosting) or run on localhost.
-       5. Recommended Realtime Database rules, so social accounts can only read/write their own data
-          (test them in the Rules Playground first; password accounts keep working as before):
-          { "rules": { "quark_vault": { "users": { "$u": {
-              ".read":  "!$u.beginsWith('fb_') || (auth != null && $u === 'fb_' + auth.uid)",
-              ".write": "!$u.beginsWith('fb_') || (auth != null && $u === 'fb_' + auth.uid)" } } } } }
        ===================================================================== */
-    const FIREBASE_WEB_CONFIG = { apiKey: '', authDomain: '', projectId: '', appId: '' };
+    const FIREBASE_WEB_CONFIG = {
+      apiKey: "AIzaSyCuqvtB-KoFDgzuKPtvUbh6LDIvjA62WAw",
+      authDomain: "quark-journal.firebaseapp.com",
+      databaseURL: "https://quark-journal-default-rtdb.firebaseio.com",
+      projectId: "quark-journal",
+      storageBucket: "quark-journal.firebasestorage.app",
+      messagingSenderId: "914889019168",
+      appId: "1:914889019168:web:df0f07209df2ef11265145",
+      measurementId: "G-JNVB1VXGKW"
+    };
 
     function lsGet(k) { try { return window.localStorage.getItem(k); } catch (e) { return null; } }
     function lsSet(k, v) { try { window.localStorage.setItem(k, v); } catch (e) {} }
@@ -1072,10 +1072,9 @@
       return username.trim().toLowerCase().replace(/[^a-z0-9]/g, '_');
     }
 
-        async function initAuthSystem() {
+    async function initAuthSystem() {
       initTheme();
       if (currentSessionUser && currentSessionUser.indexOf('fb_') === 0) {
-        // restore a Google / Apple session
         try {
           const auth = await ensureFirebaseAuth();
           const user = await new Promise(res => { const off = auth.onAuthStateChanged(u => { off(); res(u); }); });
@@ -1094,8 +1093,7 @@
       else { authGateOverlay.style.display = 'none'; renderDashboard(); }
     }
 
-    // One-Click Google & Apple Sign In Handler
-        let fbAuthReady = null;
+    let fbAuthReady = null;
     function loadExternalScript(url) {
       return new Promise((res, rej) => { const s = document.createElement('script'); s.src = url; s.onload = res; s.onerror = () => rej(new Error('Could not load ' + url)); document.head.appendChild(s); });
     }
@@ -1114,12 +1112,11 @@
       return fbAuthReady;
     }
 
-    // Real Google / Apple sign-in through Firebase Authentication
     async function handleSocialLogin(provider) {
       authErrorBox.style.display = 'none';
       authSuccessBox.style.display = 'none';
       if (!FIREBASE_WEB_CONFIG.apiKey) {
-        showAuthError(`${provider} sign-in is not set up yet. Paste your Firebase web config into FIREBASE_WEB_CONFIG at the top of the script (see the SETUP note there).`);
+        showAuthError(`${provider} sign-in is not set up yet. Paste your Firebase web config into FIREBASE_WEB_CONFIG at the top of the script.`);
         return;
       }
       if (location.protocol === 'file:') {
@@ -1151,7 +1148,7 @@
           'auth/operation-not-allowed': `${provider} sign-in is not enabled. Turn it on in Firebase console > Authentication > Sign-in method.`,
           'auth/network-request-failed': 'Network error. Check your connection and try again.'
         };
-        showAuthError(msgs[code] || `Could not sign in with ${provider}. ${err && err.message === 'Database error 401' ? 'Database rules rejected the request.' : 'Please try again.'}`);
+        showAuthError(msgs[code] || `Could not sign in with ${provider}. Please try again.`);
         console.error(err);
       }
     }
@@ -1260,12 +1257,11 @@
       document.getElementById('avatarFileInput').click();
     }
 
-        function handleAvatarUpload(event) {
+    function handleAvatarUpload(event) {
       const file = event.target.files[0];
       event.target.value = '';
       if (!file || !currentSessionUser) return;
       if (!file.type.startsWith('image/')) { alert('Please choose an image file.'); return; }
-      // shrink to 256px so it stays small in the database
       compressImageFile(file, async (dataUrl) => {
         try {
           await dbPut(`${currentSessionUser}/avatar`, dataUrl);
@@ -1275,7 +1271,7 @@
       }, 256);
     }
 
-        function applyAvatarToUI(avatarData) {
+    function applyAvatarToUI(avatarData) {
       const box = document.getElementById('userAvatar');
       box.textContent = '';
       if (avatarData && /^(data:image\/|https:\/\/)/i.test(avatarData)) {
@@ -1288,7 +1284,7 @@
       }
     }
 
-        const PASS_PREFIX = 'h2:';
+    const PASS_PREFIX = 'h2:';
     function legacyHash(pass) { try { return btoa(pass); } catch (e) { return btoa(unescape(encodeURIComponent(pass))); } }
     async function hashPass(userKey, pass) {
       try {
@@ -1302,7 +1298,7 @@
     async function checkPassword(userKey, stored, pass) {
       if (!stored) return { ok: false, legacy: false };
       if (stored.indexOf(PASS_PREFIX) === 0) return { ok: stored === await hashPass(userKey, pass), legacy: false };
-      return { ok: stored === legacyHash(pass), legacy: true };   // accounts created before the upgrade
+      return { ok: stored === legacyHash(pass), legacy: true };
     }
 
     authForm.addEventListener('submit', async (e) => {
@@ -1356,11 +1352,10 @@
           return;
         }
 
-        // login
         if (!userData || !userData.passwordHash) { showAuthError("Trader ID not found. Switch to 'Create Account' to register."); return; }
         const chk = await checkPassword(userKey, userData.passwordHash, pass);
         if (!chk.ok) { showAuthError("Invalid Password. Click 'Forgot Password?' if you need to reset it."); return; }
-        if (chk.legacy) { try { await dbPut(`${userKey}/passwordHash`, await hashPass(userKey, pass)); } catch (err) {} }  // silent upgrade
+        if (chk.legacy) { try { await dbPut(`${userKey}/passwordHash`, await hashPass(userKey, pass)); } catch (err) {} }
         loadUserProfileAndTrades(userKey, userData.displayName || rawUser, userData.trades || [], userData.avatar || null);
       } catch (err) {
         showAuthError('Connection error. Please try again.');
@@ -1369,8 +1364,6 @@
         if (!keepDisabled) btn.disabled = false;
       }
     });
-
-    
 
     function showAuthError(msg) {
       authSuccessBox.style.display = 'none';
@@ -1384,7 +1377,7 @@
       authSuccessBox.style.display = 'block';
     }
 
-        async function loadUserProfileAndTrades(userKey, fallbackName = null, initialTrades = [], avatarData = null) {
+    async function loadUserProfileAndTrades(userKey, fallbackName = null, initialTrades = [], avatarData = null) {
       currentSessionUser = userKey;
       lsSet('quark_active_user', userKey);
       authGateOverlay.style.display = 'none';
@@ -1408,7 +1401,7 @@
       renderDashboard();
     }
 
-        function logoutTerminal() {
+    function logoutTerminal() {
       lsRemove('quark_active_user');
       currentSessionUser = null;
       authToken = null;
@@ -1423,7 +1416,7 @@
       authGateOverlay.style.display = 'flex';
     }
 
-        async function persistAllTradeData() {
+    async function persistAllTradeData() {
       if (!currentSessionUser) return false;
       try {
         await dbPut(`${currentSessionUser}/trades`, trades);
@@ -1477,7 +1470,7 @@
       yearSelect.appendChild(opt);
     }
 
-        function changeMonth(delta) {
+    function changeMonth(delta) {
       let m = parseInt(monthSelect.value) + delta;
       let y = parseInt(yearSelect.value);
       if (m < 0) { m = 11; y--; } else if (m > 11) { m = 0; y++; }
@@ -1805,13 +1798,13 @@
       });
     }
 
-        function openLightbox(src) {
+    function openLightbox(src) {
       if (!/^data:image\//i.test(src || '')) return;
       lightboxImg.src = src; lightboxOverlay.style.display = 'flex';
     }
     lightboxOverlay.onclick = () => { lightboxOverlay.style.display = 'none'; };
 
-        async function deleteTrade(id) {
+    async function deleteTrade(id) {
       if (!confirm('Delete this execution? This cannot be undone.')) return;
       if (editTradeId.value == id) resetFormState();
       const backup = trades;
@@ -1822,7 +1815,7 @@
       renderModalTrades(); renderDashboard();
     }
 
-        function compressImageFile(file, callback, maxWidth = 1280) {
+    function compressImageFile(file, callback, maxWidth = 1280) {
       const reader = new FileReader();
       reader.onerror = () => callback(null);
       reader.onload = function (event) {
@@ -2013,7 +2006,6 @@
       }
       if (dow > 0) { while (dow < 7) addEmpty(); addWeek(); }
 
-      // instrument KPIs
       const wins = all.filter(t => Number(t.pnl) > 0), losses = all.filter(t => Number(t.pnl) < 0);
       const gp = wins.reduce((s, t) => s + Number(t.pnl), 0);
       const gl = Math.abs(losses.reduce((s, t) => s + Number(t.pnl), 0));
@@ -2029,13 +2021,9 @@
       document.getElementById('iDays').textContent = `${green} / ${red}`;
     }
 
-    // keep the instruments view in sync whenever the main dashboard re-renders
     const _origRenderDashboard = renderDashboard;
     renderDashboard = function () { _origRenderDashboard(); renderInstruments(); };
 
-    /* ---- Platform launcher ----
-       Note: Kite/Zerodha and most brokers block iframes (X-Frame-Options),
-       so we open them in a new tab or a side-by-side popup instead. */
     const DEFAULT_SITES = [
       { name: '🪁 Open Kite', url: 'https://kite.zerodha.com', primary: true },
       { name: 'TradingView', url: 'https://www.tradingview.com/chart/' },
@@ -2076,7 +2064,6 @@
       saveCustomSites(list); renderLauncher();
     }
     function splitWithKite() {
-      // Put Quark on the left half and Kite on the right half of the screen
       const w = Math.floor(screen.availWidth / 2), h = screen.availHeight;
       const pop = window.open('https://kite.zerodha.com', 'quark_kite', `width=${w},height=${h},left=${w},top=0`);
       if (!pop) alert('Popup blocked. Allow popups for this site, or use the "Open Kite" button.');
@@ -2086,7 +2073,6 @@
     renderLauncher();
     renderInstruments();
   
-    /* ===== Navbar helpers (added) ===== */
     function toggleNavItem(btn) {
       const item = btn.closest('.nav-item');
       const wasOpen = item.classList.contains('open');
