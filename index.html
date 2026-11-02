@@ -769,11 +769,28 @@
     .ai-bar-track i { display: block; height: 100%; border-radius: 99px; animation: barIn .9s var(--spring) backwards; } @keyframes barIn { from { width: 0 !important; } }
     @media (max-width: 520px) { .ai-hero { flex-direction: column; text-align: center; } }
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } .reveal { opacity: 1; transform: none; } }
+      .name-edit-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.8rem; margin-left: 6px; padding: 2px 4px; border-radius: 6px; vertical-align: middle; }
+    .name-edit-btn:hover { color: var(--gold); background: var(--gold-soft); }
+    .name-input { width: 100%; padding: 11px 12px; background: var(--bg-base); border: 1px solid var(--border-subtle); border-radius: 10px; color: var(--text-main); font-size: 0.9rem; outline: none; }
+    .name-input:focus { border-color: var(--border-focus); }
+    .name-msg { font-size: 0.78rem; color: var(--rose); min-height: 1em; }
+    .name-save-btn { padding: 12px; border: none; border-radius: 10px; background: var(--gold-gradient); color: #04060a; font-weight: 700; cursor: pointer; }
+    .name-save-btn:disabled { opacity: 0.6; cursor: default; }
   </style>
 </head>
 <body>
 
   <!-- TERMINAL LOGIN & VAULT GATE -->
+  <div class="auth-gate-overlay" id="nameModalOverlay" onclick="if(event.target===this)closeNameModal()">
+    <div class="auth-card" role="dialog" aria-labelledby="nameModalTitle">
+      <button class="auth-close-btn" type="button" onclick="closeNameModal()" aria-label="Close">&times;</button>
+      <div class="auth-title" id="nameModalTitle">CHANGE USERNAME</div>
+      <p class="auth-sub" id="nameModalSub"></p>
+      <input type="text" id="nameInput" maxlength="24" autocomplete="nickname" placeholder="New username" class="name-input" />
+      <div id="nameMsg" class="name-msg"></div>
+      <button type="button" id="nameSaveBtn" class="name-save-btn" onclick="saveDisplayName()">Save Username →</button>
+    </div>
+  </div>
   <div class="auth-gate-overlay" id="authGateOverlay">
     <div class="auth-card">
       <button class="auth-close-btn" onclick="closeAuthModal()" title="Close Gate">×</button>
@@ -966,7 +983,7 @@
               <div class="user-avatar" id="userAvatar">G</div>
             </div>
             <div class="user-details">
-              <span class="user-name" id="displayUsername">Guest Visitor</span>
+              <span class="user-name" id="displayUsername">Guest Visitor</span><button type="button" class="name-edit-btn" title="Change username" aria-label="Change username" onclick="event.stopPropagation();openNameModal()">✏️</button>
             </div>
           </div>
           <span class="dropdown-arrow">▼</span>
@@ -974,6 +991,7 @@
         
         <div class="profile-dropdown" id="profileDropdown">
           <button class="dropdown-btn" onclick="triggerAvatarUpload()">📷 Change Profile Photo</button>
+          <button class="dropdown-btn" onclick="openNameModal()">✏️ Change Username</button>
           <button class="dropdown-btn" onclick="openChangePasswordModal()">🔑 Change Password</button>
           <button class="dropdown-btn" onclick="toggleDarkMode()">🌓 <span id="themeToggleLabel">Switch to Light Mode</span></button>
           <button class="dropdown-btn" onclick="openLoginModalFromProfile()">👤 Switch / Sign In Account</button>
@@ -1297,22 +1315,26 @@
 
         async function initAuthSystem() {
       initTheme();
-      if (currentSessionUser && currentSessionUser.indexOf('fb_') === 0) {
-        // restore a Google / Apple session
+      // 1) Firebase remembers the signed-in user across reloads. Trust that first.
+      if (FIREBASE_WEB_CONFIG.apiKey) {
         try {
           const auth = await ensureFirebaseAuth();
           const user = await new Promise(res => { const off = auth.onAuthStateChanged(u => { off(); res(u); }); });
-          if (user && 'fb_' + user.uid === currentSessionUser) {
+          if (user) {
             authToken = await user.getIdToken();
+            currentSessionUser = 'fb_' + user.uid;
+            lsSet('quark_active_user', currentSessionUser);
             loadUserProfileAndTrades(currentSessionUser);
             return;
           }
-        } catch (e) { console.warn('Could not restore social session', e); }
-        lsRemove('quark_active_user'); currentSessionUser = null;
-        authGateOverlay.style.display = 'none';
-        renderDashboard();
+        } catch (e) { console.warn('Could not restore Firebase session', e); }
+      }
+      // 2) Legacy trader-ID sessions (non fb_ keys) are kept in localStorage.
+      if (currentSessionUser && currentSessionUser.indexOf('fb_') !== 0) {
+        loadUserProfileAndTrades(currentSessionUser);
         return;
       }
+      // 3) Nobody signed in: show the guest view.
       lsRemove('quark_active_user'); currentSessionUser = null;
       authGateOverlay.style.display = 'none'; renderDashboard();
     }
@@ -1480,6 +1502,41 @@
       document.getElementById('profileWrapper').classList.remove('open');
     }
 
+    const NAME_CHANGE_LIMIT = 3;
+    let nameChangesUsed = 0;
+    function setNameMsg(m) { document.getElementById('nameMsg').textContent = m; }
+    function openNameModal() {
+      closeProfileDropdown();
+      if (!currentSessionUser) { openLoginModalFromProfile(); return; }
+      const left = Math.max(0, NAME_CHANGE_LIMIT - nameChangesUsed);
+      document.getElementById('nameInput').value = document.getElementById('displayUsername').textContent.trim();
+      document.getElementById('nameModalSub').textContent = left + ' of ' + NAME_CHANGE_LIMIT + ' name changes left.';
+      document.getElementById('nameSaveBtn').disabled = false;
+      setNameMsg('');
+      document.getElementById('nameModalOverlay').style.display = 'flex';
+      document.getElementById('nameInput').focus();
+    }
+    function closeNameModal() { document.getElementById('nameModalOverlay').style.display = 'none'; }
+    async function saveDisplayName() {
+      const btn = document.getElementById('nameSaveBtn');
+      const name = document.getElementById('nameInput').value.trim().replace(/\s+/g, ' ');
+      if (!/^[A-Za-z0-9 _.\-]{2,24}$/.test(name)) { setNameMsg('Use 2 to 24 letters, numbers, spaces, _ . or -.'); return; }
+      if (name === document.getElementById('displayUsername').textContent.trim()) { setNameMsg('That is already your name.'); return; }
+      if (nameChangesUsed >= NAME_CHANGE_LIMIT) { setNameMsg('You have used all ' + NAME_CHANGE_LIMIT + ' name changes.'); return; }
+      btn.disabled = true; setNameMsg('Saving...');
+      try {
+        // Save the count first, so a failed name save cannot be used to skip the limit.
+        const next = nameChangesUsed + 1;
+        await dbPut(`${currentSessionUser}/nameChanges`, next);
+        nameChangesUsed = next;
+        await dbPut(`${currentSessionUser}/displayName`, name);
+        document.getElementById('displayUsername').textContent = name;
+        closeNameModal();
+      } catch (err) {
+        setNameMsg('Could not save. Check your connection and try again.');
+      } finally { btn.disabled = false; }
+    }
+
     function triggerAvatarUpload() {
       if (!currentSessionUser) {
         alert("Please sign in first to customize your profile photo.");
@@ -1626,6 +1683,7 @@
         const data = await dbGetUser(userKey);
         if (data) {
           if (data.displayName) nameToDisplay = data.displayName;
+          nameChangesUsed = Number(data.nameChanges) || 0;
           if (data.avatar) avatarData = data.avatar;
           if (data.trades) initialTrades = data.trades;
           if (Array.isArray(data.sites)) { sites = cleanSites(data.sites); lsSet(SITES_KEY, JSON.stringify(sites)); renderLauncher(); }
