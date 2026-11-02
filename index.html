@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <!-- SECURITY: Content-Security-Policy. 'unsafe-inline' stays only because the page uses inline onclick handlers. Also set real HTTP headers on your host (see SECURITY-NOTES.md). -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.google.com https://*.gstatic.com https://*.googleusercontent.com; connect-src https://*.firebaseio.com wss://*.firebaseio.com https://*.googleapis.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.rss2json.com; frame-src https://*.firebaseapp.com https://accounts.google.com https://appleid.apple.com; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.google.com https://*.gstatic.com https://*.googleusercontent.com; connect-src https://*.firebaseio.com wss://*.firebaseio.com https://*.googleapis.com https://apis.google.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.rss2json.com; frame-src https://*.firebaseapp.com https://apis.google.com https://accounts.google.com https://appleid.apple.com; object-src 'none'; base-uri 'none'; form-action 'none'">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>Quark — The Institutional Trading Terminal</title>
   
@@ -655,6 +655,24 @@
     .news-empty { text-align: center; padding: 40px 16px; color: var(--text-muted); font-size: 0.88rem; line-height: 1.6; background: var(--bg-card); border: 1px dashed var(--border-subtle); border-radius: 14px; }
     .news-empty button { margin-top: 12px; }
     .news-foot { font-size: 0.72rem; color: var(--text-muted); line-height: 1.6; margin-top: 18px; }
+    .news-why { font-size: 0.74rem; color: var(--text-muted); margin-top: 6px; line-height: 1.5; }
+    .news-tag.sent-bull { background: var(--emerald-bg); color: var(--emerald); border: 1px solid var(--emerald-border); }
+    .news-tag.sent-bear { background: var(--rose-bg); color: var(--rose); border: 1px solid var(--rose-border); }
+    .news-tk { font-size: 0.64rem; font-weight: 700; padding: 2px 8px; border-radius: 50px; border: 1px solid var(--border-subtle); background: transparent; color: var(--text-main); cursor: pointer; }
+    .news-tk:hover { border-color: var(--border-focus); color: var(--gold); }
+    .news-tools { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 0 0 16px; }
+    .tool-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 14px; padding: 12px 14px; }
+    .tool-title { font-size: 0.72rem; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: .6px; margin-bottom: 8px; display: flex; justify-content: space-between; }
+    .pm-item { display: flex; align-items: center; gap: 8px; font-size: 0.78rem; padding: 3px 0; cursor: pointer; }
+    .pm-item.done span { text-decoration: line-through; color: var(--text-muted); }
+    .wl-row { display: flex; gap: 6px; }
+    .wl-row input { flex: 1; min-width: 0; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--border-subtle); background: var(--bg-surface); color: var(--text-main); font-size: 0.78rem; }
+    .chip-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .chip-row .news-tk { display: inline-flex; gap: 4px; align-items: center; }
+    .chip-row .x { color: var(--text-muted); cursor: pointer; font-weight: 700; }
+    .news-skel { height: 74px; border-radius: 14px; background: linear-gradient(90deg, var(--bg-card) 25%, var(--border-subtle) 50%, var(--bg-card) 75%); background-size: 200% 100%; animation: skel 1.2s infinite; margin-bottom: 10px; }
+    @keyframes skel { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+    @media (max-width: 760px) { .news-tools { grid-template-columns: 1fr; } }
     @media (max-width: 760px) { .news-search { width: 100%; } .inst-subtabs { display: flex; } .sub-tab { flex: 1; padding: 9px 6px; } }
 
     /* ===== v6: platforms, news, audit ===== */
@@ -1077,6 +1095,7 @@
       <section id="newsView" style="display:none;">
         <div class="news-top">
           <span class="mkt-pill" id="mktStatus"></span>
+          <span class="ai-sub" id="mktTimeline">Pre-open 9:00 · Open 9:15 · Close 15:30 IST</span>
           <span class="news-updated" id="newsUpdated"></span>
           <button type="button" class="nav-btn-ghost" id="newsRefreshBtn" onclick="loadNews(true)">⟳ Refresh</button>
         </div>
@@ -1086,9 +1105,16 @@
           <div class="news-filters">
             <select id="newsAge" onchange="renderNewsList()"><option value="0">Any time</option><option value="6">Last 6 hours</option><option value="24">Last 24 hours</option></select>
             <label class="news-chk"><input type="checkbox" id="newsMineOnly" onchange="renderNewsList()"> Only my symbols</label>
+            <label class="news-chk"><input type="checkbox" id="newsNewOnly" onchange="renderNewsList()"> New only</label>
           </div>
         </div>
         <div id="newsNote" class="news-note" style="display:none;"></div>
+        <p class="ai-sub" style="margin-bottom:12px;">Headlines are for information only, not investment advice. Check the publisher before you trade.</p>
+        <div class="news-tools">
+          <div class="tool-card"><div class="tool-title">Pre-market checklist <span id="pmCount"></span></div><div id="pmList"></div></div>
+          <div class="tool-card"><div class="tool-title">Watchlist</div><div class="wl-row"><input id="wlInput" placeholder="e.g. RELIANCE" maxlength="20" onkeydown="if(event.key===&quot;Enter&quot;)wlAddFromInput()"><button type="button" class="nav-btn-ghost" onclick="wlAddFromInput()">Add</button></div><div id="wlList"></div></div>
+          <div class="tool-card"><div class="tool-title">Saved searches <button type="button" class="nav-btn-ghost" onclick="saveCurrentSearch()">★ Save search</button></div><div id="ssList"></div></div>
+        </div>
         <div class="news-list" id="newsList"></div>
         <p class="news-foot">Headlines come from Google News (India edition) and open on the publisher's site. Similar stories are merged. Lists refresh after 20 minutes. Market status ignores exchange holidays. For information only, not investment advice.</p>
       </section>
@@ -1349,7 +1375,7 @@
           'auth/operation-not-allowed': `${provider} sign-in is not enabled. Turn it on in Firebase console > Authentication > Sign-in method.`,
           'auth/network-request-failed': 'Network error. Check your connection and try again.'
         };
-        showAuthError(msgs[code] || `Could not sign in with ${provider}. ${err && err.message === 'Database error 401' ? 'Database rules rejected the request.' : 'Please try again.'}`);
+        showAuthError(msgs[code] || `Could not sign in with ${provider}. ${err && err.message === 'Database error 401' ? 'Database rules rejected the request.' : 'Please try again.'}${code ? ' (' + code + ')' : ''}`);
         console.error(err);
       }
     }
@@ -2406,7 +2432,7 @@
     let newsCat = 'top', newsItems = [], newsReq = 0, newsUpdatedAt = null, visibleNews = [];
     const NEWS_CATS = [['top', 'Top stories'], ['idx', 'Nifty & Bank Nifty'], ['stocks', 'Stocks in focus'], ['results', ''], ['global', 'Global cues'], ['macro', 'Economy & RBI'], ['comm', 'Commodities & rupee'], ['ipo', 'IPOs'], ['crypto', 'Crypto'], ['mine', '🎯 My symbols'], ['saved', '🔖 Saved']];
     function readJ(k, d) { try { const v = JSON.parse(lsGet(k) || 'null'); return v == null ? d : v; } catch (e) { return d; } }
-    function mySyms() { const c = {}; trades.forEach(t => { const s = symKey(t.symbol).split(/\s+/)[0]; if (s.length >= 3 && !/^\d+$/.test(s)) c[s] = (c[s] || 0) + 1; }); return Object.keys(c).sort((a, b) => c[b] - c[a]).slice(0, 6); }
+    function mySyms() { const c = {}; trades.forEach(t => { const s = symKey(t.symbol).split(/\s+/)[0]; if (s.length >= 3 && !/^\d+$/.test(s)) c[s] = (c[s] || 0) + 1; }); const k = Object.keys(c).sort((a, b) => c[b] - c[a]).slice(0, 6); readJ('quark_watchlist', []).forEach(s => { if (!k.includes(s) && k.length < 10) k.push(s); }); return k; }
 
     function resultsQuarter() {
       const d = new Date(), m = d.getMonth() + 1, y = d.getFullYear();
@@ -2450,11 +2476,11 @@
       const rss = `https://news.google.com/rss/search?q=${encodeURIComponent(spec.q + ' when:' + spec.when)}&hl=en-IN&gl=IN&ceid=IN:en`;
       try {   // race all relays, first good answer wins
         return await Promise.any(PROXIES.map(async p => {
-          const r = await fetchTimeout(p(rss), 8000); if (!r.ok) throw new Error('relay');
+          const r = await fetchTimeout(p(rss), 5000); if (!r.ok) throw new Error('relay');
           const items = parseRss(await r.text()); if (!items.length) throw new Error('empty'); return items;
         }));
       } catch (e) {}
-      const r2 = await fetchTimeout('https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(rss) + (RSS2JSON_API_KEY ? '&count=40&api_key=' + encodeURIComponent(RSS2JSON_API_KEY) : ''), 9000);
+      const r2 = await fetchTimeout('https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(rss) + (RSS2JSON_API_KEY ? '&count=40&api_key=' + encodeURIComponent(RSS2JSON_API_KEY) : ''), 6000);
       const j = await r2.json();
       if (j.status !== 'ok' || !Array.isArray(j.items)) throw new Error('feed error');
       return j.items.map(i => makeItem(i.title, i.link, String(i.pubDate || '').replace(' ', 'T') + 'Z', '')).filter(Boolean);
@@ -2509,6 +2535,7 @@
     function userSymbols() {
       const set = new Set();
       trades.forEach(t => { const s = symKey(t.symbol); if (!s) return; const w = s.split(/\s+/)[0]; if (w.length >= 3 && !/^\d+$/.test(w)) set.add(w); });
+      wlList().forEach(s => set.add(s));
       return Array.from(set);
     }
     function timeAgo(ts) {
@@ -2527,31 +2554,74 @@
       return d.toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' });
     }
 
+    const SENT_BULL = /\b(surge|surges|rally|rallies|jump|jumps|gain|gains|rise|rises|soar|soars|record high|beat|beats|upgrade|buy|bullish|up|higher)\b/i;
+    const SENT_BEAR = /\b(fall|falls|slump|slumps|drop|drops|plunge|plunges|crash|selloff|sell-off|slide|slides|loss|losses|miss|misses|downgrade|sell|bearish|down|lower|tumble|tumbles|tank|tanks)\b/i;
+    function sentimentOf(t) {
+      const b = SENT_BULL.test(t), r = SENT_BEAR.test(t);
+      if (b && !r) return { k: 'bull', l: '▲ Bullish' };
+      if (r && !b) return { k: 'bear', l: '▼ Bearish' };
+      return { k: 'neutral', l: '● Neutral' };
+    }
+    const TICKER_MAP = [[/\breliance\b|\bjio\b/i, 'Reliance'], [/\btcs\b/i, 'TCS'], [/\binfosys\b|\binfy\b/i, 'Infosys'], [/\bhdfc\b/i, 'HDFC'], [/\bicici\b/i, 'ICICI'], [/\bsbi\b/i, 'SBI'], [/\bitc\b/i, 'ITC'], [/\bntpc\b/i, 'NTPC'], [/tata motors/i, 'Tata Motors'], [/\bwipro\b/i, 'Wipro'], [/\badani\b/i, 'Adani'], [/\bzomato\b/i, 'Zomato'], [/\bpaytm\b/i, 'Paytm'], [/airtel/i, 'Airtel'], [/bajaj finance/i, 'Bajaj Finance'], [/\bnifty\b/i, 'Nifty'], [/sensex/i, 'Sensex']];
+    function tickersOf(t) { const out = []; TICKER_MAP.forEach(([re, l]) => { if (out.length < 3 && re.test(t) && !out.includes(l)) out.push(l); }); return out; }
+    const WHY = { 'Fed': 'Global rate signals can move Indian markets and the rupee.', 'Crude': 'Oil prices affect inflation, fuel costs and energy stocks.', 'FII/DII': 'Institutional flows often set the day\'s direction.', 'RBI': 'Rate and policy decisions affect banks, loans and bonds.', 'Results': 'Earnings can move a stock sharply on the day they are announced.', 'IPO': 'New listings add supply and can swing sentiment in the sector.', 'Rupee/USD': 'Currency moves change export earnings and import costs.', 'Metals': 'Gold and silver often rise when investors seek safety.', 'Geopolitics': 'Trade and conflict news can shift risk appetite quickly.' };
+    function whyLine(tags) { return tags.length ? 'Context: ' + (WHY[tags[0]] || '') : ''; }
+    function wlList() { return readJ('quark_watchlist', []); }
+    function wlAddFromInput() {
+      const v = (el('wlInput').value || '').toUpperCase().replace(/[^A-Z0-9&-]/g, '').trim();
+      if (v.length < 2) return;
+      const l = wlList(); if (!l.includes(v) && l.length < 15) l.push(v);
+      lsSet('quark_watchlist', JSON.stringify(l)); el('wlInput').value = ''; renderNewsList();
+    }
+    function wlRemove(i) { const l = wlList(); l.splice(i, 1); lsSet('quark_watchlist', JSON.stringify(l)); renderNewsList(); }
+    function savedSearches() { return readJ('quark_saved_searches', []); }
+    function saveCurrentSearch() {
+      const q = (el('newsSearch').value || '').trim(); if (!q) return;
+      const l = savedSearches(); if (!l.includes(q) && l.length < 8) l.push(q);
+      lsSet('quark_saved_searches', JSON.stringify(l)); renderNewsList();
+    }
+    function applySavedSearch(i) { el('newsSearch').value = savedSearches()[i] || ''; renderNewsList(); }
+    function removeSavedSearch(i) { const l = savedSearches(); l.splice(i, 1); lsSet('quark_saved_searches', JSON.stringify(l)); renderNewsList(); }
+    const PM_ITEMS = ['Read global cues', 'Check my watchlist news', 'Set my max loss for the day', 'Write one plan for the first trade'];
+    function pmKey() { return 'quark_pm_' + new Date().toLocaleDateString(); }
+    function pmToggle(i, on) { const st = readJ(pmKey(), {}); st[i] = !!on; lsSet(pmKey(), JSON.stringify(st)); renderNewsTools(); }
+    function renderNewsTools() {
+      const st = readJ(pmKey(), {}), done = PM_ITEMS.filter((_, i) => st[i]).length;
+      el('pmList').innerHTML = PM_ITEMS.map((t, i) => `<label class="pm-item ${st[i] ? 'done' : ''}"><input type="checkbox" ${st[i] ? 'checked' : ''} onchange="pmToggle(${i}, this.checked)"><span>${escHtml(t)}</span></label>`).join('');
+      el('pmCount').textContent = done + ' of ' + PM_ITEMS.length;
+      el('wlList').innerHTML = wlList().length ? '<div class="chip-row">' + wlList().map((s, i) => `<span class="news-tk">${escHtml(s)}<span class="x" onclick="wlRemove(${i})" title="Remove">×</span></span>`).join('') + '</div>' : '<div class="ai-sub">Add symbols you follow. Their headlines are marked ★ and included in "Only my symbols".</div>';
+      const ss = savedSearches();
+      el('ssList').innerHTML = ss.length ? '<div class="chip-row">' + ss.map((q, i) => `<span class="news-tk" onclick="applySavedSearch(${i})">${escHtml(q)}<span class="x" onclick="event.stopPropagation();removeSavedSearch(${i})" title="Remove">×</span></span>`).join('') + '</div>' : '<div class="ai-sub">Type in the search box, then press ★ Save search to reuse it.</div>';
+    }
+
     function renderNewsList() {
       const list = el('newsList'); if (!list) return;
-      const q = (el('newsSearch').value || '').trim().toLowerCase(), age = +el('newsAge').value, only = el('newsMineOnly').checked;
+      const q = (el('newsSearch').value || '').trim().toLowerCase(), age = +el('newsAge').value, only = el('newsMineOnly').checked, newOnly = el('newsNewOnly').checked;
       const mine = userSymbols(), read = readJ('quark_news_read', {}), saved = readJ('quark_news_saved', {});
       const hitOf = i => { const f = i.title.toUpperCase().replace(/\s+/g, ''); return mine.find(s => f.includes(s)); };
-      const items = newsItems.filter(i => (!q || (i.title + ' ' + i.source).toLowerCase().includes(q)) && (!age || !i.ts || Date.now() - i.ts < age * 3600000) && (!only || hitOf(i)));
+      renderNewsTools();
+      const items = newsItems.filter(i => (!q || (i.title + ' ' + i.source).toLowerCase().includes(q)) && (!age || !i.ts || Date.now() - i.ts < age * 3600000) && (!only || hitOf(i)) && (!newOnly || !read[i.link]));
       visibleNews = items;
       el('newsUpdated').textContent = newsUpdatedAt ? `Updated ${timeAgo(newsUpdatedAt)} · ${items.length} of ${newsItems.length} stories` : (newsCat === 'saved' ? `${newsItems.length} saved` : '');
-      if (!items.length) { list.innerHTML = `<div class="news-empty">${newsCat === 'saved' ? 'Nothing saved yet. Tap 🔖 on any story to keep it here.' : (q || age || only) ? 'No stories match your filters.' : 'No fresh headlines for this section right now. Try another section or refresh later.'}</div>`; return; }
+      if (!items.length) { list.innerHTML = `<div class="news-empty">${newsCat === 'saved' ? 'Nothing saved yet. Tap 🔖 on any story to keep it here.' : (q || age || only || newOnly) ? 'No stories match your filters.' : 'No fresh headlines for this section right now. Try another section or refresh later.'}</div>`; return; }
       let html = '', last = '';
       items.forEach((i, n) => {
         const dl = dayLabel(i.ts); if (dl !== last) { html += `<div class="news-day">${escHtml(dl)}</div>`; last = dl; }
         const tags = []; NEWS_TAGS.forEach(([re, label]) => { if (tags.length < 3 && re.test(i.title)) tags.push(label); });
-        const hit = hitOf(i);
+        const hit = hitOf(i), sent = sentimentOf(i.title), tks = tickersOf(i.title), why = whyLine(tags);
         html += `<article class="news-item ${hit ? 'mine' : ''} ${read[i.link] ? 'read' : ''}">
-          <a class="news-title" href="${escHtml(i.link)}" target="_blank" rel="noopener noreferrer" data-n="${n}">${escHtml(i.title)}</a>
+          <a class="news-title" href="${escHtml(i.link)}" target="_blank" rel="noopener noreferrer" data-n="${n}" title="${escHtml((i.source || 'Unknown source') + ' · ' + timeAgo(i.ts))}">${escHtml(i.title)}</a>${why ? `<div class="news-why">${escHtml(why)}</div>` : ''}
           <div class="news-meta">${i.source ? `<span class="news-src">${escHtml(i.source)}</span>·` : ''}<span>${escHtml(timeAgo(i.ts))}</span>
             ${i.also && i.also.length ? `<span class="news-also">also ${escHtml(i.also.join(', '))}</span>` : ''}
-            ${hit ? `<span class="news-tag mine">★ ${escHtml(hit)}</span>` : ''}${tags.map(t => `<span class="news-tag">${escHtml(t)}</span>`).join('')}
+            ${hit ? `<span class="news-tag mine">★ ${escHtml(hit)}</span>` : ''}<span class="news-tag sent-${sent.k}">${sent.l}</span>${tags.map(t => `<span class="news-tag">${escHtml(t)}</span>`).join('')}${tks.map(t => `<button type="button" class="news-tk" data-tk="${escHtml(t)}" title="Show headlines about ${escHtml(t)}">${escHtml(t)}</button>`).join('')}
             <button type="button" class="news-save ${saved[i.link] ? 'on' : ''}" data-n="${n}" title="Save for later" aria-label="Save for later">🔖</button></div>
         </article>`;
       });
       list.innerHTML = html;
     }
     el('newsList').addEventListener('click', ev => {
+      const tkb = ev.target.closest('.news-tk');
+      if (tkb) { el('newsSearch').value = tkb.dataset.tk; renderNewsList(); return; }
       const b = ev.target.closest('.news-save'), a = ev.target.closest('.news-title');
       const it = visibleNews[+((b || a) && (b || a).dataset.n)]; if (!it) return;
       if (a) { const r = readJ('quark_news_read', {}); r[it.link] = 1; const ks = Object.keys(r); if (ks.length > 400) delete r[ks[0]]; lsSet('quark_news_read', JSON.stringify(r)); a.closest('.news-item').classList.add('read'); }
@@ -2621,6 +2691,9 @@
       document.querySelectorAll('.reveal').forEach(n => io ? io.observe(n) : n.classList.add('in'));
       new MutationObserver(() => document.querySelectorAll('#aboutView .reveal:not(.in)').forEach(n => io && io.observe(n))).observe(document.getElementById('aboutView'), { attributes: true, attributeFilter: ['style'] });
     })();
+
+    // Start fetching the Top stories feed as soon as the page loads, so it is ready when the News tab opens
+    loadNews(false);
 
     initAuthSystem();
   </script>
