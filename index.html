@@ -769,9 +769,7 @@
     .ai-bar-track i { display: block; height: 100%; border-radius: 99px; animation: barIn .9s var(--spring) backwards; } @keyframes barIn { from { width: 0 !important; } }
     @media (max-width: 520px) { .ai-hero { flex-direction: column; text-align: center; } }
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } .reveal { opacity: 1; transform: none; } }
-      .name-edit-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.8rem; margin-left: 6px; padding: 2px 4px; border-radius: 6px; vertical-align: middle; }
-    .name-edit-btn:hover { color: var(--gold); background: var(--gold-soft); }
-    .name-input { width: 100%; padding: 11px 12px; background: var(--bg-base); border: 1px solid var(--border-subtle); border-radius: 10px; color: var(--text-main); font-size: 0.9rem; outline: none; }
+      .name-input { width: 100%; padding: 11px 12px; background: var(--bg-base); border: 1px solid var(--border-subtle); border-radius: 10px; color: var(--text-main); font-size: 0.9rem; outline: none; }
     .name-input:focus { border-color: var(--border-focus); }
     .name-msg { font-size: 0.78rem; color: var(--rose); min-height: 1em; }
     .name-save-btn { padding: 12px; border: none; border-radius: 10px; background: var(--gold-gradient); color: #04060a; font-weight: 700; cursor: pointer; }
@@ -983,7 +981,7 @@
               <div class="user-avatar" id="userAvatar">G</div>
             </div>
             <div class="user-details">
-              <span class="user-name" id="displayUsername">Guest Visitor</span><button type="button" class="name-edit-btn" title="Change username" aria-label="Change username" onclick="event.stopPropagation();openNameModal()">✏️</button>
+              <span class="user-name" id="displayUsername">Guest Visitor</span>
             </div>
           </div>
           <span class="dropdown-arrow">▼</span>
