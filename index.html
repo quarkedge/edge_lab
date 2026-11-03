@@ -774,6 +774,24 @@
     .name-msg { font-size: 0.78rem; color: var(--rose); min-height: 1em; }
     .name-save-btn { padding: 12px; border: none; border-radius: 10px; background: var(--gold-gradient); color: #04060a; font-weight: 700; cursor: pointer; }
     .name-save-btn:disabled { opacity: 0.6; cursor: default; }
+
+  /* ===== Premium pass: skeleton, SVG icons, gold as accent only, calendar cards ===== */
+  .ui-icon { width: 14px; height: 14px; flex-shrink: 0; vertical-align: -2px; display: inline-block; }
+  .day-cell.day-skel { cursor: default; pointer-events: none; transform: none; border-color: transparent;
+    background: linear-gradient(90deg, var(--bg-base) 25%, var(--bg-surface) 50%, var(--bg-base) 75%);
+    background-size: 200% 100%; animation: skelShimmer 1.4s infinite linear; box-shadow: none; }
+  @keyframes skelShimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+  .mkt-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 6px; vertical-align: 1px; background: var(--text-muted); }
+  .mkt-dot.open { background: var(--emerald); }
+  .mkt-dot.pre { background: var(--amber); }
+  .mkt-dot.off { background: var(--rose); }
+  .auth-title { background: none; -webkit-background-clip: border-box; -webkit-text-fill-color: var(--text-main); color: var(--text-main); }
+  .weekday-summary-col { color: var(--text-main); }
+  .calendar-days, .calendar-weekdays { gap: 8px; }
+  .day-cell { border-radius: 14px; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.18); }
+  .day-cell:not(.profit):not(.loss):hover { border-color: var(--text-muted); }
+  .about-card .ic svg { width: 22px; height: 22px; color: var(--text-main); }
+  .hero-pill .dot .ui-icon { width: 12px; height: 12px; vertical-align: -1px; }
   </style>
 </head>
 <body>
@@ -926,8 +944,8 @@
         <div class="nav-item nav-extra">
           <button class="nav-link" type="button" onclick="toggleNavItem(this)">More <span class="caret">•••</span></button>
           <div class="nav-menu">
-            <button type="button" onclick="toggleDarkMode()">🌓 Switch Theme<small>Dark / light mode</small></button>
-            <button type="button" onclick="navGo('perf')">📊 Open Journal<small>Go to your dashboard</small></button>
+            <button type="button" onclick="toggleDarkMode()"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor"/></svg> Switch Theme<small>Dark / light mode</small></button>
+            <button type="button" onclick="navGo('perf')"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg> Open Journal<small>Go to your dashboard</small></button>
           </div>
         </div>
         <button class="nav-btn-ghost" type="button" onclick="openLoginModalFromProfile()">Sign In</button>
@@ -936,7 +954,7 @@
     </nav>
 
     <div class="hero-content">
-      <div class="hero-pill"><span class="dot">✦</span> Built for traders who journal every execution</div>
+      <div class="hero-pill"><span class="dot"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/></svg></span> Built for traders who journal every execution</div>
       <h1 class="hero-headline">Boost Your Trading<br>Edge with <span class="gold">Quark</span></h1>
       <p class="hero-subtitle">
         Focus on execution while Quark tracks your calendar, instruments, psychology leaks and statistical edge, with autonomous AI audits.
@@ -988,11 +1006,11 @@
         </div>
         
         <div class="profile-dropdown" id="profileDropdown">
-          <button class="dropdown-btn" onclick="triggerAvatarUpload()">📷 Change Profile Photo</button>
-          <button class="dropdown-btn" onclick="openNameModal()">✏️ Change Username</button>
-          <button class="dropdown-btn" onclick="openChangePasswordModal()">🔑 Change Password</button>
-          <button class="dropdown-btn" onclick="toggleDarkMode()">🌓 <span id="themeToggleLabel">Switch to Light Mode</span></button>
-          <button class="dropdown-btn" onclick="openLoginModalFromProfile()">👤 Switch / Sign In Account</button>
+          <button class="dropdown-btn" onclick="triggerAvatarUpload()"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h3l2-3h6l2 3h3v12H4z"/><circle cx="12" cy="13" r="3.5"/></svg> Change Profile Photo</button>
+          <button class="dropdown-btn" onclick="openNameModal()"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg> Change Username</button>
+          <button class="dropdown-btn" onclick="openChangePasswordModal()"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M14 9l2 2"/></svg> Change Password</button>
+          <button class="dropdown-btn" onclick="toggleDarkMode()"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor"/></svg> <span id="themeToggleLabel">Switch to Light Mode</span></button>
+          <button class="dropdown-btn" onclick="openLoginModalFromProfile()"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg> Switch / Sign In Account</button>
           <button class="dropdown-btn danger" onclick="logoutTerminal()">🔒 Logout Terminal</button>
         </div>
         <input type="file" id="avatarFileInput" accept="image/*" style="display:none" onchange="handleAvatarUpload(event)" />
@@ -1040,7 +1058,7 @@
           <button class="btn-today" onclick="jumpToToday()">Today</button>
         </div>
         <div style="display: flex; gap: 12px; align-items: center;">
-          <button class="btn-ai-trigger" id="topAuthBtn" onclick="openLoginModalFromProfile()" style="background: rgba(212,175,55,0.15); border:1px solid var(--gold); color:var(--gold);">🔑 Sign In / Account</button>
+          <button class="btn-ai-trigger" id="topAuthBtn" onclick="openLoginModalFromProfile()" style="background: rgba(212,175,55,0.15); border:1px solid var(--gold); color:var(--gold);"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M14 9l2 2"/></svg> Sign In / Account</button>
           <div class="month-selector">
             <button class="month-nav-btn" onclick="changeMonth(-1)">‹</button>
             <select id="monthSelect"></select>
@@ -1072,10 +1090,10 @@
         <p>Quark turns every trade you log into a clear picture of your edge: where you make money, where you leak it, and what to fix first. Built for discretionary traders in Indian and global markets.</p>
         <div class="about-cta"><button type="button" class="nav-btn-solid" onclick="setView('perf')">Open my calendar <span class="arrow">→</span></button><button type="button" class="nav-btn-ghost" onclick="navGo('audit')">See the AI audit</button></div></div>
       <div class="about-grid2">
-        <div class="about-card reveal"><div class="ic">📅</div><h3>Institutional Calendar</h3><p>Every session colour-coded by P&amp;L, with weekly totals and one-tap trade logging.</p></div>
-        <div class="about-card reveal"><div class="ic">🎯</div><h3>Instrument Tracking</h3><p>See which instruments pay you and which ones leak, each with its own calendar.</p></div>
+        <div class="about-card reveal"><div class="ic"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div><h3>Institutional Calendar</h3><p>Every session colour-coded by P&amp;L, with weekly totals and one-tap trade logging.</p></div>
+        <div class="about-card reveal"><div class="ic"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg></div><h3>Instrument Tracking</h3><p>See which instruments pay you and which ones leak, each with its own calendar.</p></div>
         <div class="about-card reveal"><div class="ic">✨</div><h3>AI Edge Audit</h3><p>Execution score, expectancy, drawdown and your costliest mistakes, with one clear fix to work on.</p></div>
-        <div class="about-card reveal"><div class="ic">📰</div><h3>Market News</h3><p>Headlines for the symbols you actually trade, with saved stories and read tracking.</p></div>
+        <div class="about-card reveal"><div class="ic"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h14v16H4z"/><path d="M18 9h2v9a2 2 0 0 1-2 2"/><path d="M8 8h6M8 12h6M8 16h4"/></svg></div><h3>Market News</h3><p>Headlines for the symbols you actually trade, with saved stories and read tracking.</p></div>
         <div class="about-card reveal"><div class="ic">🚀</div><h3>My Platforms</h3><p>Your broker, charting and research sites one tap away, saved to your account.</p></div>
         <div class="about-card reveal"><div class="ic">🔒</div><h3>Private by design</h3><p>Sign in with email or Google. Database rules let each account read only its own journal.</p></div>
       </div>
@@ -1246,6 +1264,28 @@
     function lsGet(k) { try { return window.localStorage.getItem(k); } catch (e) { return null; } }
     function lsSet(k, v) { try { window.localStorage.setItem(k, v); } catch (e) {} }
     function lsRemove(k) { try { window.localStorage.removeItem(k); } catch (e) {} }
+    const ICON_PATHS = {
+      alert: '<path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/>',
+      bookmark: '<path d="M6 3h12v18l-6-4-6 4z"/>',
+      pencil: '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
+      trash: '<path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/>'
+    };
+    function svgIcon(name, cls = 'ui-icon') {
+      return `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON_PATHS[name]}</svg>`;
+    }
+
+    // Trade cache: lets the calendar paint instantly on reload. Screenshots are left out
+    // because they are large and would exceed the localStorage quota.
+    const tradeCacheKey = u => 'quark_trades_v1_' + u;
+    function readTradeCache(u) {
+      try { const v = JSON.parse(lsGet(tradeCacheKey(u)) || 'null'); return Array.isArray(v) ? sanitizeTrades(v) : null; } catch (e) { return null; }
+    }
+    function writeTradeCache(u) {
+      lsSet(tradeCacheKey(u), JSON.stringify(trades.map(({ imageBase64, ...t }) => t)));
+    }
+    function showCalendarSkeleton() {
+      calendarDays.innerHTML = Array.from({ length: 42 }, () => '<div class="day-cell day-skel" aria-hidden="true"></div>').join('');
+    }
 
     let authToken = null;
     function fbUrl(path) {
@@ -1267,6 +1307,9 @@
     let authMode = 'login';
     let authOpenedAt = Date.now();
     let trades = [];
+    let tradesLoaded = false;  // false = show skeleton
+    let tradesFresh = false;   // true only after the cloud copy for this user has loaded
+    let loadedUserKey = null;  // user whose trades are currently loaded
     let selectedDate = null;
 
     const authGateOverlay = document.getElementById('authGateOverlay');
@@ -1334,7 +1377,7 @@
       }
       // 3) Nobody signed in: show the guest view.
       lsRemove('quark_active_user'); currentSessionUser = null;
-      authGateOverlay.style.display = 'none'; renderDashboard();
+      authGateOverlay.style.display = 'none'; tradesLoaded = true; tradesFresh = false; renderDashboard();
     }
 
     // One-Click Google & Apple Sign In Handler
@@ -1675,10 +1718,17 @@
       currentSessionUser = userKey;
       lsSet('quark_active_user', userKey);
       authGateOverlay.style.display = 'none';
+      if (loadedUserKey === userKey && tradesFresh) { renderDashboard(); return; } // already loaded this session
+      tradesFresh = false;
+      const cachedTrades = readTradeCache(userKey);
+      if (cachedTrades) { trades = cachedTrades; tradesLoaded = true; renderDashboard(); }
+      else { tradesLoaded = false; showCalendarSkeleton(); }
 
       let nameToDisplay = fallbackName || userKey;
+      let fetched = false;
       try {
         const data = await dbGetUser(userKey);
+        fetched = true;
         if (data) {
           if (data.displayName) nameToDisplay = data.displayName;
           nameChangesUsed = Number(data.nameChanges) || 0;
@@ -1695,6 +1745,8 @@
 
       const list = Array.isArray(initialTrades) ? initialTrades : Object.values(initialTrades || {});
       trades = sanitizeTrades(list);
+      tradesLoaded = true;
+      if (fetched) { tradesFresh = true; loadedUserKey = userKey; writeTradeCache(userKey); }
       renderDashboard();
     }
 
@@ -1707,7 +1759,7 @@
       document.getElementById('displayUsername').textContent = 'Guest Visitor';
       applyAvatarToUI(null);
       document.getElementById('topAuthBtn').style.display = 'flex';
-      trades = [];
+      trades = []; tradesFresh = false; tradesLoaded = false; loadedUserKey = null;
       renderDashboard();
       switchAuthTab('login');
       authGateOverlay.style.display = 'flex';
@@ -1715,8 +1767,10 @@
 
         async function persistAllTradeData() {
       if (!currentSessionUser) return false;
+      if (!tradesFresh) { alert('Your trades are still loading from the cloud. Try again in a moment.'); return false; }
       try {
         await dbPut(`${currentSessionUser}/trades`, trades);
+        writeTradeCache(currentSessionUser);
         return true;
       } catch (e) {
         console.error('Failed to sync trades', e);
@@ -1802,6 +1856,7 @@
     }
 
     function renderDashboard() {
+      if (!tradesLoaded) { showCalendarSkeleton(); return; }
       const m = parseInt(monthSelect.value);
       const y = parseInt(yearSelect.value);
       calendarDays.innerHTML = '';
@@ -1873,7 +1928,7 @@
           </div>
           ${bodyHtml}
           <div class="day-footer">
-            <div class="day-meta">${dayMistakes > 0 ? `<span class="mistake-badge">⚠️ ${dayMistakes} Leak</span>` : '<span></span>'}</div>
+            <div class="day-meta">${dayMistakes > 0 ? `<span class="mistake-badge">${svgIcon('alert')} ${dayMistakes} Leak</span>` : '<span></span>'}</div>
             ${wlBarHtml}
           </div>
         `;
@@ -1958,7 +2013,7 @@
         item.className = 'leak-item';
         let metricsHtml = '';
         if (s.directLoss < 0) metricsHtml += `<div class="leak-cost-loss">🛑 Loss Cost: ${formatCurrencyPlain(s.directLoss)}</div>`;
-        if (s.luckyProfit > 0) metricsHtml += `<div class="leak-cost-lucky">⚠️ Toxic Reward: +$${s.luckyProfit.toFixed(2)}</div>`;
+        if (s.luckyProfit > 0) metricsHtml += `<div class="leak-cost-lucky">${svgIcon('alert')} Toxic Reward: +$${s.luckyProfit.toFixed(2)}</div>`;
         item.innerHTML = `
           <div class="leak-header"><span>${escHtml(k)}</span><span class="leak-count-pill">${s.count}x</span></div>
           <div class="leak-metrics">${metricsHtml}</div>
@@ -2151,7 +2206,7 @@
         const isLong = (t.direction || 'Long') === 'Long';
         const mistakeDisplay = t.mistake && t.mistake !== 'None' ? `<div style="color:var(--amber); font-size:0.82rem; font-weight:600; background:rgba(245, 158, 11, 0.1); padding: 6px 10px; border-radius:6px; display:inline-block; align-self:flex-start;">⚠️ Execution Leak: ${escHtml(t.mistake)}</div>` : '';
         const notesDisplay = t.notes ? `<div class="trade-notes-card">${formatTradeNotes(t.notes)}</div>` : '';
-        const photoThumb = t.imageBase64 ? `<a class="chart-thumb-link" data-lightbox="1" style="cursor:pointer">📷 View Attached Chart Screenshot</a>` : '';
+        const photoThumb = t.imageBase64 ? `<a class="chart-thumb-link" data-lightbox="1" style="cursor:pointer"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h3l2-3h6l2 3h3v12H4z"/><circle cx="12" cy="13" r="3.5"/></svg> View Attached Chart Screenshot</a>` : '';
         row.innerHTML = `
           <div class="trade-row-top">
             <div class="trade-title-group">
@@ -2161,8 +2216,8 @@
             </div>
             <div class="trade-row-actions">
               <span class="trade-pnl-pill" style="color:${Number(t.pnl) >= 0 ? 'var(--emerald)' : 'var(--rose)'}">${formatCurrency(Number(t.pnl))}${rDisplay}</span>
-              <button class="action-btn edit" onclick="startEditTrade(${Number(t.id)})">✏️ Edit</button>
-              <button class="action-btn delete" onclick="deleteTrade(${Number(t.id)})">🗑️</button>
+              <button class="action-btn edit" onclick="startEditTrade(${Number(t.id)})">${svgIcon('pencil')} Edit</button>
+              <button class="action-btn delete" onclick="deleteTrade(${Number(t.id)})">${svgIcon('trash')}</button>
             </div>
           </div>
           ${mistakeDisplay} ${notesDisplay} ${photoThumb}
@@ -2659,7 +2714,7 @@
       const items = newsItems.filter(i => (!q || (i.title + ' ' + i.source).toLowerCase().includes(q)) && (!age || !i.ts || Date.now() - i.ts < age * 3600000) && (!only || hitOf(i)) && (!newOnly || !read[i.link]));
       visibleNews = items;
       el('newsUpdated').textContent = newsUpdatedAt ? `Updated ${timeAgo(newsUpdatedAt)} · ${items.length} of ${newsItems.length} stories` : (newsCat === 'saved' ? `${newsItems.length} saved` : '');
-      if (!items.length) { list.innerHTML = `<div class="news-empty">${newsCat === 'saved' ? 'Nothing saved yet. Tap 🔖 on any story to keep it here.' : (q || age || only || newOnly) ? 'No stories match your filters.' : 'No fresh headlines for this section right now. Try another section or refresh later.'}</div>`; return; }
+      if (!items.length) { list.innerHTML = `<div class="news-empty">${newsCat === 'saved' ? 'Nothing saved yet. Tap the bookmark on any story to keep it here.' : (q || age || only || newOnly) ? 'No stories match your filters.' : 'No fresh headlines for this section right now. Try another section or refresh later.'}</div>`; return; }
       let html = '', last = '';
       items.forEach((i, n) => {
         const dl = dayLabel(i.ts); if (dl !== last) { html += `<div class="news-day">${escHtml(dl)}</div>`; last = dl; }
@@ -2670,7 +2725,7 @@
           <div class="news-meta">${i.source ? `<span class="news-src">${escHtml(i.source)}</span>·` : ''}<span>${escHtml(timeAgo(i.ts))}</span>
             ${i.also && i.also.length ? `<span class="news-also">also ${escHtml(i.also.join(', '))}</span>` : ''}
             ${hit ? `<span class="news-tag mine">★ ${escHtml(hit)}</span>` : ''}<span class="news-tag sent-${sent.k}">${sent.l}</span>${tags.map(t => `<span class="news-tag">${escHtml(t)}</span>`).join('')}${tks.map(t => `<button type="button" class="news-tk" data-tk="${escHtml(t)}" title="Show headlines about ${escHtml(t)}">${escHtml(t)}</button>`).join('')}
-            <button type="button" class="news-save ${saved[i.link] ? 'on' : ''}" data-n="${n}" title="Save for later" aria-label="Save for later">🔖</button></div>
+            <button type="button" class="news-save ${saved[i.link] ? 'on' : ''}" data-n="${n}" title="Save for later" aria-label="Save for later">${svgIcon('bookmark')}</button></div>
         </article>`;
       });
       list.innerHTML = html;
@@ -2699,12 +2754,12 @@
       if (!el) return;
       const ist = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
       const day = ist.getDay(), mins = ist.getHours() * 60 + ist.getMinutes();
-      let txt;
-      if (day === 0 || day === 6) txt = '🔴 NSE closed (weekend)';
-      else if (mins >= 9 * 60 + 15 && mins <= 15 * 60 + 30) txt = '🟢 NSE open';
-      else if (mins >= 9 * 60 && mins < 9 * 60 + 15) txt = '🟡 NSE pre-open';
-      else txt = '🔴 NSE closed';
-      el.textContent = txt + ' · IST ' + ist.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      let txt, dot;
+      if (day === 0 || day === 6) { txt = 'NSE closed (weekend)'; dot = 'off'; }
+      else if (mins >= 9 * 60 + 15 && mins <= 15 * 60 + 30) { txt = 'NSE open'; dot = 'open'; }
+      else if (mins >= 9 * 60 && mins < 9 * 60 + 15) { txt = 'NSE pre-open'; dot = 'pre'; }
+      else { txt = 'NSE closed'; dot = 'off'; }
+      el.innerHTML = '<span class="mkt-dot ' + dot + '" aria-hidden="true"></span>' + txt + ' · IST ' + ist.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     }
 
     setInterval(() => {
