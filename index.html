@@ -545,7 +545,8 @@
     .calendar-weekdays, .calendar-days { grid-template-columns: repeat(7, minmax(0, 1fr)) 104px; gap: 8px; }
     .day-cell { min-height: 98px; padding: 8px 9px; min-width: 0; }
     .day-pnl { font-size: 0.9rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .day-tickers { overflow: hidden; max-height: 22px; }
+    .day-tickers { overflow: visible; max-height: none; }
+    .day-tickers .ticker-chip { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .week-summary-cell { min-width: 0; padding: 8px; }
     .week-pnl { font-size: 0.85rem; overflow: hidden; text-overflow: ellipsis; }
 
@@ -2139,7 +2140,39 @@
         <div class="ai-sec">By instrument</div>${tbl(['Symbol', ...TH.slice(1)], syms.slice(0, 8).map(x => row(x.k, x)))}
         <div class="ai-sec">Weekday P&amp;L</div>${auditBars(wd)}
         <div class="ai-sec">By weekday</div>${tbl(['Day', ...TH.slice(1)], wd.map(x => row(x.k, x)))}
+        ${notesSectionHtml(list)}
         <p class="ai-sub">${s.n < 20 ? `Only ${s.n} trades: treat these as hints, not proof. ` : ''}Calculated on this device from your journal with fixed rules. No data leaves your browser. Not investment advice.</p>`;
+    }
+
+    const NOTE_THEMES = [
+      ['Impatience / rushing', /impatien|rush|hurry|too fast|forced|urgen/i],
+      ['Distraction', /distract|phone|noise|scroll|multitask/i],
+      ['Fear / hesitation', /fear|scared|hesitat|afraid|freez|doubt/i],
+      ['Greed / oversizing', /greed|oversiz|too big|size up|overconfid/i],
+      ['Revenge / tilt', /revenge|angry|anger|tilt|frustrat|upset|annoyed/i],
+      ['FOMO / chasing', /fomo|chas(e|ing)|missed|late entry/i],
+      ['Followed plan', /followed|as planned|per plan|checklist|stuck to/i],
+      ['Session timing', /\bopen(ing)?\b|lunch|expiry|pre-?open|first hour|last hour|session/i]
+    ];
+    // Separate section on the AI audit: summarises the journal notes only, never mixed into the score or insights
+    function notesSectionHtml(list) {
+      const head = '<div class="ai-sec">Psychology &amp; session notes</div>';
+      const withNotes = list.filter(t => String(t.notes || '').trim())
+        .sort((a, b) => a.date < b.date ? 1 : a.date > b.date ? -1 : b.id - a.id);
+      if (!withNotes.length) return head + '<div class="ai-sub">No Psychology &amp; Session Context Notes written for this period. Add a note to a trade in the calendar to see its themes here.</div>';
+      const themes = NOTE_THEMES.map(([label, re]) => ({ label, hits: withNotes.filter(t => re.test(t.notes)) }))
+        .filter(x => x.hits.length).sort((a, b) => b.hits.length - a.hits.length);
+      const themeTbl = themes.length
+        ? tbl(['Theme', 'Notes', 'Net P&amp;L'], themes.map(x => { const n = sum(x.hits.map(t => Number(t.pnl))); return `<tr><td>${x.label}</td><td>${x.hits.length}</td><td style="color:${pnlColor(n)}">${formatCurrencyPlain(n)}</td></tr>`; }))
+        : '<div class="ai-sub">No recurring theme found in your notes.</div>';
+      const recent = withNotes.slice(0, 6).map(t => {
+        const raw = String(t.notes).trim(), short = raw.length > 180 ? raw.slice(0, 180) + '…' : raw;
+        return `<div class="ai-sub" style="margin-top:8px"><strong>${escHtml(t.date)}</strong> · ${escHtml(t.symbol || '—')} · ${formatCurrencyPlain(Number(t.pnl))}<br>${escHtml(short)}</div>`;
+      }).join('');
+      return head
+        + `<div class="ai-sub">${withNotes.length} note${withNotes.length > 1 ? 's' : ''} in this period, summarised separately from the score above.</div>`
+        + themeTbl + recent
+        + (withNotes.length > 6 ? `<div class="ai-sub">Showing the 6 most recent of ${withNotes.length} notes.</div>` : '');
     }
 
     function openTradeModal(dateKey) {
