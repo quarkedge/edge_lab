@@ -2575,7 +2575,7 @@
     const NEWS_TTL = 20 * 60 * 1000;
     let newsCat = 'top', newsItems = [], newsReq = 0, newsUpdatedAt = null, visibleNews = [];
     const NEWS_CATS = [['top', 'Top stories'], ['idx', 'Nifty & Bank Nifty'], ['stocks', 'Stocks in focus'], ['results', ''], ['global', 'Global cues'], ['macro', 'Economy & RBI'], ['comm', 'Commodities & rupee'], ['ipo', 'IPOs'], ['crypto', 'Crypto'], ['mine', '🎯 My symbols'], ['saved', '🔖 Saved']];
-    let newsLimit = 25;
+    let newsLimit = 25, newsError = '';
     function moreNews() { newsLimit += 25; renderNewsList(); }
     function readJ(k, d) { try { const v = JSON.parse(lsGet(k) || 'null'); return v == null ? d : v; } catch (e) { return d; } }
     function mySyms() { const c = {}; trades.forEach(t => { const s = symKey(t.symbol).split(/\s+/)[0]; if (s.length >= 3 && !/^\d+$/.test(s)) c[s] = (c[s] || 0) + 1; }); const k = Object.keys(c).sort((a, b) => c[b] - c[a]).slice(0, 6); readJ('quark_watchlist', []).forEach(s => { if (!k.includes(s) && k.length < 10) k.push(s); }); return k; }
@@ -2675,7 +2675,7 @@
       const cached = readJ(ck(newsCat), null), fresh = cached && Date.now() - cached.t < NEWS_TTL;
       if (cached) { newsItems = cached.items; newsUpdatedAt = cached.t; renderNewsList(); if (fresh && !force) return; }
       else { newsItems = []; list.innerHTML = '<div class="news-skel"></div>'.repeat(6); }
-      const id = ++newsReq, cat = newsCat; setRefreshing(true);
+      const id = ++newsReq, cat = newsCat; newsError = ''; setRefreshing(true);
       try {
         const items = dedupe(await fetchFeedItems(spec)).slice(0, 150);
         lsSet(ck(cat), JSON.stringify({ t: Date.now(), items: items.map(({ _t, ...r }) => r) }));
@@ -2683,7 +2683,7 @@
         newsItems = items; newsUpdatedAt = Date.now(); renderNewsList();
       } catch (err) {
         if (id !== newsReq || cat !== newsCat) return;
-        console.warn('[news] refresh failed:', err);
+        console.warn('[news] refresh failed:', err); newsError = err.message;
         if (cached) { note.textContent = 'Could not refresh the news (' + err.message + '). Showing headlines saved on this device.'; note.style.display = 'block'; }
         else list.innerHTML = '<div class="news-empty">Could not load headlines (' + escHtml(err.message) + ').<br>The feed uses free public relays that are sometimes busy.<br><button type="button" class="nav-btn-ghost" onclick="loadNews(true)">Try again</button></div>';
       } finally { if (id === newsReq) setRefreshing(false); }
@@ -2771,7 +2771,15 @@
       const items = newsItems.filter(i => (!q || (i.title + ' ' + i.source).toLowerCase().includes(q)) && (!age || !i.ts || Date.now() - i.ts < age * 3600000) && (!only || hitOf(i)) && (!newOnly || !read[i.link]));
       visibleNews = items; const shown = items.slice(0, newsLimit);
       el('newsUpdated').textContent = newsUpdatedAt ? `Updated ${timeAgo(newsUpdatedAt)} · ${items.length} of ${newsItems.length} stories` : (newsCat === 'saved' ? `${newsItems.length} saved` : '');
-      if (!items.length) { list.innerHTML = `<div class="news-empty">${newsCat === 'saved' ? 'Nothing saved yet. Tap the bookmark on any story to keep it here.' : (q || age || only || newOnly) ? 'No stories match your filters.' : 'No fresh headlines for this section right now. Try another section or refresh later.'}</div>`; return; }
+      if (!items.length) {
+        let msg;
+        if (newsCat === 'saved') msg = 'Nothing saved yet. Tap the bookmark on any story to keep it here.';
+        else if (q || age || only || newOnly) msg = 'No stories match your filters.';
+        else if (newsError) msg = 'Could not load headlines (' + escHtml(newsError) + ').<br>The feed uses free public relays that are sometimes busy.<br><button type="button" class="nav-btn-ghost" onclick="loadNews(true)">Try again</button>';
+        else if (!newsUpdatedAt) msg = 'Loading headlines…';
+        else msg = 'No fresh headlines for this section right now. Try another section or refresh later.';
+        list.innerHTML = '<div class="news-empty">' + msg + '</div>'; return;
+      }
       let html = '', last = '';
       shown.forEach((i, n) => {
         const dl = dayLabel(i.ts); if (dl !== last) { html += `<div class="news-day">${escHtml(dl)}</div>`; last = dl; }
@@ -2823,7 +2831,7 @@
     setInterval(() => {
       if (currentView !== 'news') return;
       updateMarketStatus();
-      if (newsCat !== 'saved' && newsUpdatedAt && Date.now() - newsUpdatedAt > NEWS_TTL) loadNews(true); else renderNewsList();
+      if (newsCat !== 'saved' && (!newsUpdatedAt || Date.now() - newsUpdatedAt > NEWS_TTL)) loadNews(true); else renderNewsList();
     }, 60000);
 
     document.addEventListener('keydown', (e) => {
