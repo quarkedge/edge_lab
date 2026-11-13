@@ -1138,7 +1138,7 @@
         <div class="news-controls">
           <input type="search" id="newsSearch" class="news-search" placeholder="Search headlines…" oninput="renderNewsList()">
           <div class="news-filters">
-            <select id="newsAge" onchange="renderNewsList()"><option value="0">Any time</option><option value="6">Last 6 hours</option><option value="24">Last 24 hours</option></select>
+            <select id="newsAge" onchange="renderNewsList()"><option value="0">Any time</option><option value="6">Last 6 hours</option><option value="24">Last 24 hours</option><option value="72">Last 3 days</option><option value="168">Last 7 days</option></select>
             <label class="news-chk"><input type="checkbox" id="newsMineOnly" onchange="renderNewsList()"> Only my symbols</label>
             <label class="news-chk"><input type="checkbox" id="newsNewOnly" onchange="renderNewsList()"> New only</label>
           </div>
@@ -2575,6 +2575,8 @@
     const NEWS_TTL = 20 * 60 * 1000;
     let newsCat = 'top', newsItems = [], newsReq = 0, newsUpdatedAt = null, visibleNews = [];
     const NEWS_CATS = [['top', 'Top stories'], ['idx', 'Nifty & Bank Nifty'], ['stocks', 'Stocks in focus'], ['results', ''], ['global', 'Global cues'], ['macro', 'Economy & RBI'], ['comm', 'Commodities & rupee'], ['ipo', 'IPOs'], ['crypto', 'Crypto'], ['mine', '🎯 My symbols'], ['saved', '🔖 Saved']];
+    let newsLimit = 25;
+    function moreNews() { newsLimit += 25; renderNewsList(); }
     function readJ(k, d) { try { const v = JSON.parse(lsGet(k) || 'null'); return v == null ? d : v; } catch (e) { return d; } }
     function mySyms() { const c = {}; trades.forEach(t => { const s = symKey(t.symbol).split(/\s+/)[0]; if (s.length >= 3 && !/^\d+$/.test(s)) c[s] = (c[s] || 0) + 1; }); const k = Object.keys(c).sort((a, b) => c[b] - c[a]).slice(0, 6); readJ('quark_watchlist', []).forEach(s => { if (!k.includes(s) && k.length < 10) k.push(s); }); return k; }
 
@@ -2586,11 +2588,20 @@
     }
 
     function newsSpec(cat) {
-      const S = { top: ['Sensex Nifty Indian stock market', '1d'], idx: ['Nifty Bank Nifty outlook levels', '1d'], stocks: ['stocks in focus India buzzing', '1d'],
-        results: [resultsQuarter() + ' results India net profit', '7d'], global: ['global cues Wall Street Fed crude dollar Asian markets', '1d'],
-        macro: ['RBI inflation GDP India economy', '3d'], comm: ['crude oil gold silver rupee dollar', '1d'], ipo: ['IPO India subscription listing', '7d'], crypto: ['bitcoin ethereum crypto market', '1d'] };
-      if (cat === 'mine') { const m = mySyms(); return m.length ? { q: '(' + m.join(' OR ') + ') share news', when: '3d' } : null; }
-      return S[cat] ? { q: S[cat][0], when: S[cat][1] } : null;
+      // Each section runs several searches in parallel and merges them, with wider time windows
+      const S = {
+        top: [['Sensex Nifty Indian stock market', 'Indian stock market today', 'BSE NSE stocks news'], '3d'],
+        idx: [['Nifty Bank Nifty outlook levels', 'Nifty market outlook today', 'Bank Nifty news today'], '3d'],
+        stocks: [['stocks in focus India buzzing', 'NSE BSE shares news today', 'stock market India companies news'], '3d'],
+        results: [[resultsQuarter() + ' results India net profit', 'quarterly results India companies earnings', 'company earnings India profit'], '14d'],
+        global: [['global cues Wall Street Fed crude dollar Asian markets', 'Wall Street overnight Asia markets', 'Fed rate outlook markets'], '3d'],
+        macro: [['RBI inflation GDP India economy', 'RBI policy India banks loans', 'India economy news'], '7d'],
+        comm: [['crude oil gold silver rupee dollar', 'rupee dollar forex India', 'gold silver price India today'], '3d'],
+        ipo: [['IPO India subscription listing', 'IPO GMP India upcoming', 'SME IPO India'], '14d'],
+        crypto: [['bitcoin ethereum crypto market', 'crypto news today'], '3d']
+      };
+      if (cat === 'mine') { const m = mySyms().slice(0, 6); return m.length ? { qs: m.map(s => s + ' share news India'), when: '3d' } : null; }
+      return S[cat] ? { qs: S[cat][0], when: S[cat][1] } : null;
     }
 
     function stripTitle(raw) {
@@ -2616,18 +2627,25 @@
       return fetch(url, { signal: c.signal }).finally(() => clearTimeout(t));
     }
     const PROXIES = [u => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u), u => 'https://corsproxy.io/?url=' + encodeURIComponent(u), u => 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(u)];
-    async function fetchFeedItems(spec) {
-      const rss = `https://news.google.com/rss/search?q=${encodeURIComponent(spec.q + ' when:' + spec.when)}&hl=en-IN&gl=IN&ceid=IN:en`;
+    function rssUrl(q, when) { return `https://news.google.com/rss/search?q=${encodeURIComponent(q + ' when:' + when)}&hl=en-IN&gl=IN&ceid=IN:en`; }
+    async function fetchOneFeed(rss) {
       try {   // race all relays, first good answer wins
         return await Promise.any(PROXIES.map(async p => {
-          const r = await fetchTimeout(p(rss), 5000); if (!r.ok) throw new Error('relay');
+          const r = await fetchTimeout(p(rss), 6000); if (!r.ok) throw new Error('relay');
           const items = parseRss(await r.text()); if (!items.length) throw new Error('empty'); return items;
         }));
       } catch (e) {}
-      const r2 = await fetchTimeout('https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(rss) + (RSS2JSON_API_KEY ? '&count=40&api_key=' + encodeURIComponent(RSS2JSON_API_KEY) : ''), 6000);
+      const r2 = await fetchTimeout('https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(rss) + (RSS2JSON_API_KEY ? '&count=40&api_key=' + encodeURIComponent(RSS2JSON_API_KEY) : ''), 8000);
       const j = await r2.json();
       if (j.status !== 'ok' || !Array.isArray(j.items)) throw new Error('feed error');
       return j.items.map(i => makeItem(i.title, i.link, String(i.pubDate || '').replace(' ', 'T') + 'Z', '')).filter(Boolean);
+    }
+    async function fetchFeedItems(spec) {
+      // run every query for the section in parallel; one quiet query no longer empties the list
+      const settled = await Promise.allSettled(spec.qs.map(q => fetchOneFeed(rssUrl(q, spec.when))));
+      const items = settled.filter(x => x.status === 'fulfilled').flatMap(x => x.value);
+      if (!items.length) throw new Error('no items');
+      return items;
     }
     const STOP = new Set(['the', 'and', 'for', 'with', 'from', 'after', 'amid', 'over', 'today', 'live', 'updates', 'update', 'stock', 'stocks', 'share', 'shares']);
     function toks(t) { return new Set(t.toLowerCase().replace(/[^a-z0-9 ]/g, ' ').split(/\s+/).filter(w => w.length > 2 && !STOP.has(w))); }
@@ -2641,8 +2659,12 @@
       }
       return out;
     }
-    const ck = c => 'quark_news_v2_' + c + (c === 'mine' ? '_' + mySyms().join('') : '');
+    const ck = c => 'quark_news_v3_' + c + (c === 'mine' ? '_' + mySyms().join('') : '');
 
+    function setRefreshing(on) {
+      const b = el('newsRefreshBtn'); if (!b) return;
+      b.disabled = on; b.textContent = on ? '⟳ Refreshing…' : '⟳ Refresh';
+    }
     async function loadNews(force) {
       const list = el('newsList'); if (!list) return;
       const note = el('newsNote'); note.style.display = 'none';
@@ -2652,9 +2674,9 @@
       const cached = readJ(ck(newsCat), null), fresh = cached && Date.now() - cached.t < NEWS_TTL;
       if (cached) { newsItems = cached.items; newsUpdatedAt = cached.t; renderNewsList(); if (fresh && !force) return; }
       else { newsItems = []; list.innerHTML = '<div class="news-skel"></div>'.repeat(6); }
-      const id = ++newsReq, cat = newsCat; el('newsRefreshBtn').disabled = true;
+      const id = ++newsReq, cat = newsCat; setRefreshing(true);
       try {
-        const items = dedupe(await fetchFeedItems(spec)).slice(0, 50);
+        const items = dedupe(await fetchFeedItems(spec)).slice(0, 150);
         lsSet(ck(cat), JSON.stringify({ t: Date.now(), items: items.map(({ _t, ...r }) => r) }));
         if (id !== newsReq || cat !== newsCat) return;
         newsItems = items; newsUpdatedAt = Date.now(); renderNewsList();
@@ -2662,7 +2684,7 @@
         if (id !== newsReq || cat !== newsCat) return;
         if (cached) { note.textContent = 'Could not reach the news feed. Showing headlines saved on this device.'; note.style.display = 'block'; }
         else list.innerHTML = '<div class="news-empty">Could not load headlines. The feed uses free public relays that are sometimes busy.<br><button type="button" class="nav-btn-ghost" onclick="loadNews(true)">Try again</button></div>';
-      } finally { if (id === newsReq) el('newsRefreshBtn').disabled = false; }
+      } finally { if (id === newsReq) setRefreshing(false); }
     }
 
     const NEWS_TAGS = [
@@ -2745,11 +2767,11 @@
       const hitOf = i => { const f = i.title.toUpperCase().replace(/\s+/g, ''); return mine.find(s => f.includes(s)); };
       renderNewsTools();
       const items = newsItems.filter(i => (!q || (i.title + ' ' + i.source).toLowerCase().includes(q)) && (!age || !i.ts || Date.now() - i.ts < age * 3600000) && (!only || hitOf(i)) && (!newOnly || !read[i.link]));
-      visibleNews = items;
+      visibleNews = items; const shown = items.slice(0, newsLimit);
       el('newsUpdated').textContent = newsUpdatedAt ? `Updated ${timeAgo(newsUpdatedAt)} · ${items.length} of ${newsItems.length} stories` : (newsCat === 'saved' ? `${newsItems.length} saved` : '');
       if (!items.length) { list.innerHTML = `<div class="news-empty">${newsCat === 'saved' ? 'Nothing saved yet. Tap the bookmark on any story to keep it here.' : (q || age || only || newOnly) ? 'No stories match your filters.' : 'No fresh headlines for this section right now. Try another section or refresh later.'}</div>`; return; }
       let html = '', last = '';
-      items.forEach((i, n) => {
+      shown.forEach((i, n) => {
         const dl = dayLabel(i.ts); if (dl !== last) { html += `<div class="news-day">${escHtml(dl)}</div>`; last = dl; }
         const tags = []; NEWS_TAGS.forEach(([re, label]) => { if (tags.length < 3 && re.test(i.title)) tags.push(label); });
         const hit = hitOf(i), sent = sentimentOf(i.title), tks = tickersOf(i.title), why = whyLine(tags);
@@ -2761,6 +2783,7 @@
             <button type="button" class="news-save ${saved[i.link] ? 'on' : ''}" data-n="${n}" title="Save for later" aria-label="Save for later">${svgIcon('bookmark')}</button></div>
         </article>`;
       });
+      if (items.length > shown.length) html += `<button type="button" class="nav-btn-ghost news-more" onclick="moreNews()">Show ${Math.min(25, items.length - shown.length)} more (${items.length - shown.length} left)</button>`;
       list.innerHTML = html;
     }
     el('newsList').addEventListener('click', ev => {
@@ -2780,7 +2803,7 @@
       const box = el('newsCats'); if (!box) return;
       box.innerHTML = NEWS_CATS.map(([id, l]) => `<button type="button" class="news-cat ${newsCat === id ? 'active' : ''}" onclick="setNewsCat('${id}')">${escHtml(l || resultsQuarter() + ' results')}</button>`).join('');
     }
-    function setNewsCat(c) { newsCat = c; renderNewsCats(); loadNews(false); }
+    function setNewsCat(c) { newsCat = c; newsLimit = 25; renderNewsCats(); loadNews(false); }
 
     function updateMarketStatus() {
       const el = document.getElementById('mktStatus');
