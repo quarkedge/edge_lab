@@ -2600,7 +2600,7 @@
         ipo: [['IPO India subscription listing', 'IPO GMP India upcoming', 'SME IPO India'], '14d'],
         crypto: [['bitcoin ethereum crypto market', 'crypto news today'], '3d']
       };
-      if (cat === 'mine') { const m = mySyms().slice(0, 6); return m.length ? { qs: m.map(s => s + ' share news India'), when: '3d' } : null; }
+      if (cat === 'mine') { const m = mySyms().slice(0, 6); const qs = [m.slice(0, 3), m.slice(3, 6)].filter(c => c.length).map(c => '(' + c.join(' OR ') + ') share news India'); return qs.length ? { qs, when: '3d' } : null; }
       return S[cat] ? { qs: S[cat][0], when: S[cat][1] } : null;
     }
 
@@ -2628,9 +2628,15 @@
     }
     // Your own news relay (Cloudflare Worker). Paste its URL here, e.g. 'https://quark-news.yourname.workers.dev'. Leave '' to use the public relays only.
     const NEWS_WORKER_URL = 'https://quark-news.armaanpandey010726.workers.dev';
-    const PROXIES = [...(NEWS_WORKER_URL ? [u => NEWS_WORKER_URL + '/?rss=' + encodeURIComponent(u)] : []), u => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u), u => 'https://corsproxy.io/?url=' + encodeURIComponent(u), u => 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(u)];
+    const PROXIES = [u => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u), u => 'https://corsproxy.io/?url=' + encodeURIComponent(u), u => 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(u)];
     function rssUrl(q, when) { return `https://news.google.com/rss/search?q=${encodeURIComponent(q + ' when:' + when)}&hl=en-IN&gl=IN&ceid=IN:en`; }
     async function fetchOneFeed(rss) {
+      if (NEWS_WORKER_URL) {   // fast path: your own relay, with a timestamp so the browser never reuses an old copy
+        try {
+          const r = await fetchTimeout(NEWS_WORKER_URL + '/?rss=' + encodeURIComponent(rss) + '&t=' + Date.now(), 7000);
+          if (r.ok) { const items = parseRss(await r.text()); if (items.length) return items; }
+        } catch (e) {}
+      }
       try {   // race all relays, first good answer wins
         return await Promise.any(PROXIES.map(async p => {
           const r = await fetchTimeout(p(rss), 6000); if (!r.ok) throw new Error('relay');
@@ -2644,7 +2650,7 @@
     }
     async function fetchFeedItems(spec) {
       // run every query for the section in parallel; one quiet query no longer empties the list
-      const settled = await Promise.allSettled(spec.qs.map(q => fetchOneFeed(rssUrl(q, spec.when))));
+      const settled = await Promise.allSettled(spec.qs.slice(0, 2).map(q => fetchOneFeed(rssUrl(q, spec.when))));
       settled.forEach((x, n) => { if (x.status === 'rejected') console.warn('[news] query failed:', spec.qs[n], x.reason); });
       const items = settled.filter(x => x.status === 'fulfilled').flatMap(x => x.value);
       if (!items.length) throw new Error('no headlines returned (all feeds failed; see browser console)');
