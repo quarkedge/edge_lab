@@ -2643,8 +2643,9 @@
     async function fetchFeedItems(spec) {
       // run every query for the section in parallel; one quiet query no longer empties the list
       const settled = await Promise.allSettled(spec.qs.map(q => fetchOneFeed(rssUrl(q, spec.when))));
+      settled.forEach((x, n) => { if (x.status === 'rejected') console.warn('[news] query failed:', spec.qs[n], x.reason); });
       const items = settled.filter(x => x.status === 'fulfilled').flatMap(x => x.value);
-      if (!items.length) throw new Error('no items');
+      if (!items.length) throw new Error('no headlines returned (all feeds failed; see browser console)');
       return items;
     }
     const STOP = new Set(['the', 'and', 'for', 'with', 'from', 'after', 'amid', 'over', 'today', 'live', 'updates', 'update', 'stock', 'stocks', 'share', 'shares']);
@@ -2682,8 +2683,9 @@
         newsItems = items; newsUpdatedAt = Date.now(); renderNewsList();
       } catch (err) {
         if (id !== newsReq || cat !== newsCat) return;
-        if (cached) { note.textContent = 'Could not reach the news feed. Showing headlines saved on this device.'; note.style.display = 'block'; }
-        else list.innerHTML = '<div class="news-empty">Could not load headlines. The feed uses free public relays that are sometimes busy.<br><button type="button" class="nav-btn-ghost" onclick="loadNews(true)">Try again</button></div>';
+        console.warn('[news] refresh failed:', err);
+        if (cached) { note.textContent = 'Could not refresh the news (' + err.message + '). Showing headlines saved on this device.'; note.style.display = 'block'; }
+        else list.innerHTML = '<div class="news-empty">Could not load headlines (' + escHtml(err.message) + ').<br>The feed uses free public relays that are sometimes busy.<br><button type="button" class="nav-btn-ghost" onclick="loadNews(true)">Try again</button></div>';
       } finally { if (id === newsReq) setRefreshing(false); }
     }
 
