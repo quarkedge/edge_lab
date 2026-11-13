@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <!-- SECURITY: Content-Security-Policy. 'unsafe-inline' stays only because the page uses inline onclick handlers. Also set real HTTP headers on your host (see SECURITY-NOTES.md). -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.google.com https://*.gstatic.com https://*.googleusercontent.com; connect-src https://*.firebaseio.com wss://*.firebaseio.com https://*.googleapis.com https://apis.google.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.rss2json.com; frame-src https://*.firebaseapp.com https://apis.google.com https://accounts.google.com https://appleid.apple.com; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.google.com https://*.gstatic.com https://*.googleusercontent.com; connect-src https://*.workers.dev https://*.firebaseio.com wss://*.firebaseio.com https://*.googleapis.com https://apis.google.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.rss2json.com; frame-src https://*.firebaseapp.com https://apis.google.com https://accounts.google.com https://appleid.apple.com; object-src 'none'; base-uri 'none'; form-action 'none'">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>Quark — The Institutional Trading Terminal</title>
   
@@ -2626,7 +2626,9 @@
       const c = new AbortController(); const t = setTimeout(() => c.abort(), ms);
       return fetch(url, { signal: c.signal }).finally(() => clearTimeout(t));
     }
-    const PROXIES = [u => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u), u => 'https://corsproxy.io/?url=' + encodeURIComponent(u), u => 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(u)];
+    // Your own news relay (Cloudflare Worker). Paste its URL here, e.g. 'https://quark-news.yourname.workers.dev'. Leave '' to use the public relays only.
+    const NEWS_WORKER_URL = 'https://quark-news.armaanpandey010726.workers.dev';
+    const PROXIES = [...(NEWS_WORKER_URL ? [u => NEWS_WORKER_URL + '/?rss=' + encodeURIComponent(u)] : []), u => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u), u => 'https://corsproxy.io/?url=' + encodeURIComponent(u), u => 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(u)];
     function rssUrl(q, when) { return `https://news.google.com/rss/search?q=${encodeURIComponent(q + ' when:' + when)}&hl=en-IN&gl=IN&ceid=IN:en`; }
     async function fetchOneFeed(rss) {
       try {   // race all relays, first good answer wins
