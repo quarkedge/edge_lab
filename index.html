@@ -849,6 +849,12 @@
     .world-cell { background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:12px; padding:10px; min-width:0; }
     .world-cell h3 { font-size:0.75rem; letter-spacing:.6px; color:var(--text-muted); text-transform:uppercase; margin:4px 4px 6px; font-weight:700; }
     .world-box { height:300px; width:100%; }
+    .nifty-links { display:flex; flex-direction:column; gap:12px; padding:20px; max-width:640px; margin:0 auto; }
+    .nifty-link { background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:12px; padding:16px; text-decoration:none; color:var(--text-main); display:flex; flex-direction:column; gap:4px; }
+    .nifty-link:hover { border-color:var(--border-focus); }
+    .nifty-link b { color:var(--gold); font-size:1rem; }
+    .nifty-link small { color:var(--text-muted); font-size:0.8rem; }
+    .nifty-note { color:var(--text-muted); font-size:0.78rem; text-align:center; margin-top:6px; }
     .tool-fallback { padding:24px; text-align:center; color:var(--text-muted); }
     #fullChart, #toolSlot { width:100%; min-width:0; display:block; }
     #fullChart iframe, #toolSlot iframe, #tv-chart iframe, #tv-ta iframe { width:100% !important; min-width:0 !important; max-width:100% !important; }
@@ -3000,6 +3006,7 @@
       { id: 'ta', icon: '🎯', title: 'Technical analysis', desc: 'Buy / sell / neutral signals from indicators.' },
       { id: 'ticker', icon: '💹', title: 'Ticker tape', desc: 'Live scrolling prices for indices and assets.' },
       { id: 'overview', icon: '🌐', title: 'Market overview', desc: 'Indices, stocks and crypto in one table.' },
+      { id: 'nifty', icon: '🇮🇳', title: 'NIFTY chart links', desc: 'Open NIFTY 50 live on free sites in one tap.' },
       { id: 'world', icon: '🌍', title: 'World market performance', desc: 'Indices from America, Europe, Asia, India and commodities.' },
       { id: 'screener', icon: '🔎', title: 'Stock screener', desc: 'Filter Indian stocks by size, price and more.' },
       { id: 'events', icon: '📅', title: 'Economic calendar', desc: 'Upcoming economic events and their impact.' },
@@ -3073,6 +3080,22 @@
       { title: 'Crypto', symbols: [['BITSTAMP:BTCUSD', 'Bitcoin'], ['BINANCE:ETHUSDT', 'Ethereum']] }
     ];
 
+    function openNiftyLinks() {
+      document.getElementById('toolTitle').textContent = 'NIFTY 50 · free chart links';
+      document.getElementById('toolNote').textContent = '';
+      document.getElementById('toolOpenSite').href = 'https://www.nseindia.com/';
+      document.getElementById('toolOpenSite').textContent = 'NSE website ↗';
+      const links = [
+        { href: 'https://www.tradingview.com/symbols/NSE-NIFTY/', name: 'TradingView', note: 'Interactive NIFTY chart with drawing tools' },
+        { href: 'https://finance.yahoo.com/quote/%5ENSEI/', name: 'Yahoo Finance', note: 'NIFTY price history and chart' },
+        { href: 'https://www.nseindia.com/market-data/live-equity-market', name: 'NSE live market', note: 'Official live NSE market data' }
+      ];
+      document.getElementById('toolSlot').innerHTML = '<div class="nifty-links">' + links.map(l =>
+        `<a class="nifty-link" href="${l.href}" target="_blank" rel="noopener noreferrer"><b>${l.name} ↗</b><small>${l.note}</small></a>`).join('') +
+        '<p class="nifty-note">These open on the provider’s own website, so the chart and data are theirs.</p></div>';
+      document.getElementById('toolOverlay').classList.add('open');
+    }
+
     function openWorld() {
       document.getElementById('toolTitle').textContent = 'World market performance';
       document.getElementById('toolNote').textContent = '';
@@ -3096,6 +3119,7 @@
 
     function openToolFull(id) {
       if (id === 'world') { openWorld(); return; }
+      if (id === 'nifty') { openNiftyLinks(); return; }
       const meta = SLIDER_TOOLS.find(t => t.id === id);
       const cfg = TOOL_CFG[id];
       if (!meta || !cfg) return;
