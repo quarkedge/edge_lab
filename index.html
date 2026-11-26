@@ -862,6 +862,8 @@
     .picker-cancel { margin-top:16px; background:transparent; border:1px solid var(--border-subtle); color:var(--text-muted); padding:9px 18px; border-radius:9px; cursor:pointer; }
     #calOverlay { display:none; position:fixed; inset:0; z-index:4000; background:var(--bg-base); flex-direction:column; }
     #calOverlay.open { display:flex; }
+    #calcOverlay { display:none; position:fixed; inset:0; z-index:4000; background:var(--bg-base); flex-direction:column; }
+    #calcOverlay.open { display:flex; }
     #calFullSlot { flex:1; overflow:auto; padding:16px; }
     .slider-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
     .slider-head h2 { font-family:var(--serif); letter-spacing:2px; color:var(--gold); font-size:1.3rem; }
@@ -1195,6 +1197,24 @@
         <div id="marketPulseBox" style="height:420px;width:100%;"></div>
         <p class="calc-hint" style="margin-top:8px;">Live data from TradingView, not a recommendation to buy or sell. If it does not load, turn off ad blockers or open the market page on TradingView.</p>
       </div>
+      <div class="card" id="homeAbout" style="margin-bottom:16px;padding:18px;">
+        <div class="kpi-label" style="margin-bottom:6px;">About Quark</div>
+        <h3 style="font-size:1.1rem;margin-bottom:6px;">A trading journal and toolkit for Indian markets</h3>
+        <p class="calc-hint" style="margin:0 0 14px;">Quark helps you log trades, see what is working and what is leaking, and check your numbers before you trade. Your journal is linked to your account when you sign in.</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;">
+          <div class="about-card"><div class="ic">📒</div><h3>Trade journal</h3><p>Log each trade with your plan, your reason and the result. Open the trading calendar from Tools to see each day's P&amp;L.</p></div>
+          <div class="about-card"><div class="ic">🧩</div><h3>Instrument tracking</h3><p>See which instruments make money for you and which ones leak it.</p></div>
+          <div class="about-card"><div class="ic">✨</div><h3>AI Edge Audit</h3><p>Execution score, expectancy, drawdown and your costliest mistakes, with one fix to work on.</p></div>
+          <div class="about-card"><div class="ic">📈</div><h3>Live markets</h3><p>Charts, screener, economic calendar and news from TradingView and public feeds.</p></div>
+          <div class="about-card"><div class="ic">🧮</div><h3>Calculators</h3><p>Position size, risk : reward and options breakeven, with estimated charges included.</p></div>
+          <div class="about-card"><div class="ic">🎓</div><h3>Learning centre</h3><p>Short lessons on how Indian markets work, with calculators to practise on.</p></div>
+        </div>
+        <h4 style="font-size:0.85rem;margin:18px 0 8px;">How to start</h4>
+        <p class="calc-hint" style="margin:0 0 6px;">1. Open Tools and choose Trading calendar to log your first trade.</p>
+        <p class="calc-hint" style="margin:0 0 6px;">2. Open Tools and choose Calculators to set your risk per trade.</p>
+        <p class="calc-hint" style="margin:0 0 10px;">3. After about 10 trades, generate the AI Edge Audit and check Instruments.</p>
+        <p class="calc-hint" style="margin:0;">Quark is for education and information only. It is not investment advice or a recommendation to buy or sell any security.</p>
+      </div>
       <div class="calendar-container" id="perfCalendar">
         <div class="calendar-weekdays">
           <div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div><div>Sun</div>
@@ -1247,47 +1267,9 @@
 
       <section id="learnView" style="display:none;">
         <div class="learn-intro">
-          <p>New to trading in India? Start here. Read a section, then try the calculators with sample numbers before risking real money.</p>
+          <p>New to trading in India? Start here. Read a section, then try the calculators in Tools with sample numbers before risking real money.</p>
         </div>
         <div class="nse-live closed" id="nseLiveStatus"><span class="nse-live-dot"></span><span id="nseLiveText">NSE status</span><span class="nse-live-note">IST · Mon–Fri · excludes exchange holidays</span></div>
-
-        <div class="calc-grid">
-          <div class="calc-card">
-            <h3>Position size</h3>
-            <div class="calc-field"><label for="psCap">Capital (₹)</label><input id="psCap" type="number" min="0" value="100000" oninput="calcPosition()"></div>
-            <div class="calc-field"><label for="psRisk">Risk per trade (%)</label><input id="psRisk" type="number" min="0" step="0.1" value="1" oninput="calcPosition()"></div>
-            <div class="calc-field"><label for="psEntry">Entry price (₹)</label><input id="psEntry" type="number" min="0" step="0.05" value="" oninput="calcPosition()"></div>
-            <div class="calc-field"><label for="psStop">Stop-loss (₹)</label><input id="psStop" type="number" min="0" step="0.05" value="" oninput="calcPosition()"></div>
-            <div class="calc-field"><label for="psSeg">Trade type</label><select id="psSeg" onchange="calcPosition()"><option value="intraday">Intraday equity</option><option value="delivery">Delivery equity</option></select></div>
-            <div class="calc-field"><label for="psFee">Broker fee per order (₹)</label><input id="psFee" type="number" min="0" step="1" value="20" oninput="calcPosition()"></div>
-            <div class="calc-out" id="psOut">Enter entry and stop-loss to see quantity.</div>
-            <div class="calc-hint">Quantity is reduced until the loss at stop, including charges, fits within your risk limit.</div>
-          </div>
-
-          <div class="calc-card">
-            <h3>Risk : reward</h3>
-            <div class="calc-field"><label for="rrEntry">Entry (₹)</label><input id="rrEntry" type="number" min="0" step="0.05" oninput="calcRR()"></div>
-            <div class="calc-field"><label for="rrStop">Stop-loss (₹)</label><input id="rrStop" type="number" min="0" step="0.05" oninput="calcRR()"></div>
-            <div class="calc-field"><label for="rrTarget">Target (₹)</label><input id="rrTarget" type="number" min="0" step="0.05" oninput="calcRR()"></div>
-            <div class="calc-field"><label for="rrQty">Quantity</label><input id="rrQty" type="number" min="0" value="1" oninput="calcRR()"></div>
-            <div class="calc-field"><label for="rrSeg">Trade type</label><select id="rrSeg" onchange="calcRR()"><option value="intraday">Intraday equity</option><option value="delivery">Delivery equity</option><option value="options">Options</option></select></div>
-            <div class="calc-field"><label for="rrFee">Broker fee per order (₹)</label><input id="rrFee" type="number" min="0" step="1" value="20" oninput="calcRR()"></div>
-            <div class="calc-out" id="rrOut">Enter prices to see reward per risk.</div>
-            <div class="calc-hint">Charges are estimated from standard NSE rates. Check your broker's and the exchange's current fee schedule.</div>
-          </div>
-
-          <div class="calc-card">
-            <h3>Options breakeven</h3>
-            <div class="calc-field"><label for="opType">Type</label><select id="opType" onchange="calcOptions()"><option value="call">Call (CE)</option><option value="put">Put (PE)</option></select></div>
-            <div class="calc-field"><label for="opStrike">Strike (₹)</label><input id="opStrike" type="number" min="0" step="1" oninput="calcOptions()"></div>
-            <div class="calc-field"><label for="opPremium">Premium paid per unit (₹)</label><input id="opPremium" type="number" min="0" step="0.05" oninput="calcOptions()"></div>
-            <div class="calc-field"><label for="opLot">Lot size (units)</label><input id="opLot" type="number" min="1" step="1" value="1" oninput="calcOptions()"></div>
-            <div class="calc-field"><label for="opLots">Number of lots</label><input id="opLots" type="number" min="1" step="1" value="1" oninput="calcOptions()"></div>
-            <div class="calc-field"><label for="opFee">Broker fee per order (₹)</label><input id="opFee" type="number" min="0" step="1" value="20" oninput="calcOptions()"></div>
-            <div class="calc-out" id="opOut">Enter strike and premium to see breakeven.</div>
-            <div class="calc-hint">Lot sizes change over time. Confirm the current lot size on the exchange. For option buyers, maximum loss is the premium paid plus charges.</div>
-          </div>
-        </div>
 
         <div class="learn-glossary">
           <div class="tool-card wide" style="width:100%;">
@@ -1309,7 +1291,7 @@
         <div class="learn-grid">
           <div class="tool-card"><h3>1. Read a candle</h3><p class="learn-p">Each candle shows the open, high, low and close for one time period. A green (or hollow) candle means the price closed higher than it opened. A red (or filled) candle means it closed lower. Long wicks show prices that were tested and rejected.</p></div>
           <div class="tool-card"><h3>2. Stop-loss first</h3><p class="learn-p">Decide where you'll exit if the trade goes against you before you enter. A stop-loss turns an open-ended risk into a fixed amount. Most beginners lose money by moving or dropping stops, not by picking the wrong stock.</p></div>
-          <div class="tool-card"><h3>3. Size the position</h3><p class="learn-p">Choose a risk you can absorb, such as 1% of your capital per trade, then work backwards to quantity using the position size calculator above. Size comes from your stop distance, not from how confident you feel.</p></div>
+          <div class="tool-card"><h3>3. Size the position</h3><p class="learn-p">Choose a risk you can absorb, such as 1% of your capital per trade, then work backwards to quantity using the position size calculator in Tools. Size comes from your stop distance, not from how confident you feel.</p></div>
           <div class="tool-card"><h3>4. Think in risk : reward</h3><p class="learn-p">A trade that risks ₹1 to make ₹2 needs to win less often to break even. Check the ratio before entering, and remember that charges reduce the real reward. Use the risk : reward calculator to see the net figure.</p></div>
           <div class="tool-card"><h3>5. Options carry more risk</h3><p class="learn-p">Option buyers can lose the full premium paid, and options lose value as expiry approaches. Option sellers can face losses much larger than the premium received. Use the breakeven calculator, and understand a strategy fully before trading it.</p></div>
           <div class="tool-card"><h3>6. Charges add up</h3><p class="learn-p">Brokerage, exchange fees, STT, stamp duty, GST and other taxes are charged on each trade. Frequent trading can cost more than the gains. Estimate them with your broker's current fee schedule.</p></div>
@@ -2622,6 +2604,8 @@
       el('toolsView').style.display = tools ? 'block' : 'none';
       el('perfCalendar').style.display = 'none';
       el('marketPulseCard').style.display = perf ? '' : 'none';
+      el('homeAbout').style.display = perf ? '' : 'none';
+      el('platformsCard').style.display = perf ? 'none' : '';
       el('instView').style.display = inst ? 'block' : 'none';
       el('newsView').style.display = news ? 'block' : 'none';
       document.querySelectorAll('.tab-perf').forEach(b => b.classList.toggle('active', perf));
@@ -2805,7 +2789,7 @@
       if (target === 'tools') openPicker();
       if (target === 'learn') setView('learn');
       if (target === 'about') setView('about');
-      if (target === 'sites') setTimeout(() => { el('platformsCard').scrollIntoView({ behavior: 'smooth', block: 'center' }); openSiteForm(); }, 450);
+      if (target === 'sites') { if (currentView === 'perf') setView('inst'); setTimeout(() => { el('platformsCard').scrollIntoView({ behavior: 'smooth', block: 'center' }); openSiteForm(); }, 450); }
       document.getElementById('workspace').scrollIntoView({ behavior: 'smooth' });
       if (target === 'audit') setTimeout(() => { const b = document.getElementById('openAiReportBtn'); if (b) b.click(); }, 500);
     }
@@ -3129,6 +3113,7 @@
     function openPicker() { buildSlider(); document.getElementById('toolsPicker').classList.add('open'); }
     function closePicker() { document.getElementById('toolsPicker').classList.remove('open'); }
     const SLIDER_TOOLS = [
+      { id: 'calc', tag: 'RISK', icon: '🧮', title: 'Calculators', desc: 'Position size, risk : reward and options breakeven, with charges.' },
       { id: 'chart', tag: 'LIVE', icon: '📈', title: 'Trading chart', desc: 'Full-screen chart. Change symbol and timeframe.' },
       { id: 'calendar', tag: 'JOURNAL', icon: '🗓', title: 'Trading calendar', desc: 'Your daily P&L and trades, full screen.' },
       { id: 'ta', tag: 'SIGNALS', icon: '🎯', title: 'Technical analysis', desc: 'Buy / sell / neutral signals from indicators.' },
@@ -3155,6 +3140,7 @@
 
     function openTool(id) {
       closePicker();
+      if (id === 'calc') { openCalcFull(); return; }
       if (id === 'chart') { tvOpenFull(); return; }
       if (id === 'calendar') { openCalFull(); return; }
       openToolFull(id);
@@ -3259,6 +3245,8 @@
       tvEmbed(box, cfg.script, cfg.cfg(h));
       watchWidget(box, document.getElementById('toolNote'));
     }
+    function openCalcFull() { document.getElementById('calcOverlay').classList.add('open'); }
+    function closeCalcFull() { document.getElementById('calcOverlay').classList.remove('open'); }
     function closeToolFull() {
       document.getElementById('toolOverlay').classList.remove('open');
       document.getElementById('toolSlot').innerHTML = '';
@@ -3523,7 +3511,7 @@
     }
     nseStatus(); setInterval(nseStatus, 60000);
     calcPosition(); calcRR(); calcOptions();
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') { tvCloseFull(); closeCalFull(); closePicker(); closeToolFull(); } });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') { tvCloseFull(); closeCalFull(); closeCalcFull(); closePicker(); closeToolFull(); } });
 
     // Performance-page chart (NIFTY)
     (function () {
@@ -3545,6 +3533,7 @@
       box.dataset.loaded = '1';
       tvEmbed(box, 'embed-widget-market-movers.js', { exchange: 'NSE', timeframe: '1D', colorTheme: TV_THEME(), isTransparent: false, locale: 'en', width: '100%', height: 420 });
     }
+    setView('perf');
     renderMarketPulse();
 
     initAuthSystem();
@@ -3582,6 +3571,52 @@
   <div id="toolSlot" style="flex:1;min-height:0;"></div>
 </div>
 
+<div id="calcOverlay">
+  <div class="full-bar">
+    <b style="color:var(--gold);">Calculators</b>
+    <span style="color:var(--text-muted);font-size:0.8rem;">Charges included</span>
+    <button type="button" onclick="closeCalcFull()" style="margin-left:auto;">Close ✕</button>
+  </div>
+  <div style="flex:1;min-height:0;overflow:auto;padding:16px;">
+        <div class="calc-grid">
+          <div class="calc-card">
+            <h3>Position size</h3>
+            <div class="calc-field"><label for="psCap">Capital (₹)</label><input id="psCap" type="number" min="0" value="100000" oninput="calcPosition()"></div>
+            <div class="calc-field"><label for="psRisk">Risk per trade (%)</label><input id="psRisk" type="number" min="0" step="0.1" value="1" oninput="calcPosition()"></div>
+            <div class="calc-field"><label for="psEntry">Entry price (₹)</label><input id="psEntry" type="number" min="0" step="0.05" value="" oninput="calcPosition()"></div>
+            <div class="calc-field"><label for="psStop">Stop-loss (₹)</label><input id="psStop" type="number" min="0" step="0.05" value="" oninput="calcPosition()"></div>
+            <div class="calc-field"><label for="psSeg">Trade type</label><select id="psSeg" onchange="calcPosition()"><option value="intraday">Intraday equity</option><option value="delivery">Delivery equity</option></select></div>
+            <div class="calc-field"><label for="psFee">Broker fee per order (₹)</label><input id="psFee" type="number" min="0" step="1" value="20" oninput="calcPosition()"></div>
+            <div class="calc-out" id="psOut">Enter entry and stop-loss to see quantity.</div>
+            <div class="calc-hint">Quantity is reduced until the loss at stop, including charges, fits within your risk limit.</div>
+          </div>
+
+          <div class="calc-card">
+            <h3>Risk : reward</h3>
+            <div class="calc-field"><label for="rrEntry">Entry (₹)</label><input id="rrEntry" type="number" min="0" step="0.05" oninput="calcRR()"></div>
+            <div class="calc-field"><label for="rrStop">Stop-loss (₹)</label><input id="rrStop" type="number" min="0" step="0.05" oninput="calcRR()"></div>
+            <div class="calc-field"><label for="rrTarget">Target (₹)</label><input id="rrTarget" type="number" min="0" step="0.05" oninput="calcRR()"></div>
+            <div class="calc-field"><label for="rrQty">Quantity</label><input id="rrQty" type="number" min="0" value="1" oninput="calcRR()"></div>
+            <div class="calc-field"><label for="rrSeg">Trade type</label><select id="rrSeg" onchange="calcRR()"><option value="intraday">Intraday equity</option><option value="delivery">Delivery equity</option><option value="options">Options</option></select></div>
+            <div class="calc-field"><label for="rrFee">Broker fee per order (₹)</label><input id="rrFee" type="number" min="0" step="1" value="20" oninput="calcRR()"></div>
+            <div class="calc-out" id="rrOut">Enter prices to see reward per risk.</div>
+            <div class="calc-hint">Charges are estimated from standard NSE rates. Check your broker's and the exchange's current fee schedule.</div>
+          </div>
+
+          <div class="calc-card">
+            <h3>Options breakeven</h3>
+            <div class="calc-field"><label for="opType">Type</label><select id="opType" onchange="calcOptions()"><option value="call">Call (CE)</option><option value="put">Put (PE)</option></select></div>
+            <div class="calc-field"><label for="opStrike">Strike (₹)</label><input id="opStrike" type="number" min="0" step="1" oninput="calcOptions()"></div>
+            <div class="calc-field"><label for="opPremium">Premium paid per unit (₹)</label><input id="opPremium" type="number" min="0" step="0.05" oninput="calcOptions()"></div>
+            <div class="calc-field"><label for="opLot">Lot size (units)</label><input id="opLot" type="number" min="1" step="1" value="1" oninput="calcOptions()"></div>
+            <div class="calc-field"><label for="opLots">Number of lots</label><input id="opLots" type="number" min="1" step="1" value="1" oninput="calcOptions()"></div>
+            <div class="calc-field"><label for="opFee">Broker fee per order (₹)</label><input id="opFee" type="number" min="0" step="1" value="20" oninput="calcOptions()"></div>
+            <div class="calc-out" id="opOut">Enter strike and premium to see breakeven.</div>
+            <div class="calc-hint">Lot sizes change over time. Confirm the current lot size on the exchange. For option buyers, maximum loss is the premium paid plus charges.</div>
+          </div>
+        </div>
+  </div>
+</div>
 <div id="calOverlay">
   <div class="full-bar">
     <b style="color:var(--gold);">Trading calendar</b>
