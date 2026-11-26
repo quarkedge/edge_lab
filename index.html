@@ -830,7 +830,25 @@
     #calOverlay { display:none; position:fixed; inset:0; z-index:4000; background:var(--bg-base); flex-direction:column; }
     #calOverlay.open { display:flex; }
     #calFullSlot { flex:1; overflow:auto; padding:16px; }
-    @media (max-width: 640px) { .picker-grid { grid-template-columns:1fr; } }
+    .slider-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+    .slider-head h2 { font-family:var(--serif); letter-spacing:2px; color:var(--gold); font-size:1.3rem; }
+    .slider-wrap { display:flex; align-items:center; gap:8px; }
+    .slider-track { flex:1; display:flex; gap:14px; overflow-x:auto; scroll-snap-type:x mandatory; scroll-behavior:smooth; padding:6px 2px 12px; scrollbar-width:thin; }
+    .slider-card { flex:0 0 200px; scroll-snap-align:start; background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:14px; padding:22px 16px; cursor:pointer; color:var(--text-main); text-align:center; display:flex; flex-direction:column; gap:8px; align-items:center; transition:all .2s; }
+    .slider-card:hover { border-color:var(--border-focus); transform:translateY(-2px); }
+    .slider-card .ico { font-size:2rem; }
+    .slider-card b { font-size:1rem; }
+    .slider-card small { color:var(--text-muted); font-size:0.78rem; line-height:1.4; }
+    .slider-arrow { flex:0 0 auto; width:40px; height:40px; border-radius:50%; border:1px solid var(--border-subtle); background:var(--bg-card); color:var(--text-main); font-size:1.4rem; cursor:pointer; }
+    .slider-arrow:hover { border-color:var(--border-focus); color:var(--gold); }
+    .slider-hint { color:var(--text-muted); font-size:0.78rem; margin-top:10px; text-align:center; }
+    #toolOverlay { display:none; position:fixed; inset:0; z-index:4000; background:var(--bg-base); flex-direction:column; }
+    #toolOverlay.open { display:flex; }
+    .tool-fallback { padding:24px; text-align:center; color:var(--text-muted); }
+    #fullChart, #toolSlot { width:100%; min-width:0; display:block; }
+    #fullChart iframe, #toolSlot iframe, #tv-chart iframe, #tv-ta iframe { width:100% !important; min-width:0 !important; max-width:100% !important; }
+    .tradingview-widget-container { width:100% !important; min-width:0; }
+    @media (max-width: 640px) { .slider-card { flex-basis:170px; } }
   </style>
 </head>
 <body>
@@ -2969,11 +2987,84 @@
 
 
     // ===== Tools picker: choose chart, calendar or all tools =====
-    function openPicker() { document.getElementById('toolsPicker').classList.add('open'); }
+    function openPicker() { buildSlider(); document.getElementById('toolsPicker').classList.add('open'); }
     function closePicker() { document.getElementById('toolsPicker').classList.remove('open'); }
-    function pickChart() { closePicker(); tvOpenFull(); }
-    function pickTools() { closePicker(); setView('tools'); }
-    function pickCalendar() { closePicker(); openCalFull(); }
+    const SLIDER_TOOLS = [
+      { id: 'chart', icon: '📈', title: 'Trading chart', desc: 'Full-screen chart. Change symbol and timeframe.' },
+      { id: 'calendar', icon: '🗓', title: 'Trading calendar', desc: 'Your daily P&L and trades, full screen.' },
+      { id: 'ta', icon: '🎯', title: 'Technical analysis', desc: 'Buy / sell / neutral signals from indicators.' },
+      { id: 'ticker', icon: '💹', title: 'Ticker tape', desc: 'Live scrolling prices for indices and assets.' },
+      { id: 'overview', icon: '🌐', title: 'Market overview', desc: 'Indices, stocks and crypto in one table.' },
+      { id: 'screener', icon: '🔎', title: 'Stock screener', desc: 'Filter Indian stocks by size, price and more.' },
+      { id: 'events', icon: '📅', title: 'Economic calendar', desc: 'Upcoming economic events and their impact.' },
+      { id: 'profile', icon: '🏢', title: 'Company profile', desc: 'Business summary for the selected symbol.' },
+      { id: 'financials', icon: '📊', title: 'Financials', desc: 'Key financial figures for the selected symbol.' },
+      { id: 'forex', icon: '💱', title: 'Forex rates', desc: 'Currency cross rates, including INR.' }
+    ];
+
+    function buildSlider() {
+      const track = document.getElementById('sliderTrack');
+      track.innerHTML = SLIDER_TOOLS.map(t => `<button type="button" class="slider-card" onclick="openTool('${t.id}')">
+        <span class="ico">${t.icon}</span><b>${t.title}</b><small>${t.desc}</small></button>`).join('');
+    }
+    function slideBy(dir) {
+      const track = document.getElementById('sliderTrack');
+      track.scrollBy({ left: dir * 230, behavior: 'smooth' });
+    }
+
+    function openTool(id) {
+      closePicker();
+      if (id === 'chart') { tvOpenFull(); return; }
+      if (id === 'calendar') { openCalFull(); return; }
+      openToolFull(id);
+    }
+
+    // Full-screen configs for each TradingView tool
+    const TOOL_CFG = {
+      ta: { script: 'embed-widget-technical-analysis.js', cfg: h => ({ interval: TV_TA[TV_STATE.interval] || '1D', width: '100%', height: h, symbol: TV_STATE.symbol, showIntervalTabs: true, displayMode: 'multiple', isTransparent: false, locale: 'en', colorTheme: TV_THEME() }) },
+      ticker: { script: 'embed-widget-ticker-tape.js', cfg: () => ({ symbols: [
+          { proName: 'NSE:NIFTY', title: 'Nifty 50' }, { proName: 'NSE:BANKNIFTY', title: 'Bank Nifty' },
+          { proName: 'BSE:SENSEX', title: 'Sensex' }, { proName: 'TVC:GOLD', title: 'Gold' },
+          { proName: 'BITSTAMP:BTCUSD', title: 'Bitcoin' }, { proName: 'NASDAQ:AAPL', title: 'Apple' }
+        ], showSymbolLogo: true, isTransparent: false, displayMode: 'regular', colorTheme: TV_THEME(), locale: 'en' }) },
+      overview: { script: 'embed-widget-market-overview.js', cfg: h => ({ colorTheme: TV_THEME(), dateRange: '12M', showChart: true, locale: 'en', width: '100%', height: h, isTransparent: false, showSymbolLogo: true, showFloatingTooltip: true, tabs: [
+          { title: 'India', symbols: [{ s: 'NSE:NIFTY', d: 'Nifty 50' }, { s: 'NSE:BANKNIFTY', d: 'Bank Nifty' }, { s: 'BSE:SENSEX', d: 'Sensex' }], originalTitle: 'India' },
+          { title: 'Stocks', symbols: [{ s: 'NSE:RELIANCE', d: 'Reliance' }, { s: 'NSE:TCS', d: 'TCS' }, { s: 'NSE:HDFCBANK', d: 'HDFC Bank' }, { s: 'NSE:INFY', d: 'Infosys' }], originalTitle: 'Stocks' },
+          { title: 'Crypto', symbols: [{ s: 'BITSTAMP:BTCUSD', d: 'Bitcoin' }, { s: 'BINANCE:ETHUSDT', d: 'Ethereum' }], originalTitle: 'Crypto' }
+        ] }) },
+      screener: { script: 'embed-widget-screener.js', cfg: h => ({ width: '100%', height: h, market: 'india', defaultColumn: 'overview', defaultScreen: 'most_capitalized', showToolbar: true, colorTheme: TV_THEME(), isTransparent: false, locale: 'en' }) },
+      events: { script: 'embed-widget-events.js', cfg: h => ({ width: '100%', height: h, colorTheme: TV_THEME(), isTransparent: false, locale: 'en', importanceFilter: '-1,0,1', countryFilter: 'in,us' }) },
+      profile: { script: 'embed-widget-symbol-profile.js', cfg: h => ({ width: '100%', height: h, symbol: TV_STATE.symbol, colorTheme: TV_THEME(), isTransparent: false, locale: 'en' }) },
+      financials: { script: 'embed-widget-financials.js', cfg: h => ({ width: '100%', height: h, symbol: TV_STATE.symbol, colorTheme: TV_THEME(), displayMode: 'regular', isTransparent: false, locale: 'en' }) },
+      forex: { script: 'embed-widget-forex-cross-rates.js', cfg: h => ({ width: '100%', height: h, currencies: ['INR', 'USD', 'EUR', 'GBP', 'JPY', 'AED'], isTransparent: false, colorTheme: TV_THEME(), locale: 'en' }) }
+    };
+
+    // Shows a note if a widget did not draw (blocked by an ad blocker, network, or policy)
+    function watchWidget(box, noteEl) {
+      noteEl.textContent = '';
+      setTimeout(() => {
+        if (!box.querySelector('iframe')) {
+          noteEl.textContent = 'Not loaded. Turn off ad blockers for this site, or use “Open on TradingView”.';
+        }
+      }, 8000);
+    }
+
+    function openToolFull(id) {
+      const meta = SLIDER_TOOLS.find(t => t.id === id);
+      const cfg = TOOL_CFG[id];
+      if (!meta || !cfg) return;
+      document.getElementById('toolTitle').textContent = meta.title + (id === 'chart' ? '' : ' · ' + TV_STATE.symbol);
+      document.getElementById('toolOpenSite').href = 'https://www.tradingview.com/chart/?symbol=' + encodeURIComponent(TV_STATE.symbol);
+      const box = document.getElementById('toolSlot');
+      const h = Math.max(400, window.innerHeight - 60);
+      document.getElementById('toolOverlay').classList.add('open');
+      tvEmbed(box, cfg.script, cfg.cfg(h));
+      watchWidget(box, document.getElementById('toolNote'));
+    }
+    function closeToolFull() {
+      document.getElementById('toolOverlay').classList.remove('open');
+      document.getElementById('toolSlot').innerHTML = '';
+    }
 
     function openCalFull() {
       const cal = document.getElementById('perfCalendar');
@@ -3036,7 +3127,7 @@
       'tv-chart': c => tvEmbed(c, 'embed-widget-advanced-chart.js', {
         width: '100%', height: 560, symbol: TV_STATE.symbol, interval: TV_STATE.interval,
         timezone: 'Asia/Kolkata', theme: TV_THEME(), style: '1', locale: 'en',
-        allow_symbol_change: false, withdateranges: true, save_image: true,
+        allow_symbol_change: true, withdateranges: true, save_image: true, hide_side_toolbar: false, hide_top_toolbar: false, details: true, hotlist: true, calendar: true, studies: ['RSI@tv-basicstudies', 'MACD@tv-basicstudies', 'MASimple@tv-basicstudies', 'BB@tv-basicstudies', 'Volume@tv-basicstudies'],
         support_host: 'https://www.tradingview.com'
       }),
       'tv-ta': c => tvEmbed(c, 'embed-widget-technical-analysis.js', {
@@ -3103,10 +3194,11 @@
     /* Full-screen chart, inside this same page */
     function fullDraw() {
       document.getElementById('fullTitle').textContent = TV_STATE.symbol;
+      watchWidget(document.getElementById('fullChart'), document.getElementById('fullNote'));
       tvEmbed(document.getElementById('fullChart'), 'embed-widget-advanced-chart.js', {
-        autosize: true, symbol: TV_STATE.symbol, interval: TV_STATE.interval,
+        width: '100%', height: Math.max(400, window.innerHeight - 60), symbol: TV_STATE.symbol, interval: TV_STATE.interval,
         timezone: 'Asia/Kolkata', theme: TV_THEME(), style: '1', locale: 'en',
-        allow_symbol_change: false, withdateranges: true, save_image: true,
+        allow_symbol_change: true, withdateranges: true, save_image: true, hide_side_toolbar: false, hide_top_toolbar: false, details: true, hotlist: true, calendar: true, studies: ['RSI@tv-basicstudies', 'MACD@tv-basicstudies', 'MASimple@tv-basicstudies', 'BB@tv-basicstudies', 'Volume@tv-basicstudies'],
         support_host: 'https://www.tradingview.com'
       });
     }
@@ -3126,7 +3218,7 @@
       tvSetSymbol(sym);
       fullDraw();
     }
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') { tvCloseFull(); closeCalFull(); closePicker(); } });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') { tvCloseFull(); closeCalFull(); closePicker(); closeToolFull(); } });
 
     // Performance-page chart (NIFTY)
     (function () {
@@ -3147,6 +3239,7 @@
 <div id="fullOverlay">
   <div class="full-bar">
     <b id="fullTitle" style="color:var(--gold);">NSE:NIFTY</b>
+    <span id="fullNote" style="color:var(--text-muted);font-size:0.8rem;"></span>
     <input id="fullSymbol" type="text" placeholder="Change symbol, e.g. RELIANCE" style="max-width:260px;margin-left:auto;" onkeydown="if(event.key==='Enter')fullGo()" />
     <button type="button" onclick="fullGo()">Show</button>
     <select id="fullInterval" onchange="tvSetInterval(this.value);fullDraw()"><option value="1">1m</option><option value="5">5m</option><option value="15">15m</option><option value="60">1h</option><option value="D">1D</option><option value="W">1W</option><option value="M">1M</option></select>
@@ -3156,14 +3249,24 @@
 </div>
 <div id="toolsPicker" class="picker-backdrop" onclick="if(event.target===this)closePicker()">
   <div class="picker-card">
-    <h2>What do you want to open?</h2>
-    <div class="picker-grid">
-      <button type="button" onclick="pickChart()"><span>📈</span><b>Trading chart</b><small>Full screen chart. Change symbol and timeframe.</small></button>
-      <button type="button" onclick="pickCalendar()"><span>🗓</span><b>Trading calendar</b><small>Your daily P&amp;L and trades, full screen.</small></button>
-      <button type="button" onclick="pickTools()"><span>🧰</span><b>All TradingView tools</b><small>Ticker, analysis, screener, market overview and more.</small></button>
+    <div class="slider-head"><h2>Trading tools</h2><button type="button" class="picker-cancel" onclick="closePicker()">Close ✕</button></div>
+    <div class="slider-wrap">
+      <button type="button" class="slider-arrow" onclick="slideBy(-1)" aria-label="Previous">‹</button>
+      <div class="slider-track" id="sliderTrack"></div>
+      <button type="button" class="slider-arrow" onclick="slideBy(1)" aria-label="Next">›</button>
     </div>
-    <button type="button" class="picker-cancel" onclick="closePicker()">Cancel</button>
+    <p class="slider-hint">Swipe or use the arrows. Tap a tool to open it full screen.</p>
   </div>
+</div>
+
+<div id="toolOverlay">
+  <div class="full-bar">
+    <b id="toolTitle" style="color:var(--gold);"></b>
+    <span id="toolNote" style="color:var(--text-muted);font-size:0.8rem;"></span>
+    <a id="toolOpenSite" class="nav-btn-ghost" href="https://www.tradingview.com/" target="_blank" rel="noopener" style="text-decoration:none;margin-left:auto;">Open on TradingView ↗</a>
+    <button type="button" onclick="closeToolFull()">Close ✕</button>
+  </div>
+  <div id="toolSlot" style="flex:1;min-height:0;"></div>
 </div>
 
 <div id="calOverlay">
