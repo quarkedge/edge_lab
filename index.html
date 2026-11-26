@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <!-- SECURITY: Content-Security-Policy. 'unsafe-inline' stays only because the page uses inline onclick handlers. Also set real HTTP headers on your host (see SECURITY-NOTES.md). -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://apis.google.com https://s3.tradingview.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.google.com https://*.gstatic.com https://*.googleusercontent.com; connect-src https://*.tradingview.com https://*.workers.dev https://*.firebaseio.com wss://*.firebaseio.com https://*.googleapis.com https://apis.google.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.rss2json.com; frame-src https://*.tradingview.com https://*.firebaseapp.com https://apis.google.com https://accounts.google.com https://appleid.apple.com; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://apis.google.com https://s3.tradingview.com https://*.tradingview.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https: data:; img-src 'self' data: https:; connect-src https://*.tradingview.com https://*.workers.dev https://*.firebaseio.com wss://*.firebaseio.com https://*.googleapis.com https://apis.google.com https://api.allorigins.win https://corsproxy.io https://api.codetabs.com https://api.rss2json.com; frame-src https://*.tradingview.com https://*.firebaseapp.com https://apis.google.com https://accounts.google.com https://appleid.apple.com; worker-src blob: https:; child-src blob: https:; object-src 'none'; base-uri 'none'; form-action 'none'">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>Quark — The Institutional Trading Terminal</title>
   
@@ -1155,6 +1155,7 @@
           <input id="tvSymbol" type="text" placeholder="Any symbol, e.g. RELIANCE, AAPL, BTCUSD" aria-label="Symbol" onkeydown="if(event.key==='Enter')tvSetFromInput()" />
           <button type="button" class="nav-btn-solid" onclick="tvSetFromInput()">Show chart</button>
           <button type="button" class="nav-btn-ghost" onclick="tvOpenFull()">Full screen ⤢</button>
+          <a class="nav-btn-ghost" id="tvOpenSite" href="https://www.tradingview.com/chart/?symbol=NSE%3ANIFTY" target="_blank" rel="noopener" style="text-decoration:none;">Open on TradingView ↗</a>
           <select id="tvInterval" aria-label="Interval" onchange="tvSetInterval(this.value)"><option value="1">1m</option><option value="5">5m</option><option value="15">15m</option><option value="60">1h</option><option value="D" selected>1D</option><option value="W">1W</option><option value="M">1M</option></select>
         </div>
         <div class="tools-chips">
@@ -1169,6 +1170,7 @@
           <button type="button" class="tools-chip" onclick="tvSetSymbol('BITSTAMP:BTCUSD')">Bitcoin</button>
           <button type="button" class="tools-chip" onclick="tvSetSymbol('NASDAQ:AAPL')">Apple</button>
         </div>
+        <div class="tool-card wide" style="margin-bottom:16px;"><h3>Trading calendar (your P&amp;L)</h3><div id="toolsCalSlot"></div></div>
         <div class="tools-grid">
           <div class="tool-card wide"><h3>Ticker tape</h3><div class="tool-body" id="tv-ticker"></div></div>
           <div class="tool-card wide"><h3>Advanced chart · <span class="tools-current" id="tvCurrentLabel">NSE:NIFTY</span></h3><div class="tool-body" id="tv-chart" style="height:560px"></div></div>
@@ -2447,14 +2449,15 @@
       el('perfKpis').style.display = perf ? '' : 'none';
       el('nseChartCard').style.display = (perf || inst) ? '' : 'none';
       el('toolsView').style.display = tools ? 'block' : 'none';
-      el('perfCalendar').style.display = perf ? '' : 'none';
+      el('perfCalendar').style.display = (perf || tools) ? '' : 'none';
+      placeCalendar(tools);
       el('instView').style.display = inst ? 'block' : 'none';
       el('newsView').style.display = news ? 'block' : 'none';
       document.querySelectorAll('.tab-perf').forEach(b => b.classList.toggle('active', perf));
       document.querySelectorAll('.tab-inst').forEach(b => b.classList.toggle('active', inst));
       document.querySelectorAll('.tab-news').forEach(b => b.classList.toggle('active', news));
       el('viewHeading').textContent = perf ? 'Performance Matrix' : inst ? 'Instrument Calendar' : about ? 'About Quark' : tools ? 'Tools' : 'Market News';
-      document.querySelector('.month-selector').style.display = (news || about || tools) ? 'none' : '';
+      document.querySelector('.month-selector').style.display = (news || about) ? 'none' : '';
       if (tools) tvOpenTools();
       if (inst) renderInstruments();
       if (news) { renderNewsCats(); updateMarketStatus(); loadNews(false); }
@@ -2946,6 +2949,20 @@
     // Start fetching the Top stories feed as soon as the page loads, so it is ready when the News tab opens
     loadNews(false);
 
+    // ===== Move the trading calendar between Performance and Tools =====
+    const CAL_HOME = { parent: null, next: null };
+    function placeCalendar(toTools) {
+      const cal = document.getElementById('perfCalendar');
+      if (!cal) return;
+      if (!CAL_HOME.parent) { CAL_HOME.parent = cal.parentNode; CAL_HOME.next = cal.nextSibling; }
+      if (toTools) {
+        document.getElementById('toolsCalSlot').appendChild(cal);
+      } else if (cal.parentNode !== CAL_HOME.parent) {
+        const next = CAL_HOME.next && CAL_HOME.next.parentNode === CAL_HOME.parent ? CAL_HOME.next : null;
+        CAL_HOME.parent.insertBefore(cal, next);
+      }
+    }
+
     // ===== Tools & charts (TradingView widgets) =====
     const TV_STATE = { symbol: 'NSE:NIFTY', interval: 'D' };
     const TV_TA = { '1': '1m', '5': '5m', '15': '15m', '60': '1h', 'D': '1D', 'W': '1W', 'M': '1M' };
@@ -3035,6 +3052,7 @@
     function tvSetSymbol(sym) {
       TV_STATE.symbol = sym;
       document.getElementById('tvCurrentLabel').textContent = sym;
+      document.getElementById('tvOpenSite').href = 'https://www.tradingview.com/chart/?symbol=' + encodeURIComponent(sym);
       ['tv-chart', 'tv-ta', 'tv-profile', 'tv-fin'].forEach(tvRender);
     }
     function tvSetFromInput() {
