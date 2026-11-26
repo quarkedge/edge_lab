@@ -793,6 +793,21 @@
   .day-cell:not(.profit):not(.loss):hover { border-color: var(--text-muted); }
   .about-card .ic svg { width: 22px; height: 22px; color: var(--text-main); }
   .hero-pill .dot .ui-icon { width: 12px; height: 12px; vertical-align: -1px; }
+  
+    /* ===== Tools (TradingView widgets) ===== */
+    .tools-bar { display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:12px; }
+    .tools-bar input { flex:1; min-width:220px; padding:10px 12px; border-radius:10px; border:1px solid var(--border-subtle); background:var(--bg-surface); color:var(--text-main); font-size:0.9rem; text-transform:uppercase; }
+    .tools-bar select { padding:9px 10px; border-radius:10px; border:1px solid var(--border-subtle); background:var(--bg-surface); color:var(--text-main); font-size:0.85rem; }
+    .tools-chips { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px; }
+    .tools-chip { padding:6px 12px; border-radius:999px; border:1px solid var(--border-subtle); background:var(--bg-card); color:var(--text-main); font-size:0.78rem; font-weight:600; cursor:pointer; }
+    .tools-chip:hover { border-color:var(--border-focus); color:var(--gold); }
+    .tools-grid { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:16px; }
+    .tools-grid .wide { grid-column:1 / -1; }
+    .tool-card { background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:12px; padding:10px; min-width:0; overflow:hidden; }
+    .tool-card h3 { font-size:0.75rem; letter-spacing:.6px; color:var(--text-muted); text-transform:uppercase; margin:4px 6px 8px; font-weight:700; }
+    .tool-body { width:100%; }
+    .tools-current { font-family:var(--mono); color:var(--gold); font-weight:700; }
+    @media (max-width: 820px) { .tools-grid { grid-template-columns:1fr; } }
   </style>
 </head>
 <body>
@@ -928,7 +943,7 @@
           <button class="nav-link" type="button" onclick="toggleNavItem(this)">Platforms <span class="caret">▼</span></button>
           <div class="nav-menu" id="navSitesMenu"></div>
         </div>
-        <div class="nav-item"><button class="nav-link" type="button" onclick="navGo('audit')">Tools</button></div>
+        <div class="nav-item"><button class="nav-link" type="button" onclick="navGo('tools')">Tools</button></div>
         <div class="nav-item"><a class="nav-link" href="https://zerodha.com/varsity/" target="_blank" rel="noopener">Learning Center</a></div>
       </div>
 
@@ -1132,6 +1147,27 @@
         </div>
 
         </section>
+
+      <section id="toolsView" style="display:none;">
+        <div class="tools-bar">
+          <select id="tvExchange" aria-label="Exchange"><option value="NSE">NSE</option><option value="BSE">BSE</option><option value="NASDAQ">NASDAQ</option><option value="NYSE">NYSE</option><option value="MCX">MCX</option><option value="BINANCE">BINANCE</option></select>
+          <input id="tvSymbol" type="text" placeholder="Any symbol, e.g. RELIANCE, AAPL, BTCUSD" aria-label="Symbol" onkeydown="if(event.key==='Enter')tvSetFromInput()" />
+          <button type="button" class="nav-btn-solid" onclick="tvSetFromInput()">Show chart</button>
+          <select id="tvInterval" aria-label="Interval" onchange="tvSetInterval(this.value)"><option value="1">1m</option><option value="5">5m</option><option value="15">15m</option><option value="60">1h</option><option value="D" selected>1D</option><option value="W">1W</option><option value="M">1M</option></select>
+        </div>
+        <div class="tools-chips"><button type="button" class="tools-chip" onclick="tvSetSymbol('NSE:NIFTY')">Nifty 50</button><button type="button" class="tools-chip" onclick="tvSetSymbol('NSE:BANKNIFTY')">Bank Nifty</button><button type="button" class="tools-chip" onclick="tvSetSymbol('BSE:SENSEX')">Sensex</button><button type="button" class="tools-chip" onclick="tvSetSymbol('NSE:RELIANCE')">Reliance</button><button type="button" class="tools-chip" onclick="tvSetSymbol('NSE:TCS')">TCS</button><button type="button" class="tools-chip" onclick="tvSetSymbol('NSE:HDFCBANK')">HDFC Bank</button><button type="button" class="tools-chip" onclick="tvSetSymbol('NSE:INFY')">Infosys</button><button type="button" class="tools-chip" onclick="tvSetSymbol('NSE:SBIN')">SBI</button><button type="button" class="tools-chip" onclick="tvSetSymbol('TVC:GOLD')">Gold</button><button type="button" class="tools-chip" onclick="tvSetSymbol('BITSTAMP:BTCUSD')">Bitcoin</button><button type="button" class="tools-chip" onclick="tvSetSymbol('NASDAQ:AAPL')">Apple</button><button type="button" class="tools-chip" onclick="tvSetSymbol('NASDAQ:NVDA')">Nvidia</button></div>
+        <div class="tools-grid">
+          <div class="tool-card wide"><h3>Ticker tape</h3><div class="tool-body" id="tv-ticker"></div></div>
+          <div class="tool-card wide"><h3>Advanced chart · <span class="tools-current" id="tvCurrentLabel">NSE:NIFTY</span></h3><div class="tool-body" id="tv-chart" style="height:560px"></div></div>
+          <div class="tool-card"><h3>Technical analysis</h3><div class="tool-body" id="tv-ta" style="height:450px"></div></div>
+          <div class="tool-card"><h3>Company profile</h3><div class="tool-body" id="tv-profile" style="height:450px"></div></div>
+          <div class="tool-card"><h3>Financials</h3><div class="tool-body" id="tv-fin" style="height:500px"></div></div>
+          <div class="tool-card"><h3>Economic calendar</h3><div class="tool-body" id="tv-events" style="height:500px"></div></div>
+          <div class="tool-card wide"><h3>Market overview</h3><div class="tool-body" id="tv-overview" style="height:500px"></div></div>
+          <div class="tool-card wide"><h3>Stock screener (India)</h3><div class="tool-body" id="tv-screener" style="height:600px"></div></div>
+          <div class="tool-card"><h3>Forex cross rates</h3><div class="tool-body" id="tv-forex" style="height:400px"></div></div>
+        </div>
+      </section>
 
       <section id="newsView" style="display:none;">
         <div class="news-top">
@@ -2392,7 +2428,7 @@
 
     function setView(v) {
       currentView = v;
-      const perf = v === 'perf', inst = v === 'inst', news = v === 'news', about = v === 'about';
+      const perf = v === 'perf', inst = v === 'inst', news = v === 'news', about = v === 'about', tools = v === 'tools';
       el('aboutView').style.display = about ? 'block' : 'none';
       document.querySelectorAll('.tab-about').forEach(b => b.classList.toggle('active', about));
       el('perfKpis').style.display = perf ? '' : 'none';
@@ -2400,11 +2436,13 @@
       el('perfCalendar').style.display = perf ? '' : 'none';
       el('instView').style.display = inst ? 'block' : 'none';
       el('newsView').style.display = news ? 'block' : 'none';
+      el('toolsView').style.display = tools ? 'block' : 'none';
       document.querySelectorAll('.tab-perf').forEach(b => b.classList.toggle('active', perf));
       document.querySelectorAll('.tab-inst').forEach(b => b.classList.toggle('active', inst));
       document.querySelectorAll('.tab-news').forEach(b => b.classList.toggle('active', news));
-      el('viewHeading').textContent = perf ? 'Performance Matrix' : inst ? 'Instrument Calendar' : about ? 'About Quark' : 'Market News';
-      document.querySelector('.month-selector').style.display = (news || about) ? 'none' : '';
+      el('viewHeading').textContent = perf ? 'Performance Matrix' : inst ? 'Instrument Calendar' : about ? 'About Quark' : tools ? 'Tools' : 'Market News';
+      document.querySelector('.month-selector').style.display = (news || about || tools) ? 'none' : '';
+      if (tools) tvOpenTools();
       if (inst) renderInstruments();
       if (news) { renderNewsCats(); updateMarketStatus(); loadNews(false); }
     }
@@ -2577,6 +2615,7 @@
       document.getElementById('siteNav').classList.remove('menu-open');
       if (target === 'inst' || target === 'perf') setView(target);
       if (target === 'news') setView('news');
+      if (target === 'tools') setView('tools');
       if (target === 'about') setView('about');
       if (target === 'sites') setTimeout(() => { el('platformsCard').scrollIntoView({ behavior: 'smooth', block: 'center' }); openSiteForm(); }, 450);
       document.getElementById('workspace').scrollIntoView({ behavior: 'smooth' });
@@ -2893,6 +2932,118 @@
 
     // Start fetching the Top stories feed as soon as the page loads, so it is ready when the News tab opens
     loadNews(false);
+
+
+    // ===== Tools: TradingView widgets with a symbol picker =====
+    const TV_STATE = { symbol: 'NSE:NIFTY', interval: 'D' };
+    const TV_TA_INTERVAL = { '1': '1m', '5': '5m', '15': '15m', '60': '1h', 'D': '1D', 'W': '1W', 'M': '1M' };
+    let TV_BUILT = false;
+
+    function tvTheme() { return document.querySelector('[data-theme="light"]') ? 'light' : 'dark'; }
+
+    // Turns what the user types into a TradingView symbol like NSE:RELIANCE
+    function tvNormalize(raw, exchange) {
+      const s = (raw || '').trim().toUpperCase().replace(/\s+/g, '');
+      if (!s) return '';
+      if (s.indexOf(':') > -1) return s;
+      const alias = { NIFTY: 'NSE:NIFTY', BANKNIFTY: 'NSE:BANKNIFTY', SENSEX: 'BSE:SENSEX', GOLD: 'TVC:GOLD', SILVER: 'TVC:SILVER', BTC: 'BITSTAMP:BTCUSD', BITCOIN: 'BITSTAMP:BTCUSD', ETH: 'BITSTAMP:ETHUSD' };
+      return alias[s] || (exchange + ':' + s);
+    }
+
+    // Loads one TradingView embed widget into a container
+    function tvEmbed(container, script, cfg) {
+      container.innerHTML = '';
+      const box = document.createElement('div');
+      box.className = 'tradingview-widget-container';
+      box.style.width = '100%';
+      const inner = document.createElement('div');
+      inner.className = 'tradingview-widget-container__widget';
+      box.appendChild(inner);
+      const s = document.createElement('script');
+      s.type = 'text/javascript';
+      s.async = true;
+      s.src = 'https://s3.tradingview.com/external-embedding/' + script;
+      s.textContent = JSON.stringify(cfg);
+      box.appendChild(s);
+      container.appendChild(box);
+    }
+
+    const TV_RENDER = {
+      'tv-ticker': c => tvEmbed(c, 'embed-widget-ticker-tape.js', {
+        symbols: [
+          { proName: 'NSE:NIFTY', title: 'Nifty 50' }, { proName: 'NSE:BANKNIFTY', title: 'Bank Nifty' },
+          { proName: 'BSE:SENSEX', title: 'Sensex' }, { proName: 'TVC:GOLD', title: 'Gold' },
+          { proName: 'BITSTAMP:BTCUSD', title: 'Bitcoin' }, { proName: 'NASDAQ:AAPL', title: 'Apple' }
+        ], showSymbolLogo: true, isTransparent: true, displayMode: 'adaptive', colorTheme: tvTheme(), locale: 'en'
+      }),
+      'tv-chart': c => tvEmbed(c, 'embed-widget-advanced-chart.js', {
+        width: '100%', height: 560, symbol: TV_STATE.symbol, interval: TV_STATE.interval,
+        timezone: 'Asia/Kolkata', theme: tvTheme(), style: '1', locale: 'en',
+        allow_symbol_change: true, withdateranges: true, save_image: true, hide_side_toolbar: false,
+        support_host: 'https://www.tradingview.com'
+      }),
+      'tv-ta': c => tvEmbed(c, 'embed-widget-technical-analysis.js', {
+        interval: TV_TA_INTERVAL[TV_STATE.interval] || '1D', width: '100%', height: 450,
+        symbol: TV_STATE.symbol, showIntervalTabs: true, displayMode: 'single', isTransparent: true,
+        locale: 'en', colorTheme: tvTheme()
+      }),
+      'tv-profile': c => tvEmbed(c, 'embed-widget-symbol-profile.js', {
+        width: '100%', height: 450, symbol: TV_STATE.symbol, colorTheme: tvTheme(), isTransparent: true, locale: 'en'
+      }),
+      'tv-fin': c => tvEmbed(c, 'embed-widget-financials.js', {
+        width: '100%', height: 500, symbol: TV_STATE.symbol, colorTheme: tvTheme(), displayMode: 'regular', isTransparent: true, locale: 'en'
+      }),
+      'tv-events': c => tvEmbed(c, 'embed-widget-events.js', {
+        width: '100%', height: 500, colorTheme: tvTheme(), isTransparent: true, locale: 'en',
+        importanceFilter: '-1,0,1', countryFilter: 'in,us'
+      }),
+      'tv-overview': c => tvEmbed(c, 'embed-widget-market-overview.js', {
+        colorTheme: tvTheme(), dateRange: '12M', showChart: true, locale: 'en', width: '100%', height: 500,
+        isTransparent: true, showSymbolLogo: true, showFloatingTooltip: true,
+        tabs: [
+          { title: 'India', symbols: [{ s: 'NSE:NIFTY', d: 'Nifty 50' }, { s: 'NSE:BANKNIFTY', d: 'Bank Nifty' }, { s: 'BSE:SENSEX', d: 'Sensex' }], originalTitle: 'India' },
+          { title: 'Stocks', symbols: [{ s: 'NSE:RELIANCE', d: 'Reliance' }, { s: 'NSE:TCS', d: 'TCS' }, { s: 'NSE:HDFCBANK', d: 'HDFC Bank' }, { s: 'NSE:INFY', d: 'Infosys' }], originalTitle: 'Stocks' },
+          { title: 'Crypto', symbols: [{ s: 'BITSTAMP:BTCUSD', d: 'Bitcoin' }, { s: 'BINANCE:ETHUSDT', d: 'Ethereum' }], originalTitle: 'Crypto' }
+        ]
+      }),
+      'tv-screener': c => tvEmbed(c, 'embed-widget-screener.js', {
+        width: '100%', height: 600, market: 'india', defaultColumn: 'overview', defaultScreen: 'most_capitalized',
+        showToolbar: true, colorTheme: tvTheme(), isTransparent: true, locale: 'en'
+      }),
+      'tv-forex': c => tvEmbed(c, 'embed-widget-forex-cross-rates.js', {
+        width: '100%', height: 400, currencies: ['INR', 'USD', 'EUR', 'GBP', 'JPY', 'AED'],
+        isTransparent: true, colorTheme: tvTheme(), locale: 'en'
+      })
+    };
+
+    function tvRender(id) { const c = document.getElementById(id); if (c && TV_RENDER[id]) TV_RENDER[id](c); }
+    function tvRenderSymbolWidgets() { ['tv-chart', 'tv-ta', 'tv-profile', 'tv-fin'].forEach(tvRender); }
+
+    function tvOpenTools() {
+      if (TV_BUILT) return;
+      TV_BUILT = true;
+      Object.keys(TV_RENDER).forEach(tvRender);
+    }
+
+    function tvSetSymbol(sym) {
+      TV_STATE.symbol = sym;
+      document.getElementById('tvCurrentLabel').textContent = sym;
+      tvRenderSymbolWidgets();
+    }
+
+    function tvSetFromInput() {
+      const input = document.getElementById('tvSymbol');
+      const sym = tvNormalize(input.value, document.getElementById('tvExchange').value);
+      if (!sym) return;
+      input.value = '';
+      tvSetSymbol(sym);
+    }
+
+    function tvSetInterval(v) {
+      TV_STATE.interval = v;
+      tvRender('tv-chart');
+      tvRender('tv-ta');
+    }
 
     // NSE chart (TradingView widget)
     (function () {
