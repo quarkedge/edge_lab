@@ -844,6 +844,11 @@
     .slider-hint { color:var(--text-muted); font-size:0.78rem; margin-top:10px; text-align:center; }
     #toolOverlay { display:none; position:fixed; inset:0; z-index:4000; background:var(--bg-base); flex-direction:column; }
     #toolOverlay.open { display:flex; }
+    #toolSlot { overflow:auto; }
+    .world-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(340px, 1fr)); gap:12px; padding:12px; }
+    .world-cell { background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:12px; padding:10px; min-width:0; }
+    .world-cell h3 { font-size:0.75rem; letter-spacing:.6px; color:var(--text-muted); text-transform:uppercase; margin:4px 4px 6px; font-weight:700; }
+    .world-box { height:300px; width:100%; }
     .tool-fallback { padding:24px; text-align:center; color:var(--text-muted); }
     #fullChart, #toolSlot { width:100%; min-width:0; display:block; }
     #fullChart iframe, #toolSlot iframe, #tv-chart iframe, #tv-ta iframe { width:100% !important; min-width:0 !important; max-width:100% !important; }
@@ -3057,7 +3062,40 @@
       }, 8000);
     }
 
+    // All regions on one page. Uses ETFs for Americas and Europe/Asia, because the free embed
+    // shows index data (S&P 500, Dow, Nasdaq, DAX, Nikkei...) only with a TradingView data subscription.
+    const WORLD_GROUPS = [
+      { title: 'Americas', symbols: [['AMEX:SPY', 'S&P 500 (SPY)'], ['NASDAQ:QQQ', 'Nasdaq 100 (QQQ)'], ['AMEX:DIA', 'Dow Jones (DIA)'], ['AMEX:EWZ', 'Brazil (EWZ)']] },
+      { title: 'Europe', symbols: [['AMEX:EWG', 'Germany (EWG)'], ['AMEX:EWU', 'UK (EWU)'], ['AMEX:FEZ', 'Euro Stoxx 50 (FEZ)'], ['AMEX:EWQ', 'France (EWQ)']] },
+      { title: 'Asia', symbols: [['AMEX:EWJ', 'Japan (EWJ)'], ['AMEX:FXI', 'China (FXI)'], ['AMEX:EWH', 'Hong Kong (EWH)'], ['AMEX:INDA', 'India ETF (INDA)']] },
+      { title: 'India', symbols: [['NSE:NIFTY', 'Nifty 50'], ['NSE:BANKNIFTY', 'Bank Nifty'], ['BSE:SENSEX', 'Sensex']] },
+      { title: 'Commodities', symbols: [['TVC:GOLD', 'Gold'], ['TVC:SILVER', 'Silver'], ['TVC:USOIL', 'Crude oil']] },
+      { title: 'Crypto', symbols: [['BITSTAMP:BTCUSD', 'Bitcoin'], ['BINANCE:ETHUSDT', 'Ethereum']] }
+    ];
+
+    function openWorld() {
+      document.getElementById('toolTitle').textContent = 'World market performance';
+      document.getElementById('toolNote').textContent = '';
+      document.getElementById('toolOpenSite').href = 'https://www.tradingview.com/markets/world-stocks/';
+      const slot = document.getElementById('toolSlot');
+      slot.innerHTML = '<div class="world-grid"></div>';
+      const grid = slot.firstChild;
+      WORLD_GROUPS.forEach(g => {
+        const cell = document.createElement('div');
+        cell.className = 'world-cell';
+        cell.innerHTML = '<h3>' + g.title + '</h3><div class="world-box"></div>';
+        grid.appendChild(cell);
+        tvEmbed(cell.querySelector('.world-box'), 'embed-widget-market-overview.js', {
+          colorTheme: TV_THEME(), dateRange: '1D', showChart: false, locale: 'en', width: '100%', height: 300,
+          isTransparent: false, showSymbolLogo: true, showFloatingTooltip: true,
+          tabs: [{ title: g.title, symbols: g.symbols.map(([sym, name]) => ({ s: sym, d: name })), originalTitle: g.title }]
+        });
+      });
+      document.getElementById('toolOverlay').classList.add('open');
+    }
+
     function openToolFull(id) {
+      if (id === 'world') { openWorld(); return; }
       const meta = SLIDER_TOOLS.find(t => t.id === id);
       const cfg = TOOL_CFG[id];
       if (!meta || !cfg) return;
