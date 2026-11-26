@@ -905,6 +905,11 @@
       padding: 2px 6px; border-radius: 4px; margin-bottom: 8px;
     }
     .calc-sub { display: block; margin-top: 6px; font-size: 0.72rem; color: var(--text-muted); line-height: 1.5; }
+  
+    /* Instruments page: professional typography */
+    #instView, #instView * { font-family: var(--sans) !important; letter-spacing: 0; }
+    #instView h1, #instView h2, #instView h3, #instView h4 { font-weight: 700; letter-spacing: -0.2px; }
+    #instView .inst-pnl, #instView .kpi-value, #instView .inst-chip .inst-pnl, #instView .ai-table td, #instView .day-pnl, #instView .trade-pnl-pill { font-family: var(--mono) !important; }
   </style>
 </head>
 <body>
@@ -1220,15 +1225,6 @@
         <div class="kpi-card"><div class="kpi-label">Green / Red Days</div><div class="kpi-value" id="greenRedDays">0 / 0</div><div class="kpi-sub" id="activeDaysCount">0 active sessions</div></div>
       </div>
 
-      <div class="card" id="marketPulseCard" style="margin-bottom:16px;padding:14px;">
-        <div class="kpi-label" style="margin-bottom:4px;">Market pulse · NSE leaders and laggards</div>
-        <p class="calc-hint" style="margin:0 0 12px;">Top gainers show where buyers are in control. Top losers show where the market is lagging, so be cautious there.</p>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px;">
-          <div><div class="kpi-label" style="color:var(--emerald);margin-bottom:6px;">▲ Top gainers</div><div id="marketGainersBox" style="height:360px;width:100%;"></div></div>
-          <div><div class="kpi-label" style="color:var(--rose);margin-bottom:6px;">▼ Top losers</div><div id="marketLosersBox" style="height:360px;width:100%;"></div></div>
-        </div>
-        <p class="calc-hint" style="margin-top:10px;">Live data from TradingView, not a recommendation to buy or sell. If the tables do not load, turn off ad blockers or open the Tools section.</p>
-      </div>
       <div class="card" id="homePhotos" style="margin-bottom:16px;padding:14px;">
         <div class="kpi-label" style="margin-bottom:10px;">Quark in action</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;">
@@ -2661,7 +2657,6 @@
       el('nseChartCard').style.display = inst ? '' : 'none';
       el('toolsView').style.display = tools ? 'block' : 'none';
       el('perfCalendar').style.display = 'none';
-      el('marketPulseCard').style.display = perf ? '' : 'none';
       el('homeAbout').style.display = perf ? '' : 'none';
       el('platformsCard').style.display = perf ? 'none' : '';
       document.querySelectorAll('.copilot-sidebar-card, .discipline-box, .leak-tracker, #topAiButton').forEach(n => n.style.display = perf ? 'none' : '');
