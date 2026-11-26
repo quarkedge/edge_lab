@@ -1146,7 +1146,7 @@
         <div class="leak-list" id="leakList"><span style="color: var(--text-muted); font-size: 0.8rem;">No rule violations logged</span></div>
       </div>
     
-      <div class="launcher-card" id="platformsCard">
+      <div class="launcher-card" id="platformsCard" style="display:none;">
         <div class="launch-head"><h4>🚀 My Platforms</h4><button type="button" class="launch-add" onclick="openSiteForm()">+ Add site</button></div>
         <div class="launcher-grid" id="launcherGrid"></div>
         <form class="site-form" id="siteForm" style="display:none;" onsubmit="saveSite(event)">
@@ -1182,7 +1182,25 @@
         </div>
       </div>
 
-      <div class="card" id="nseChartCard" style="margin-bottom:16px;padding:12px;"><div id="tradingview_nifty" style="height:460px;width:100%;"></div></div>
+      <div class="card" id="nseChartCard" style="margin-bottom:16px;padding:12px;display:none;"><div id="tradingview_nifty" style="height:460px;width:100%;"></div></div>
+      <div class="card" id="homeHero" style="margin-bottom:16px;padding:0;overflow:hidden;">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));">
+          <div style="padding:22px;">
+            <div class="kpi-label">Welcome to Quark</div>
+            <h2 style="font-size:1.4rem;margin:6px 0 8px;">Trade with a plan. Review with honesty.</h2>
+            <p class="calc-hint" style="margin:0 0 12px;">Quark is a trading journal and toolkit built for Indian markets. Log your trades, see which instruments and setups actually pay you, and let the AI Edge Audit show where your discipline slips.</p>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;">
+              <span class="slider-tag">NSE &amp; BSE</span><span class="slider-tag">TRADE JOURNAL</span><span class="slider-tag">AI AUDIT</span><span class="slider-tag">LIVE MARKETS</span><span class="slider-tag">CALCULATORS</span>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+              <button type="button" class="nav-btn-solid" onclick="openLoginModalFromProfile()">Sign in</button>
+              <button type="button" class="nav-btn-ghost" onclick="openLoginModalFromProfile();switchAuthTab('signup')">Create account</button>
+            </div>
+            <p class="calc-hint" style="margin-top:12px;">Sign in with Google or with your email. Your journal is linked to your account, so it follows you across devices.</p>
+          </div>
+          <div style="background:var(--bg-surface);min-height:230px;border-left:1px solid var(--border-subtle);"><svg viewBox="0 0 400 260" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Illustration of a candlestick chart"><line x1="0" y1="0" x2="400" y2="0" stroke="rgba(255,255,255,0.05)"/><line x1="0" y1="52" x2="400" y2="52" stroke="rgba(255,255,255,0.05)"/><line x1="0" y1="104" x2="400" y2="104" stroke="rgba(255,255,255,0.05)"/><line x1="0" y1="156" x2="400" y2="156" stroke="rgba(255,255,255,0.05)"/><line x1="0" y1="208" x2="400" y2="208" stroke="rgba(255,255,255,0.05)"/><line x1="16" y1="30.0" x2="16" y2="74.4" stroke="#f43f5e" stroke-width="1.5"/><rect x="11" y="39.2" width="10" height="12.8" rx="1.5" fill="#f43f5e"/><line x1="37" y1="32.7" x2="37" y2="102.4" stroke="#f43f5e" stroke-width="1.5"/><rect x="32" y="52.0" width="10" height="35.5" rx="1.5" fill="#f43f5e"/><line x1="58" y1="68.9" x2="58" y2="130.6" stroke="#f43f5e" stroke-width="1.5"/><rect x="53" y="87.5" width="10" height="36.8" rx="1.5" fill="#f43f5e"/><line x1="79" y1="117.2" x2="79" y2="134.8" stroke="#f43f5e" stroke-width="1.5"/><rect x="74" y="124.3" width="10" height="2.8" rx="1.5" fill="#f43f5e"/><line x1="100" y1="100.2" x2="100" y2="139.4" stroke="#f43f5e" stroke-width="1.5"/><rect x="95" y="127.2" width="10" height="3.7" rx="1.5" fill="#f43f5e"/><line x1="121" y1="109.1" x2="121" y2="182.9" stroke="#f43f5e" stroke-width="1.5"/><rect x="116" y="130.8" width="10" height="21.9" rx="1.5" fill="#f43f5e"/><line x1="142" y1="126.9" x2="142" y2="183.6" stroke="#10b981" stroke-width="1.5"/><rect x="137" y="142.6" width="10" height="10.1" rx="1.5" fill="#10b981"/><line x1="163" y1="114.8" x2="163" y2="193.3" stroke="#f43f5e" stroke-width="1.5"/><rect x="158" y="142.6" width="10" height="37.8" rx="1.5" fill="#f43f5e"/><line x1="184" y1="172.1" x2="184" y2="222.8" stroke="#f43f5e" stroke-width="1.5"/><rect x="179" y="180.4" width="10" height="29.0" rx="1.5" fill="#f43f5e"/><line x1="205" y1="167.7" x2="205" y2="230.0" stroke="#10b981" stroke-width="1.5"/><rect x="200" y="177.7" width="10" height="31.7" rx="1.5" fill="#10b981"/><line x1="226" y1="146.9" x2="226" y2="197.4" stroke="#10b981" stroke-width="1.5"/><rect x="221" y="162.0" width="10" height="15.7" rx="1.5" fill="#10b981"/><line x1="247" y1="155.2" x2="247" y2="209.0" stroke="#f43f5e" stroke-width="1.5"/><rect x="242" y="162.0" width="10" height="36.4" rx="1.5" fill="#f43f5e"/><line x1="268" y1="162.4" x2="268" y2="211.9" stroke="#10b981" stroke-width="1.5"/><rect x="263" y="178.9" width="10" height="19.5" rx="1.5" fill="#10b981"/><line x1="289" y1="150.8" x2="289" y2="192.0" stroke="#10b981" stroke-width="1.5"/><rect x="284" y="168.0" width="10" height="10.9" rx="1.5" fill="#10b981"/><line x1="310" y1="114.6" x2="310" y2="179.7" stroke="#10b981" stroke-width="1.5"/><rect x="305" y="138.2" width="10" height="29.8" rx="1.5" fill="#10b981"/><line x1="331" y1="109.3" x2="331" y2="166.5" stroke="#10b981" stroke-width="1.5"/><rect x="326" y="128.4" width="10" height="9.9" rx="1.5" fill="#10b981"/><line x1="352" y1="91.6" x2="352" y2="159.4" stroke="#10b981" stroke-width="1.5"/><rect x="347" y="104.5" width="10" height="23.9" rx="1.5" fill="#10b981"/><line x1="373" y1="88.2" x2="373" y2="161.0" stroke="#f43f5e" stroke-width="1.5"/><rect x="368" y="104.5" width="10" height="31.4" rx="1.5" fill="#f43f5e"/><polyline points="16,52.0 37,87.5 58,124.3 79,127.2 100,130.8 121,152.7 142,142.6 163,180.4 184,209.5 205,177.7 226,162.0 247,198.4 268,178.9 289,168.0 310,138.2 331,128.4 352,104.5 373,135.8" fill="none" stroke="#d4af37" stroke-width="2" opacity="0.7"/><text x="16" y="252" fill="#7e8c9f" font-size="11" font-family="monospace">ILLUSTRATION</text></svg></div>
+        </div>
+      </div>
       <div class="kpi-grid" id="perfKpis">
         <div class="kpi-card"><div class="kpi-label">Month Net P&L</div><div class="kpi-value" id="totalPnl">$0.00</div><div class="kpi-sub" id="pnlSub">0 logged trades</div></div>
         <div class="kpi-card"><div class="kpi-label">Win Rate</div><div class="kpi-value" id="winRate">0%</div><div class="kpi-sub" id="winLossCount">0W / 0L</div></div>
@@ -1192,10 +1210,26 @@
       </div>
 
       <div class="card" id="marketPulseCard" style="margin-bottom:16px;padding:14px;">
-        <div class="kpi-label" style="margin-bottom:4px;">Market pulse · NSE leaders and laggards today</div>
-        <p class="calc-hint" style="margin:0 0 10px;">Top gainers show where buyers are in control. Top losers show where the market is lagging, so be cautious there.</p>
-        <div id="marketPulseBox" style="height:420px;width:100%;"></div>
-        <p class="calc-hint" style="margin-top:8px;">Live data from TradingView, not a recommendation to buy or sell. If it does not load, turn off ad blockers or open the market page on TradingView.</p>
+        <div class="kpi-label" style="margin-bottom:4px;">Market pulse · NSE leaders and laggards</div>
+        <p class="calc-hint" style="margin:0 0 12px;">Top gainers show where buyers are in control. Top losers show where the market is lagging, so be cautious there.</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px;">
+          <div><div class="kpi-label" style="color:var(--emerald);margin-bottom:6px;">▲ Top gainers</div><div id="marketGainersBox" style="height:360px;width:100%;"></div></div>
+          <div><div class="kpi-label" style="color:var(--rose);margin-bottom:6px;">▼ Top losers</div><div id="marketLosersBox" style="height:360px;width:100%;"></div></div>
+        </div>
+        <p class="calc-hint" style="margin-top:10px;">Live data from TradingView, not a recommendation to buy or sell. If the tables do not load, turn off ad blockers or open the Tools section.</p>
+      </div>
+      <div class="card" id="homeAudit" style="margin-bottom:16px;padding:18px;">
+        <div class="kpi-label">✨ AI Edge Audit</div>
+        <h3 style="font-size:1.1rem;margin:6px 0 8px;">See where your edge leaks</h3>
+        <p class="calc-hint" style="margin:0 0 14px;">The audit reads your own journal and scores how well you execute. It gets more useful as you log more trades.</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:16px;">
+          <div class="about-card"><h3>Execution score</h3><p>How closely you follow your plan on entries and exits.</p></div>
+          <div class="about-card"><h3>Expectancy</h3><p>The average result you can expect per trade over time.</p></div>
+          <div class="about-card"><h3>Drawdown</h3><p>How far your account fell from its highest point.</p></div>
+          <div class="about-card"><h3>Costliest mistakes</h3><p>The habits that cost you the most, with one fix to work on.</p></div>
+        </div>
+        <button type="button" class="btn-ai-trigger" onclick="document.getElementById('openAiReportBtn').click()">Generate Audit</button>
+        <p class="calc-hint" style="margin-top:10px;">Needs logged trades. This is educational analysis, not investment advice.</p>
       </div>
       <div class="card" id="homeAbout" style="margin-bottom:16px;padding:18px;">
         <div class="kpi-label" style="margin-bottom:6px;">About Quark</div>
@@ -1215,7 +1249,7 @@
         <p class="calc-hint" style="margin:0 0 10px;">3. After about 10 trades, generate the AI Edge Audit and check Instruments.</p>
         <p class="calc-hint" style="margin:0;">Quark is for education and information only. It is not investment advice or a recommendation to buy or sell any security.</p>
       </div>
-      <div class="calendar-container" id="perfCalendar">
+      <div class="calendar-container" id="perfCalendar" style="display:none;">
         <div class="calendar-weekdays">
           <div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div><div>Sun</div>
           <div class="weekday-summary-col">Wk P&L</div>
@@ -3528,10 +3562,13 @@
     })();
 
     function renderMarketPulse() {
-      const box = document.getElementById('marketPulseBox');
-      if (!box || box.dataset.loaded) return;
-      box.dataset.loaded = '1';
-      tvEmbed(box, 'embed-widget-market-movers.js', { exchange: 'NSE', timeframe: '1D', colorTheme: TV_THEME(), isTransparent: false, locale: 'en', width: '100%', height: 420 });
+      const base = { market: 'india', defaultColumn: 'overview', showToolbar: false, width: '100%', height: 360, colorTheme: TV_THEME(), isTransparent: false, locale: 'en' };
+      [['marketGainersBox', 'top_gainers'], ['marketLosersBox', 'top_losers']].forEach(([id, screen]) => {
+        const box = document.getElementById(id);
+        if (!box || box.dataset.loaded) return;
+        box.dataset.loaded = '1';
+        tvEmbed(box, 'embed-widget-screener.js', Object.assign({}, base, { defaultScreen: screen }));
+      });
     }
     setView('perf');
     renderMarketPulse();
