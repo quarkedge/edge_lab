@@ -1070,6 +1070,12 @@
         </div>
       </div>
 
+      <div class="nse-chart-card" id="nseChartCard" style="background:var(--bg-card);border:1px solid var(--border-subtle);border-radius:12px;padding:12px;margin-bottom:16px;">
+        <div class="tradingview-widget-container">
+          <div id="tradingview_nifty" style="height:460px;width:100%;"></div>
+        </div>
+      </div>
+
       <div class="kpi-grid" id="perfKpis">
         <div class="kpi-card"><div class="kpi-label">Month Net P&L</div><div class="kpi-value" id="totalPnl">$0.00</div><div class="kpi-sub" id="pnlSub">0 logged trades</div></div>
         <div class="kpi-card"><div class="kpi-label">Win Rate</div><div class="kpi-value" id="winRate">0%</div><div class="kpi-sub" id="winLossCount">0W / 0L</div></div>
@@ -1128,11 +1134,6 @@
         </section>
 
       <section id="newsView" style="display:none;">
-        <div class="nse-chart-card" style="margin-bottom:16px;">
-          <div class="tradingview-widget-container">
-            <div id="tradingview_nifty" style="height:460px;width:100%;"></div>
-          </div>
-        </div>
         <div class="news-top">
           <span class="mkt-pill" id="mktStatus"></span>
           <span class="ai-sub" id="mktTimeline">Pre-open 9:00 · Open 9:15 · Close 15:30 IST</span>
@@ -2395,6 +2396,7 @@
       el('aboutView').style.display = about ? 'block' : 'none';
       document.querySelectorAll('.tab-about').forEach(b => b.classList.toggle('active', about));
       el('perfKpis').style.display = perf ? '' : 'none';
+      el('nseChartCard').style.display = (perf || inst) ? '' : 'none';
       el('perfCalendar').style.display = perf ? '' : 'none';
       el('instView').style.display = inst ? 'block' : 'none';
       el('newsView').style.display = news ? 'block' : 'none';
