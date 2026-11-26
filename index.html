@@ -1217,7 +1217,7 @@
           <div class="ic">🔎</div><h3>Scan the market</h3><p>Filter NSE stocks by size, price and other criteria.</p>
         </div>
       </div>
-      <div class="kpi-grid" id="perfKpis">
+      <div class="kpi-grid" id="perfKpis" style="display:none;">
         <div class="kpi-card"><div class="kpi-label">Month Net P&L</div><div class="kpi-value" id="totalPnl">$0.00</div><div class="kpi-sub" id="pnlSub">0 logged trades</div></div>
         <div class="kpi-card"><div class="kpi-label">Win Rate</div><div class="kpi-value" id="winRate">0%</div><div class="kpi-sub" id="winLossCount">0W / 0L</div></div>
         <div class="kpi-card"><div class="kpi-label">Profit Factor</div><div class="kpi-value" id="profitFactor">0.00</div><div class="kpi-sub" id="grossWinsLosses">$0 / $0</div></div>
@@ -2653,7 +2653,6 @@
       el('learnView').style.display = learn ? 'block' : 'none';
       el('aboutView').style.display = about ? 'block' : 'none';
       document.querySelectorAll('.tab-about').forEach(b => b.classList.toggle('active', about));
-      el('perfKpis').style.display = perf ? '' : 'none';
       el('nseChartCard').style.display = inst ? '' : 'none';
       el('toolsView').style.display = tools ? 'block' : 'none';
       el('perfCalendar').style.display = 'none';
