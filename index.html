@@ -814,6 +814,23 @@
     .full-bar button { padding:8px 12px; border-radius:8px; border:1px solid var(--border-subtle); background:var(--bg-card); color:var(--text-main); cursor:pointer; font-weight:600; }
     #fullChart { flex:1; min-height:0; }
     @media (max-width: 820px) { .tools-grid { grid-template-columns:1fr; } }
+  
+    /* ===== Tools picker & full-screen calendar ===== */
+    .picker-backdrop { display:none; position:fixed; inset:0; z-index:4500; background:rgba(0,0,0,0.7); backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:20px; }
+    .picker-backdrop.open { display:flex; }
+    .picker-card { background:var(--bg-surface); border:1px solid var(--border-focus); border-radius:18px; padding:26px; width:100%; max-width:720px; text-align:center; }
+    .picker-card h2 { font-family:var(--serif); letter-spacing:2px; color:var(--gold); margin-bottom:18px; font-size:1.3rem; }
+    .picker-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; }
+    .picker-grid button { background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:14px; padding:22px 14px; cursor:pointer; color:var(--text-main); display:flex; flex-direction:column; gap:8px; align-items:center; transition:all .2s; }
+    .picker-grid button:hover { border-color:var(--border-focus); transform:translateY(-2px); }
+    .picker-grid span { font-size:2rem; }
+    .picker-grid b { font-size:1rem; }
+    .picker-grid small { color:var(--text-muted); font-size:0.78rem; line-height:1.4; }
+    .picker-cancel { margin-top:16px; background:transparent; border:1px solid var(--border-subtle); color:var(--text-muted); padding:9px 18px; border-radius:9px; cursor:pointer; }
+    #calOverlay { display:none; position:fixed; inset:0; z-index:4000; background:var(--bg-base); flex-direction:column; }
+    #calOverlay.open { display:flex; }
+    #calFullSlot { flex:1; overflow:auto; padding:16px; }
+    @media (max-width: 640px) { .picker-grid { grid-template-columns:1fr; } }
   </style>
 </head>
 <body>
@@ -1170,7 +1187,6 @@
           <button type="button" class="tools-chip" onclick="tvSetSymbol('BITSTAMP:BTCUSD')">Bitcoin</button>
           <button type="button" class="tools-chip" onclick="tvSetSymbol('NASDAQ:AAPL')">Apple</button>
         </div>
-        <div class="tool-card wide" style="margin-bottom:16px;"><h3>Trading calendar (your P&amp;L)</h3><div id="toolsCalSlot"></div></div>
         <div class="tools-grid">
           <div class="tool-card wide"><h3>Ticker tape</h3><div class="tool-body" id="tv-ticker"></div></div>
           <div class="tool-card wide"><h3>Advanced chart · <span class="tools-current" id="tvCurrentLabel">NSE:NIFTY</span></h3><div class="tool-body" id="tv-chart" style="height:560px"></div></div>
@@ -2449,8 +2465,7 @@
       el('perfKpis').style.display = perf ? '' : 'none';
       el('nseChartCard').style.display = (perf || inst) ? '' : 'none';
       el('toolsView').style.display = tools ? 'block' : 'none';
-      el('perfCalendar').style.display = (perf || tools) ? '' : 'none';
-      placeCalendar(tools);
+      el('perfCalendar').style.display = perf ? '' : 'none';
       el('instView').style.display = inst ? 'block' : 'none';
       el('newsView').style.display = news ? 'block' : 'none';
       document.querySelectorAll('.tab-perf').forEach(b => b.classList.toggle('active', perf));
@@ -2631,7 +2646,7 @@
       document.getElementById('siteNav').classList.remove('menu-open');
       if (target === 'inst' || target === 'perf') setView(target);
       if (target === 'news') setView('news');
-      if (target === 'tools') setView('tools');
+      if (target === 'tools') openPicker();
       if (target === 'about') setView('about');
       if (target === 'sites') setTimeout(() => { el('platformsCard').scrollIntoView({ behavior: 'smooth', block: 'center' }); openSiteForm(); }, 450);
       document.getElementById('workspace').scrollIntoView({ behavior: 'smooth' });
@@ -2949,18 +2964,33 @@
     // Start fetching the Top stories feed as soon as the page loads, so it is ready when the News tab opens
     loadNews(false);
 
-    // ===== Move the trading calendar between Performance and Tools =====
+    // ===== Calendar home (it moves into a full-screen view and back) =====
     const CAL_HOME = { parent: null, next: null };
-    function placeCalendar(toTools) {
+
+
+    // ===== Tools picker: choose chart, calendar or all tools =====
+    function openPicker() { document.getElementById('toolsPicker').classList.add('open'); }
+    function closePicker() { document.getElementById('toolsPicker').classList.remove('open'); }
+    function pickChart() { closePicker(); tvOpenFull(); }
+    function pickTools() { closePicker(); setView('tools'); }
+    function pickCalendar() { closePicker(); openCalFull(); }
+
+    function openCalFull() {
       const cal = document.getElementById('perfCalendar');
       if (!cal) return;
       if (!CAL_HOME.parent) { CAL_HOME.parent = cal.parentNode; CAL_HOME.next = cal.nextSibling; }
-      if (toTools) {
-        document.getElementById('toolsCalSlot').appendChild(cal);
-      } else if (cal.parentNode !== CAL_HOME.parent) {
+      document.getElementById('calFullSlot').appendChild(cal);
+      cal.style.display = '';
+      document.getElementById('calOverlay').classList.add('open');
+    }
+    function closeCalFull() {
+      const cal = document.getElementById('perfCalendar');
+      if (cal && CAL_HOME.parent) {
         const next = CAL_HOME.next && CAL_HOME.next.parentNode === CAL_HOME.parent ? CAL_HOME.next : null;
         CAL_HOME.parent.insertBefore(cal, next);
+        cal.style.display = currentView === 'perf' ? '' : 'none';
       }
+      document.getElementById('calOverlay').classList.remove('open');
     }
 
     // ===== Tools & charts (TradingView widgets) =====
@@ -3096,7 +3126,7 @@
       tvSetSymbol(sym);
       fullDraw();
     }
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') tvCloseFull(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') { tvCloseFull(); closeCalFull(); closePicker(); } });
 
     // Performance-page chart (NIFTY)
     (function () {
@@ -3123,6 +3153,28 @@
     <button type="button" onclick="tvCloseFull()">Close ✕</button>
   </div>
   <div id="fullChart"></div>
+</div>
+<div id="toolsPicker" class="picker-backdrop" onclick="if(event.target===this)closePicker()">
+  <div class="picker-card">
+    <h2>What do you want to open?</h2>
+    <div class="picker-grid">
+      <button type="button" onclick="pickChart()"><span>📈</span><b>Trading chart</b><small>Full screen chart. Change symbol and timeframe.</small></button>
+      <button type="button" onclick="pickCalendar()"><span>🗓</span><b>Trading calendar</b><small>Your daily P&amp;L and trades, full screen.</small></button>
+      <button type="button" onclick="pickTools()"><span>🧰</span><b>All TradingView tools</b><small>Ticker, analysis, screener, market overview and more.</small></button>
+    </div>
+    <button type="button" class="picker-cancel" onclick="closePicker()">Cancel</button>
+  </div>
+</div>
+
+<div id="calOverlay">
+  <div class="full-bar">
+    <b style="color:var(--gold);">Trading calendar</b>
+    <button type="button" onclick="changeMonth(-1)">‹ Prev</button>
+    <button type="button" onclick="jumpToToday()">Today</button>
+    <button type="button" onclick="changeMonth(1)">Next ›</button>
+    <button type="button" onclick="closeCalFull()" style="margin-left:auto;">Close ✕</button>
+  </div>
+  <div id="calFullSlot"></div>
 </div>
 </body>
 </html>
