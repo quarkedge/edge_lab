@@ -1153,6 +1153,7 @@
           <select id="tvExchange" aria-label="Exchange"><option value="NSE">NSE</option><option value="BSE">BSE</option><option value="NASDAQ">NASDAQ</option><option value="NYSE">NYSE</option><option value="MCX">MCX</option><option value="BINANCE">BINANCE</option></select>
           <input id="tvSymbol" type="text" placeholder="Any symbol, e.g. RELIANCE, AAPL, BTCUSD" aria-label="Symbol" onkeydown="if(event.key==='Enter')tvSetFromInput()" />
           <button type="button" class="nav-btn-solid" onclick="tvSetFromInput()">Show chart</button>
+          <a id="tvFullLink" class="nav-btn-ghost" href="chart.html?symbol=NSE%3ANIFTY&interval=D" target="_blank" rel="noopener" style="text-decoration:none;">Full-screen chart ↗</a>
           <select id="tvInterval" aria-label="Interval" onchange="tvSetInterval(this.value)"><option value="1">1m</option><option value="5">5m</option><option value="15">15m</option><option value="60">1h</option><option value="D" selected>1D</option><option value="W">1W</option><option value="M">1M</option></select>
         </div>
         <div class="tools-chips"><button type="button" class="tools-chip" onclick="tvSetSymbol('NSE:NIFTY')">Nifty 50</button><button type="button" class="tools-chip" onclick="tvSetSymbol('NSE:BANKNIFTY')">Bank Nifty</button><button type="button" class="tools-chip" onclick="tvSetSymbol('BSE:SENSEX')">Sensex</button><button type="button" class="tools-chip" onclick="tvSetSymbol('NSE:RELIANCE')">Reliance</button><button type="button" class="tools-chip" onclick="tvSetSymbol('NSE:TCS')">TCS</button><button type="button" class="tools-chip" onclick="tvSetSymbol('NSE:HDFCBANK')">HDFC Bank</button><button type="button" class="tools-chip" onclick="tvSetSymbol('NSE:INFY')">Infosys</button><button type="button" class="tools-chip" onclick="tvSetSymbol('NSE:SBIN')">SBI</button><button type="button" class="tools-chip" onclick="tvSetSymbol('TVC:GOLD')">Gold</button><button type="button" class="tools-chip" onclick="tvSetSymbol('BITSTAMP:BTCUSD')">Bitcoin</button><button type="button" class="tools-chip" onclick="tvSetSymbol('NASDAQ:AAPL')">Apple</button><button type="button" class="tools-chip" onclick="tvSetSymbol('NASDAQ:NVDA')">Nvidia</button></div>
@@ -2979,7 +2980,7 @@
       'tv-chart': c => tvEmbed(c, 'embed-widget-advanced-chart.js', {
         width: '100%', height: 560, symbol: TV_STATE.symbol, interval: TV_STATE.interval,
         timezone: 'Asia/Kolkata', theme: tvTheme(), style: '1', locale: 'en',
-        allow_symbol_change: true, withdateranges: true, save_image: true, hide_side_toolbar: false,
+        allow_symbol_change: false, withdateranges: true, save_image: true, hide_side_toolbar: false,
         support_host: 'https://www.tradingview.com'
       }),
       'tv-ta': c => tvEmbed(c, 'embed-widget-technical-analysis.js', {
@@ -3028,6 +3029,7 @@
     function tvSetSymbol(sym) {
       TV_STATE.symbol = sym;
       document.getElementById('tvCurrentLabel').textContent = sym;
+      document.getElementById('tvFullLink').href = 'chart.html?symbol=' + encodeURIComponent(sym) + '&interval=' + TV_STATE.interval;
       tvRenderSymbolWidgets();
     }
 
@@ -3041,6 +3043,7 @@
 
     function tvSetInterval(v) {
       TV_STATE.interval = v;
+      document.getElementById('tvFullLink').href = 'chart.html?symbol=' + encodeURIComponent(TV_STATE.symbol) + '&interval=' + v;
       tvRender('tv-chart');
       tvRender('tv-ta');
     }
