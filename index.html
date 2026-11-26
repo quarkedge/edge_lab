@@ -893,6 +893,16 @@
     #fullChart iframe, #toolSlot iframe, #tv-chart iframe, #tv-ta iframe { width:100% !important; min-width:0 !important; max-width:100% !important; }
     .tradingview-widget-container { width:100% !important; min-width:0; }
     @media (max-width: 640px) { .slider-card { flex-basis:170px; } }
+  
+    /* Trader-style additions */
+    .slider-card { box-shadow: inset 3px 0 0 var(--gold); }
+    .slider-card b { font-family: var(--mono); font-size: 0.85rem; }
+    .slider-tag {
+      display: inline-block; font-family: var(--mono); font-size: 0.6rem; font-weight: 700; letter-spacing: 1.2px;
+      color: var(--emerald); background: var(--emerald-bg); border: 1px solid var(--emerald-border);
+      padding: 2px 6px; border-radius: 4px; margin-bottom: 8px;
+    }
+    .calc-sub { display: block; margin-top: 6px; font-size: 0.72rem; color: var(--text-muted); line-height: 1.5; }
   </style>
 </head>
 <body>
@@ -1179,6 +1189,12 @@
         <div class="kpi-card"><div class="kpi-label">Green / Red Days</div><div class="kpi-value" id="greenRedDays">0 / 0</div><div class="kpi-sub" id="activeDaysCount">0 active sessions</div></div>
       </div>
 
+      <div class="card" id="marketPulseCard" style="margin-bottom:16px;padding:14px;">
+        <div class="kpi-label" style="margin-bottom:4px;">Market pulse · NSE leaders and laggards today</div>
+        <p class="calc-hint" style="margin:0 0 10px;">Top gainers show where buyers are in control. Top losers show where the market is lagging, so be cautious there.</p>
+        <div id="marketPulseBox" style="height:420px;width:100%;"></div>
+        <p class="calc-hint" style="margin-top:8px;">Live data from TradingView, not a recommendation to buy or sell. If it does not load, turn off ad blockers or open the market page on TradingView.</p>
+      </div>
       <div class="calendar-container" id="perfCalendar">
         <div class="calendar-weekdays">
           <div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div><div>Sun</div>
@@ -1242,7 +1258,10 @@
             <div class="calc-field"><label for="psRisk">Risk per trade (%)</label><input id="psRisk" type="number" min="0" step="0.1" value="1" oninput="calcPosition()"></div>
             <div class="calc-field"><label for="psEntry">Entry price (₹)</label><input id="psEntry" type="number" min="0" step="0.05" value="" oninput="calcPosition()"></div>
             <div class="calc-field"><label for="psStop">Stop-loss (₹)</label><input id="psStop" type="number" min="0" step="0.05" value="" oninput="calcPosition()"></div>
+            <div class="calc-field"><label for="psSeg">Trade type</label><select id="psSeg" onchange="calcPosition()"><option value="intraday">Intraday equity</option><option value="delivery">Delivery equity</option></select></div>
+            <div class="calc-field"><label for="psFee">Broker fee per order (₹)</label><input id="psFee" type="number" min="0" step="1" value="20" oninput="calcPosition()"></div>
             <div class="calc-out" id="psOut">Enter entry and stop-loss to see quantity.</div>
+            <div class="calc-hint">Quantity is reduced until the loss at stop, including charges, fits within your risk limit.</div>
           </div>
 
           <div class="calc-card">
@@ -1251,9 +1270,10 @@
             <div class="calc-field"><label for="rrStop">Stop-loss (₹)</label><input id="rrStop" type="number" min="0" step="0.05" oninput="calcRR()"></div>
             <div class="calc-field"><label for="rrTarget">Target (₹)</label><input id="rrTarget" type="number" min="0" step="0.05" oninput="calcRR()"></div>
             <div class="calc-field"><label for="rrQty">Quantity</label><input id="rrQty" type="number" min="0" value="1" oninput="calcRR()"></div>
-            <div class="calc-field"><label for="rrCharges">Estimated charges per round trip (₹)</label><input id="rrCharges" type="number" min="0" value="50" oninput="calcRR()"></div>
+            <div class="calc-field"><label for="rrSeg">Trade type</label><select id="rrSeg" onchange="calcRR()"><option value="intraday">Intraday equity</option><option value="delivery">Delivery equity</option><option value="options">Options</option></select></div>
+            <div class="calc-field"><label for="rrFee">Broker fee per order (₹)</label><input id="rrFee" type="number" min="0" step="1" value="20" oninput="calcRR()"></div>
             <div class="calc-out" id="rrOut">Enter prices to see reward per risk.</div>
-            <div class="calc-hint">Charges are your own estimate. Check your broker's and the exchange's current fee schedule.</div>
+            <div class="calc-hint">Charges are estimated from standard NSE rates. Check your broker's and the exchange's current fee schedule.</div>
           </div>
 
           <div class="calc-card">
@@ -1263,8 +1283,9 @@
             <div class="calc-field"><label for="opPremium">Premium paid per unit (₹)</label><input id="opPremium" type="number" min="0" step="0.05" oninput="calcOptions()"></div>
             <div class="calc-field"><label for="opLot">Lot size (units)</label><input id="opLot" type="number" min="1" step="1" value="1" oninput="calcOptions()"></div>
             <div class="calc-field"><label for="opLots">Number of lots</label><input id="opLots" type="number" min="1" step="1" value="1" oninput="calcOptions()"></div>
+            <div class="calc-field"><label for="opFee">Broker fee per order (₹)</label><input id="opFee" type="number" min="0" step="1" value="20" oninput="calcOptions()"></div>
             <div class="calc-out" id="opOut">Enter strike and premium to see breakeven.</div>
-            <div class="calc-hint">Lot sizes change over time. Confirm the current lot size on the exchange. For option buyers, maximum loss is the premium paid.</div>
+            <div class="calc-hint">Lot sizes change over time. Confirm the current lot size on the exchange. For option buyers, maximum loss is the premium paid plus charges.</div>
           </div>
         </div>
 
@@ -2597,9 +2618,10 @@
       el('aboutView').style.display = about ? 'block' : 'none';
       document.querySelectorAll('.tab-about').forEach(b => b.classList.toggle('active', about));
       el('perfKpis').style.display = perf ? '' : 'none';
-      el('nseChartCard').style.display = (perf || inst) ? '' : 'none';
+      el('nseChartCard').style.display = inst ? '' : 'none';
       el('toolsView').style.display = tools ? 'block' : 'none';
-      el('perfCalendar').style.display = perf ? '' : 'none';
+      el('perfCalendar').style.display = 'none';
+      el('marketPulseCard').style.display = perf ? '' : 'none';
       el('instView').style.display = inst ? 'block' : 'none';
       el('newsView').style.display = news ? 'block' : 'none';
       document.querySelectorAll('.tab-perf').forEach(b => b.classList.toggle('active', perf));
@@ -3107,24 +3129,24 @@
     function openPicker() { buildSlider(); document.getElementById('toolsPicker').classList.add('open'); }
     function closePicker() { document.getElementById('toolsPicker').classList.remove('open'); }
     const SLIDER_TOOLS = [
-      { id: 'chart', icon: '📈', title: 'Trading chart', desc: 'Full-screen chart. Change symbol and timeframe.' },
-      { id: 'calendar', icon: '🗓', title: 'Trading calendar', desc: 'Your daily P&L and trades, full screen.' },
-      { id: 'ta', icon: '🎯', title: 'Technical analysis', desc: 'Buy / sell / neutral signals from indicators.' },
-      { id: 'ticker', icon: '💹', title: 'Ticker tape', desc: 'Live scrolling prices for indices and assets.' },
-      { id: 'overview', icon: '🌐', title: 'Market overview', desc: 'Indices, stocks and crypto in one table.' },
-      { id: 'nifty', icon: '🇮🇳', title: 'NIFTY chart links', desc: 'Open NIFTY 50 live on free sites in one tap.' },
-      { id: 'world', icon: '🌍', title: 'World market performance', desc: 'Indices from America, Europe, Asia, India and commodities.' },
-      { id: 'screener', icon: '🔎', title: 'Stock screener', desc: 'Filter Indian stocks by size, price and more.' },
-      { id: 'events', icon: '📅', title: 'Economic calendar', desc: 'Upcoming economic events and their impact.' },
-      { id: 'profile', icon: '🏢', title: 'Company profile', desc: 'Business summary for the selected symbol.' },
-      { id: 'financials', icon: '📊', title: 'Financials', desc: 'Key financial figures for the selected symbol.' },
-      { id: 'forex', icon: '💱', title: 'Forex rates', desc: 'Currency cross rates, including INR.' }
+      { id: 'chart', tag: 'LIVE', icon: '📈', title: 'Trading chart', desc: 'Full-screen chart. Change symbol and timeframe.' },
+      { id: 'calendar', tag: 'JOURNAL', icon: '🗓', title: 'Trading calendar', desc: 'Your daily P&L and trades, full screen.' },
+      { id: 'ta', tag: 'SIGNALS', icon: '🎯', title: 'Technical analysis', desc: 'Buy / sell / neutral signals from indicators.' },
+      { id: 'ticker', tag: 'TAPE', icon: '💹', title: 'Ticker tape', desc: 'Live scrolling prices for indices and assets.' },
+      { id: 'overview', tag: 'MARKETS', icon: '🌐', title: 'Market overview', desc: 'Indices, stocks and crypto in one table.' },
+      { id: 'nifty', tag: 'NIFTY', icon: '🇮🇳', title: 'NIFTY chart links', desc: 'Open NIFTY 50 live on free sites in one tap.' },
+      { id: 'world', tag: 'GLOBAL', icon: '🌍', title: 'World market performance', desc: 'Indices from America, Europe, Asia, India and commodities.' },
+      { id: 'screener', tag: 'SCAN', icon: '🔎', title: 'Stock screener', desc: 'Filter Indian stocks by size, price and more.' },
+      { id: 'events', tag: 'MACRO', icon: '📅', title: 'Economic calendar', desc: 'Upcoming economic events and their impact.' },
+      { id: 'profile', tag: 'FUNDAMENTALS', icon: '🏢', title: 'Company profile', desc: 'Business summary for the selected symbol.' },
+      { id: 'financials', tag: 'FINANCIALS', icon: '📊', title: 'Financials', desc: 'Key financial figures for the selected symbol.' },
+      { id: 'forex', tag: 'FX', icon: '💱', title: 'Forex rates', desc: 'Currency cross rates, including INR.' }
     ];
 
     function buildSlider() {
       const track = document.getElementById('sliderTrack');
       track.innerHTML = SLIDER_TOOLS.map(t => `<button type="button" class="slider-card" onclick="openTool('${t.id}')">
-        <span class="ico">${t.icon}</span><b>${t.title}</b><small>${t.desc}</small></button>`).join('');
+        <span class="slider-tag">${t.tag}</span><span class="ico">${t.icon}</span><b>${t.title}</b><small>${t.desc}</small></button>`).join('');
     }
     function slideBy(dir) {
       const track = document.getElementById('sliderTrack');
@@ -3255,7 +3277,7 @@
       if (cal && CAL_HOME.parent) {
         const next = CAL_HOME.next && CAL_HOME.next.parentNode === CAL_HOME.parent ? CAL_HOME.next : null;
         CAL_HOME.parent.insertBefore(cal, next);
-        cal.style.display = currentView === 'perf' ? '' : 'none';
+        cal.style.display = 'none';
       }
       document.getElementById('calOverlay').classList.remove('open');
     }
@@ -3403,38 +3425,88 @@
     function num(id) { const v = parseFloat(document.getElementById(id).value); return isNaN(v) ? null : v; }
     function inr(x) { return '₹' + x.toLocaleString('en-IN', { maximumFractionDigits: 2 }); }
 
+    /* ---- Trading charges (NSE, approximate rates) ----
+       Rates change over time. Confirm them with your broker and on the NSE website. */
+    const CHARGE_RATES = {
+      intraday: { brokPct: 0.0003, sttBuy: 0,       sttSell: 0.00025, exch: 0.0000297, stamp: 0.00003,  sebi: 0.000001 },
+      delivery: { brokPct: 0,      sttBuy: 0.001,   sttSell: 0.001,   exch: 0.0000297, stamp: 0.00015,  sebi: 0.000001 },
+      options:  { brokPct: 0,      sttBuy: 0,       sttSell: 0.001,   exch: 0.0003503, stamp: 0.00003,  sebi: 0.000001 }
+    };
+    // buyVal and sellVal are the rupee turnover on each side of the trade. fee is the flat broker fee per order.
+    // Intraday brokerage is the lower of the fee and 0.03% of the order value.
+    function chargesFor(seg, buyVal, sellVal, fee) {
+      const R = CHARGE_RATES[seg] || CHARGE_RATES.intraday;
+      let brok = 0, stt = 0, exch = 0, stamp = 0, sebi = 0;
+      [['buy', buyVal], ['sell', sellVal]].forEach(([side, v]) => {
+        if (!v || v <= 0) return;
+        brok += seg === 'intraday' ? Math.min(fee, R.brokPct * v) : fee;
+        stt += v * (side === 'buy' ? R.sttBuy : R.sttSell);
+        exch += v * R.exch;
+        if (side === 'buy') stamp += v * R.stamp;
+        sebi += v * R.sebi;
+      });
+      const gst = 0.18 * (brok + exch + sebi);
+      const total = brok + stt + exch + stamp + sebi + gst;
+      return { brok, stt, exch, stamp, sebi, gst, total };
+    }
+    function chargeLine(c) {
+      return `Brokerage ${inr(c.brok)} · STT ${inr(c.stt)} · Exchange ${inr(c.exch)} · Stamp ${inr(c.stamp)} · SEBI ${inr(c.sebi)} · GST ${inr(c.gst)}`;
+    }
+
     function calcPosition() {
       const cap = num('psCap'), risk = num('psRisk'), entry = num('psEntry'), stop = num('psStop');
+      const seg = document.getElementById('psSeg').value, fee = num('psFee') ?? 0;
       const out = document.getElementById('psOut');
       if (cap == null || risk == null || entry == null || stop == null || entry === stop || entry <= 0 || stop <= 0) {
         out.textContent = 'Enter entry and stop-loss (they must differ) to see quantity.'; return;
       }
-      const perShareRisk = Math.abs(entry - stop);
+      const isLong = stop < entry;
+      const grossLoss = q => Math.abs(entry - stop) * q;
+      const legs = q => isLong ? chargesFor(seg, entry * q, stop * q, fee) : chargesFor(seg, stop * q, entry * q, fee);
+      const totalLoss = q => grossLoss(q) + legs(q).total;
       const maxLoss = cap * (risk / 100);
-      const qty = Math.floor(maxLoss / perShareRisk);
-      out.innerHTML = `Quantity: <b>${qty}</b><br>Max loss at stop: <b>${inr(qty * perShareRisk)}</b><br>Position value: <b>${inr(qty * entry)}</b>`;
+      // Binary search for the largest quantity whose loss at stop, including charges, fits the risk budget
+      let lo = 0, hi = Math.floor(maxLoss / Math.abs(entry - stop));
+      while (lo < hi) {
+        const mid = Math.ceil((lo + hi) / 2);
+        if (totalLoss(mid) <= maxLoss) lo = mid; else hi = mid - 1;
+      }
+      const qty = lo;
+      if (qty < 1) { out.textContent = 'Your risk budget is too small for one share once charges are included.'; return; }
+      const c = legs(qty);
+      out.innerHTML = `Quantity: <b>${qty}</b><br>Gross loss at stop: <b>${inr(grossLoss(qty))}</b><br>Charges (round trip): <b>${inr(c.total)}</b><br>Total max loss: <b class="neg">${inr(totalLoss(qty))}</b><br>Position value: <b>${inr(qty * entry)}</b><br><span class="calc-sub">${chargeLine(c)}</span>`;
     }
 
     function calcRR() {
-      const e = num('rrEntry'), s = num('rrStop'), t = num('rrTarget'), q = num('rrQty') || 0, c = num('rrCharges') || 0;
+      const e = num('rrEntry'), s = num('rrStop'), t = num('rrTarget'), q = num('rrQty') || 0;
+      const seg = document.getElementById('rrSeg').value, fee = num('rrFee') ?? 0;
       const out = document.getElementById('rrOut');
       if (e == null || s == null || t == null || e === s) { out.textContent = 'Enter entry, stop-loss and target to see reward per risk.'; return; }
+      if (q <= 0) { out.textContent = 'Enter a quantity to see the net figures.'; return; }
       const isLong = t > e;
-      const risk = Math.abs(e - s) * q + c;
-      const reward = Math.abs(t - e) * q - c;
-      const ratio = (Math.abs(t - e)) / Math.abs(e - s);
-      const cls = reward >= 0 ? 'pos' : 'neg';
-      out.innerHTML = `Direction: <b>${isLong ? 'Long' : 'Short'}</b><br>Reward : risk: <b>1 : ${ratio.toFixed(2)}</b> (before charges)<br>Max loss incl. charges: <b class="neg">${inr(-risk)}</b><br>Net gain at target: <b class="${cls}">${inr(reward)}</b>`;
+      const legs = exitPrice => isLong ? chargesFor(seg, e * q, exitPrice * q, fee) : chargesFor(seg, exitPrice * q, e * q, fee);
+      const cT = legs(t), cS = legs(s);
+      const grossReward = Math.abs(t - e) * q, grossRisk = Math.abs(e - s) * q;
+      const netReward = grossReward - cT.total;
+      const totalRisk = grossRisk + cS.total;
+      const ratioGross = Math.abs(t - e) / Math.abs(e - s);
+      const ratioNet = netReward / totalRisk;
+      const cls = netReward >= 0 ? 'pos' : 'neg';
+      out.innerHTML = `Direction: <b>${isLong ? 'Long' : 'Short'}</b><br>Reward : risk before charges: <b>1 : ${ratioGross.toFixed(2)}</b><br>Reward : risk after charges: <b class="${cls}">1 : ${ratioNet.toFixed(2)}</b><br>Max loss at stop incl. charges: <b class="neg">${inr(-totalRisk)}</b><br>Net gain at target: <b class="${cls}">${inr(netReward)}</b><br><span class="calc-sub">Charges at target: ${inr(cT.total)} · at stop: ${inr(cS.total)}<br>${chargeLine(cT)}</span>`;
     }
 
     function calcOptions() {
       const type = document.getElementById('opType').value;
-      const k = num('opStrike'), p = num('opPremium'), lot = num('opLot') || 1, lots = num('opLots') || 1;
+      const k = num('opStrike'), p = num('opPremium'), lot = num('opLot') || 1, lots = num('opLots') || 1, fee = num('opFee') ?? 0;
       const out = document.getElementById('opOut');
       if (k == null || p == null) { out.textContent = 'Enter strike and premium to see breakeven.'; return; }
-      const be = type === 'call' ? k + p : k - p;
-      const cost = p * lot * lots;
-      out.innerHTML = `Breakeven at expiry: <b>${inr(be)}</b><br>Total premium paid: <b>${inr(cost)}</b><br>Max loss (buyer): <b class="neg">${inr(-cost)}</b>`;
+      const units = lot * lots;
+      const premium = p * units;
+      const c = chargesFor('options', premium, 0, fee);
+      const totalCost = premium + c.total;
+      const perUnit = totalCost / units;
+      const be = type === 'call' ? k + perUnit : k - perUnit;
+      out.innerHTML = `Breakeven at expiry (incl. charges): <b>${inr(be)}</b><br>Premium paid: <b>${inr(premium)}</b><br>Entry charges: <b>${inr(c.total)}</b><br>Total cost (buyer): <b class="neg">${inr(-totalCost)}</b><br><span class="calc-sub">Exit charges, including STT on sale, are extra. ${chargeLine(c)}</span>`;
     }
 
     /* Market status: NSE regular session 9:15-15:30 IST, pre-open 9:00-9:15. Weekends closed. Holidays not included. */
@@ -3466,6 +3538,14 @@
       };
       document.head.appendChild(s);
     })();
+
+    function renderMarketPulse() {
+      const box = document.getElementById('marketPulseBox');
+      if (!box || box.dataset.loaded) return;
+      box.dataset.loaded = '1';
+      tvEmbed(box, 'embed-widget-market-movers.js', { exchange: 'NSE', timeframe: '1D', colorTheme: TV_THEME(), isTransparent: false, locale: 'en', width: '100%', height: 420 });
+    }
+    renderMarketPulse();
 
     initAuthSystem();
   </script>
