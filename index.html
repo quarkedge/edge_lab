@@ -814,6 +814,39 @@
     .full-bar button { padding:8px 12px; border-radius:8px; border:1px solid var(--border-subtle); background:var(--bg-card); color:var(--text-main); cursor:pointer; font-weight:600; }
     #fullChart { flex:1; min-height:0; }
     @media (max-width: 820px) { .tools-grid { grid-template-columns:1fr; } }
+    /* ---- Trader tools: status, calculators, glossary ---- */
+    .nse-live { display:inline-flex; align-items:center; gap:8px; font-size:0.78rem; font-weight:700;
+      padding:6px 12px; border-radius:999px; border:1px solid var(--border-subtle); background:var(--bg-card); margin-bottom:12px; }
+    .nse-live-dot { width:8px; height:8px; border-radius:50%; background:var(--text-muted); }
+    .nse-live.open .nse-live-dot { background:var(--emerald); box-shadow:0 0 8px var(--emerald); }
+    .nse-live.pre .nse-live-dot { background:var(--amber); }
+    .nse-live.closed .nse-live-dot { background:var(--rose); }
+    .nse-live-note { font-weight:500; color:var(--text-muted); font-size:0.72rem; }
+    .calc-grid { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:16px; margin-bottom:16px; }
+    .calc-card { background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:12px; padding:14px; min-width:0; }
+    .calc-card h3 { font-size:0.75rem; letter-spacing:.6px; color:var(--gold); text-transform:uppercase; margin-bottom:10px; font-weight:700; }
+    .calc-field { display:flex; flex-direction:column; gap:4px; margin-bottom:8px; }
+    .calc-field label { font-size:0.7rem; color:var(--text-muted); font-weight:600; }
+    .calc-field input { width:100%; }
+    .calc-out { margin-top:10px; padding-top:10px; border-top:1px solid var(--border-subtle); font-size:0.8rem; line-height:1.7; }
+    .calc-out b { color:var(--text-main); }
+    .calc-out .neg { color:var(--rose); }
+    .calc-out .pos { color:var(--emerald); }
+    .calc-hint { font-size:0.68rem; color:var(--text-muted); margin-top:6px; line-height:1.5; }
+    .glossary { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:10px 18px; font-size:0.8rem; line-height:1.55; }
+    .glossary dt { font-weight:700; color:var(--text-main); }
+    .glossary dd { color:var(--text-muted); margin:0 0 6px 0; }
+    .tools-disclaimer { font-size:0.7rem; color:var(--text-muted); margin-top:14px; line-height:1.6; text-align:center; }
+    @media (max-width: 820px) { .calc-grid, .glossary { grid-template-columns:1fr; } }
+    .learn-intro p { font-size:0.9rem; color:var(--text-muted); line-height:1.6; margin:4px 2px 16px; }
+    .learn-grid { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:16px; margin-top:16px; }
+    .learn-grid .tool-card { padding:16px; }
+    .learn-grid h3 { color:var(--gold) !important; }
+    .learn-p { font-size:0.84rem; color:var(--text-main); line-height:1.65; margin:0 6px; }
+    .learn-glossary { margin-top:4px; }
+    @media (max-width: 820px) { .learn-grid { grid-template-columns:1fr; } }
+
+
   
     /* ===== Tools picker & full-screen calendar ===== */
     .picker-backdrop { display:none; position:fixed; inset:0; z-index:4500; background:rgba(0,0,0,0.7); backdrop-filter:blur(6px); align-items:center; justify-content:center; padding:20px; }
@@ -996,7 +1029,7 @@
           <div class="nav-menu" id="navSitesMenu"></div>
         </div>
         <div class="nav-item"><button class="nav-link" type="button" onclick="navGo('tools')">Tools</button></div>
-        <div class="nav-item"><a class="nav-link" href="https://zerodha.com/varsity/" target="_blank" rel="noopener">Learning Center</a></div>
+        <div class="nav-item"><button class="nav-link" type="button" onclick="navGo('learn')">Learning Centre</button></div>
       </div>
 
       <a class="nav-logo" href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" aria-label="Quark home">
@@ -1195,6 +1228,76 @@
 
         </section>
 
+
+      <section id="learnView" style="display:none;">
+        <div class="learn-intro">
+          <p>New to trading in India? Start here. Read a section, then try the calculators with sample numbers before risking real money.</p>
+        </div>
+        <div class="nse-live closed" id="nseLiveStatus"><span class="nse-live-dot"></span><span id="nseLiveText">NSE status</span><span class="nse-live-note">IST · Mon–Fri · excludes exchange holidays</span></div>
+
+        <div class="calc-grid">
+          <div class="calc-card">
+            <h3>Position size</h3>
+            <div class="calc-field"><label for="psCap">Capital (₹)</label><input id="psCap" type="number" min="0" value="100000" oninput="calcPosition()"></div>
+            <div class="calc-field"><label for="psRisk">Risk per trade (%)</label><input id="psRisk" type="number" min="0" step="0.1" value="1" oninput="calcPosition()"></div>
+            <div class="calc-field"><label for="psEntry">Entry price (₹)</label><input id="psEntry" type="number" min="0" step="0.05" value="" oninput="calcPosition()"></div>
+            <div class="calc-field"><label for="psStop">Stop-loss (₹)</label><input id="psStop" type="number" min="0" step="0.05" value="" oninput="calcPosition()"></div>
+            <div class="calc-out" id="psOut">Enter entry and stop-loss to see quantity.</div>
+          </div>
+
+          <div class="calc-card">
+            <h3>Risk : reward</h3>
+            <div class="calc-field"><label for="rrEntry">Entry (₹)</label><input id="rrEntry" type="number" min="0" step="0.05" oninput="calcRR()"></div>
+            <div class="calc-field"><label for="rrStop">Stop-loss (₹)</label><input id="rrStop" type="number" min="0" step="0.05" oninput="calcRR()"></div>
+            <div class="calc-field"><label for="rrTarget">Target (₹)</label><input id="rrTarget" type="number" min="0" step="0.05" oninput="calcRR()"></div>
+            <div class="calc-field"><label for="rrQty">Quantity</label><input id="rrQty" type="number" min="0" value="1" oninput="calcRR()"></div>
+            <div class="calc-field"><label for="rrCharges">Estimated charges per round trip (₹)</label><input id="rrCharges" type="number" min="0" value="50" oninput="calcRR()"></div>
+            <div class="calc-out" id="rrOut">Enter prices to see reward per risk.</div>
+            <div class="calc-hint">Charges are your own estimate. Check your broker's and the exchange's current fee schedule.</div>
+          </div>
+
+          <div class="calc-card">
+            <h3>Options breakeven</h3>
+            <div class="calc-field"><label for="opType">Type</label><select id="opType" onchange="calcOptions()"><option value="call">Call (CE)</option><option value="put">Put (PE)</option></select></div>
+            <div class="calc-field"><label for="opStrike">Strike (₹)</label><input id="opStrike" type="number" min="0" step="1" oninput="calcOptions()"></div>
+            <div class="calc-field"><label for="opPremium">Premium paid per unit (₹)</label><input id="opPremium" type="number" min="0" step="0.05" oninput="calcOptions()"></div>
+            <div class="calc-field"><label for="opLot">Lot size (units)</label><input id="opLot" type="number" min="1" step="1" value="1" oninput="calcOptions()"></div>
+            <div class="calc-field"><label for="opLots">Number of lots</label><input id="opLots" type="number" min="1" step="1" value="1" oninput="calcOptions()"></div>
+            <div class="calc-out" id="opOut">Enter strike and premium to see breakeven.</div>
+            <div class="calc-hint">Lot sizes change over time. Confirm the current lot size on the exchange. For option buyers, maximum loss is the premium paid.</div>
+          </div>
+        </div>
+
+        <div class="learn-glossary">
+          <div class="tool-card wide" style="width:100%;">
+            <h3>Quick glossary</h3>
+            <dl class="glossary">
+              <div><dt>Stop-loss</dt><dd>A price where you exit to cap a loss.</dd></div>
+              <div><dt>Risk : reward</dt><dd>Potential gain divided by potential loss on a trade.</dd></div>
+              <div><dt>OI (open interest)</dt><dd>Number of open option or futures contracts not yet closed.</dd></div>
+              <div><dt>PCR</dt><dd>Put-call ratio. Total put open interest divided by total call open interest.</dd></div>
+              <div><dt>ATR</dt><dd>Average true range. A measure of how much a price typically moves.</dd></div>
+              <div><dt>F&amp;O</dt><dd>Futures and options, derivatives traded on the exchange.</dd></div>
+              <div><dt>Lot size</dt><dd>Fixed number of units in one derivatives contract.</dd></div>
+              <div><dt>STT</dt><dd>Securities Transaction Tax, charged on trades in India.</dd></div>
+            </dl>
+          </div>
+        </div>
+
+
+        <div class="learn-grid">
+          <div class="tool-card"><h3>1. Read a candle</h3><p class="learn-p">Each candle shows the open, high, low and close for one time period. A green (or hollow) candle means the price closed higher than it opened. A red (or filled) candle means it closed lower. Long wicks show prices that were tested and rejected.</p></div>
+          <div class="tool-card"><h3>2. Stop-loss first</h3><p class="learn-p">Decide where you'll exit if the trade goes against you before you enter. A stop-loss turns an open-ended risk into a fixed amount. Most beginners lose money by moving or dropping stops, not by picking the wrong stock.</p></div>
+          <div class="tool-card"><h3>3. Size the position</h3><p class="learn-p">Choose a risk you can absorb, such as 1% of your capital per trade, then work backwards to quantity using the position size calculator above. Size comes from your stop distance, not from how confident you feel.</p></div>
+          <div class="tool-card"><h3>4. Think in risk : reward</h3><p class="learn-p">A trade that risks ₹1 to make ₹2 needs to win less often to break even. Check the ratio before entering, and remember that charges reduce the real reward. Use the risk : reward calculator to see the net figure.</p></div>
+          <div class="tool-card"><h3>5. Options carry more risk</h3><p class="learn-p">Option buyers can lose the full premium paid, and options lose value as expiry approaches. Option sellers can face losses much larger than the premium received. Use the breakeven calculator, and understand a strategy fully before trading it.</p></div>
+          <div class="tool-card"><h3>6. Charges add up</h3><p class="learn-p">Brokerage, exchange fees, STT, stamp duty, GST and other taxes are charged on each trade. Frequent trading can cost more than the gains. Estimate them with your broker's current fee schedule.</p></div>
+          <div class="tool-card"><h3>7. Keep a journal</h3><p class="learn-p">Log every trade with the reason, the plan and the result. The trade journal in this app calculates win rate and average outcome, so you can see what is actually working.</p></div>
+          <div class="tool-card"><h3>8. Learn more</h3><p class="learn-p">For free, in-depth courses on the Indian markets, see Zerodha Varsity. Read the SEBI investor education material on sebi.gov.in before you invest.</p><a class="nav-btn-ghost" href="https://zerodha.com/varsity/" target="_blank" rel="noopener" style="text-decoration:none;display:inline-block;margin-top:8px;">Zerodha Varsity ↗</a></div>
+        </div>
+        <p class="tools-disclaimer">Quark's learning material and calculators are for education and information only. They are not investment advice or a recommendation to buy or sell any security. Calculations are estimates. Check your own figures before trading.</p>
+      </section>
+
       <section id="toolsView" style="display:none;">
         <div class="tools-bar">
           <select id="tvExchange" aria-label="Exchange"><option>NSE</option><option>BSE</option><option>NASDAQ</option><option>NYSE</option><option>MCX</option><option>BINANCE</option></select>
@@ -1227,6 +1330,7 @@
           <div class="tool-card wide"><h3>Stock screener (India)</h3><div class="tool-body" id="tv-screener" style="height:600px"></div></div>
           <div class="tool-card"><h3>Forex cross rates</h3><div class="tool-body" id="tv-forex" style="height:400px"></div></div>
         </div>
+        <p class="tools-disclaimer">Quark tools are for education and information only. Nothing here is investment advice or a recommendation to buy or sell. Calculations are estimates. Check your own figures before trading.</p>
       </section>
 
       <section id="newsView" style="display:none;">
@@ -2488,7 +2592,8 @@
 
     function setView(v) {
       currentView = v;
-      const perf = v === 'perf', inst = v === 'inst', news = v === 'news', about = v === 'about', tools = v === 'tools';
+      const perf = v === 'perf', inst = v === 'inst', news = v === 'news', about = v === 'about', tools = v === 'tools', learn = v === 'learn';
+      el('learnView').style.display = learn ? 'block' : 'none';
       el('aboutView').style.display = about ? 'block' : 'none';
       document.querySelectorAll('.tab-about').forEach(b => b.classList.toggle('active', about));
       el('perfKpis').style.display = perf ? '' : 'none';
@@ -2500,8 +2605,8 @@
       document.querySelectorAll('.tab-perf').forEach(b => b.classList.toggle('active', perf));
       document.querySelectorAll('.tab-inst').forEach(b => b.classList.toggle('active', inst));
       document.querySelectorAll('.tab-news').forEach(b => b.classList.toggle('active', news));
-      el('viewHeading').textContent = perf ? 'Performance Matrix' : inst ? 'Instrument Calendar' : about ? 'About Quark' : tools ? 'Tools' : 'Market News';
-      document.querySelector('.month-selector').style.display = (news || about) ? 'none' : '';
+      el('viewHeading').textContent = perf ? 'Performance Matrix' : inst ? 'Instrument Calendar' : about ? 'About Quark' : tools ? 'Tools' : learn ? 'Learning Centre' : 'Market News';
+      document.querySelector('.month-selector').style.display = (news || about || learn) ? 'none' : '';
       if (tools) tvOpenTools();
       if (inst) renderInstruments();
       if (news) { renderNewsCats(); updateMarketStatus(); loadNews(false); }
@@ -2676,6 +2781,7 @@
       if (target === 'inst' || target === 'perf') setView(target);
       if (target === 'news') setView('news');
       if (target === 'tools') openPicker();
+      if (target === 'learn') setView('learn');
       if (target === 'about') setView('about');
       if (target === 'sites') setTimeout(() => { el('platformsCard').scrollIntoView({ behavior: 'smooth', block: 'center' }); openSiteForm(); }, 450);
       document.getElementById('workspace').scrollIntoView({ behavior: 'smooth' });
@@ -3238,7 +3344,11 @@
     function tvOpenTools() {
       if (TV_BUILT) return;
       TV_BUILT = true;
-      Object.keys(TV_RENDER).forEach(tvRender);
+      if (!('IntersectionObserver' in window)) { Object.keys(TV_RENDER).forEach(tvRender); return; }
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(en => { if (en.isIntersecting) { io.unobserve(en.target); tvRender(en.target.id); } });
+      }, { rootMargin: '250px' });
+      Object.keys(TV_RENDER).forEach(id => { const el = document.getElementById(id); if (el) io.observe(el); });
     }
     function tvSetSymbol(sym) {
       TV_STATE.symbol = sym;
@@ -3288,6 +3398,59 @@
       tvSetSymbol(sym);
       fullDraw();
     }
+
+    /* ---- Trader tools logic (pure browser maths, no data feed needed) ---- */
+    function num(id) { const v = parseFloat(document.getElementById(id).value); return isNaN(v) ? null : v; }
+    function inr(x) { return '₹' + x.toLocaleString('en-IN', { maximumFractionDigits: 2 }); }
+
+    function calcPosition() {
+      const cap = num('psCap'), risk = num('psRisk'), entry = num('psEntry'), stop = num('psStop');
+      const out = document.getElementById('psOut');
+      if (cap == null || risk == null || entry == null || stop == null || entry === stop || entry <= 0 || stop <= 0) {
+        out.textContent = 'Enter entry and stop-loss (they must differ) to see quantity.'; return;
+      }
+      const perShareRisk = Math.abs(entry - stop);
+      const maxLoss = cap * (risk / 100);
+      const qty = Math.floor(maxLoss / perShareRisk);
+      out.innerHTML = `Quantity: <b>${qty}</b><br>Max loss at stop: <b>${inr(qty * perShareRisk)}</b><br>Position value: <b>${inr(qty * entry)}</b>`;
+    }
+
+    function calcRR() {
+      const e = num('rrEntry'), s = num('rrStop'), t = num('rrTarget'), q = num('rrQty') || 0, c = num('rrCharges') || 0;
+      const out = document.getElementById('rrOut');
+      if (e == null || s == null || t == null || e === s) { out.textContent = 'Enter entry, stop-loss and target to see reward per risk.'; return; }
+      const isLong = t > e;
+      const risk = Math.abs(e - s) * q + c;
+      const reward = Math.abs(t - e) * q - c;
+      const ratio = (Math.abs(t - e)) / Math.abs(e - s);
+      const cls = reward >= 0 ? 'pos' : 'neg';
+      out.innerHTML = `Direction: <b>${isLong ? 'Long' : 'Short'}</b><br>Reward : risk: <b>1 : ${ratio.toFixed(2)}</b> (before charges)<br>Max loss incl. charges: <b class="neg">${inr(-risk)}</b><br>Net gain at target: <b class="${cls}">${inr(reward)}</b>`;
+    }
+
+    function calcOptions() {
+      const type = document.getElementById('opType').value;
+      const k = num('opStrike'), p = num('opPremium'), lot = num('opLot') || 1, lots = num('opLots') || 1;
+      const out = document.getElementById('opOut');
+      if (k == null || p == null) { out.textContent = 'Enter strike and premium to see breakeven.'; return; }
+      const be = type === 'call' ? k + p : k - p;
+      const cost = p * lot * lots;
+      out.innerHTML = `Breakeven at expiry: <b>${inr(be)}</b><br>Total premium paid: <b>${inr(cost)}</b><br>Max loss (buyer): <b class="neg">${inr(-cost)}</b>`;
+    }
+
+    /* Market status: NSE regular session 9:15-15:30 IST, pre-open 9:00-9:15. Weekends closed. Holidays not included. */
+    function nseStatus() {
+      const parts = new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Kolkata', weekday: 'short', hour: '2-digit', minute: '2-digit', hour12: false }).formatToParts(new Date());
+      const wd = parts.find(p => p.type === 'weekday').value;
+      const mins = parseInt(parts.find(p => p.type === 'hour').value, 10) * 60 + parseInt(parts.find(p => p.type === 'minute').value, 10);
+      const pill = document.getElementById('nseLiveStatus'), txt = document.getElementById('nseLiveText');
+      const weekday = !['Sat', 'Sun'].includes(wd);
+      pill.classList.remove('open', 'pre', 'closed');
+      if (weekday && mins >= 555 && mins < 930) { pill.classList.add('open'); txt.textContent = 'NSE open · closes 3:30 PM IST'; }
+      else if (weekday && mins >= 540 && mins < 555) { pill.classList.add('pre'); txt.textContent = 'NSE pre-open · opens 9:15 AM IST'; }
+      else { pill.classList.add('closed'); txt.textContent = weekday && mins < 540 ? 'NSE closed · pre-open 9:00 AM IST' : 'NSE closed · next session 9:15 AM IST'; }
+    }
+    nseStatus(); setInterval(nseStatus, 60000);
+    calcPosition(); calcRR(); calcOptions();
     document.addEventListener('keydown', e => { if (e.key === 'Escape') { tvCloseFull(); closeCalFull(); closePicker(); closeToolFull(); } });
 
     // Performance-page chart (NIFTY)
