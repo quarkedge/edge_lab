@@ -1639,10 +1639,12 @@
       initTheme();
       renderDashboard(); // paint the calendar grid immediately (shows the loading state until trades arrive)
       // 1) Firebase remembers the signed-in user across reloads. Trust that first.
+      let firebaseAnswered = false; // true only when Firebase has actually told us who (if anyone) is signed in
       if (FIREBASE_WEB_CONFIG.apiKey) {
         try {
-          const auth = await withTimeout(ensureFirebaseAuth(), 8000, 'Firebase took too long to load');
-          const user = await withTimeout(new Promise(res => { const off = auth.onAuthStateChanged(u => { off(); res(u); }); }), 8000, 'Sign-in check timed out');
+          const auth = await withTimeout(ensureFirebaseAuth(), 20000, 'Firebase took too long to load');
+          const user = await withTimeout(new Promise(res => { const off = auth.onAuthStateChanged(u => { off(); res(u); }); }), 20000, 'Sign-in check timed out');
+          firebaseAnswered = true;
           if (user) {
             authToken = await user.getIdToken();
             currentSessionUser = 'fb_' + user.uid;
@@ -1652,8 +1654,9 @@
           }
         } catch (e) { console.warn('Could not restore Firebase session', e); }
       }
-      // 2) Legacy trader-ID sessions (non fb_ keys) are kept in localStorage.
-      if (currentSessionUser && currentSessionUser.indexOf('fb_') !== 0) {
+      // 2) Keep a saved session when Firebase could not answer (slow network or error), so a refresh never logs the user out by accident.
+      //    Legacy trader-ID sessions are always kept. A fb_ session is dropped only when Firebase confirms nobody is signed in.
+      if (currentSessionUser && (currentSessionUser.indexOf('fb_') !== 0 || !firebaseAnswered)) {
         loadUserProfileAndTrades(currentSessionUser);
         return;
       }
