@@ -778,7 +778,7 @@
 
   /* ===== Premium pass: skeleton, SVG icons, gold as accent only, calendar cards ===== */
   .ui-icon { width: 14px; height: 14px; flex-shrink: 0; vertical-align: -2px; display: inline-block; }
-  .day-cell.day-skel { cursor: default; pointer-events: none; transform: none; border-color: transparent;
+  .day-cell.day-skel { cursor: default; pointer-events: none; transform: none; border-color: var(--border-subtle);
     background: linear-gradient(90deg, var(--bg-base) 25%, var(--bg-surface) 50%, var(--bg-base) 75%);
     background-size: 200% 100%; animation: skelShimmer 1.4s infinite linear; box-shadow: none; }
   @keyframes skelShimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
@@ -1566,10 +1566,17 @@
       const q = (authToken && path.indexOf('fb_') === 0) ? '?auth=' + encodeURIComponent(authToken) : '';
       return `${MASTER_FIREBASE_URL}/quark_vault/users/${path}.json${q}`;
     }
+    function withTimeout(promise, ms, msg) {
+      return Promise.race([promise, new Promise((_, rej) => setTimeout(() => rej(new Error(msg || 'Timed out')), ms))]);
+    }
     async function dbGetUser(userKey) {
-      const res = await fetch(fbUrl(userKey));
-      if (!res.ok) throw new Error('Database error ' + res.status);
-      return await res.json();
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), 8000); // never leave the calendar waiting forever
+      try {
+        const res = await fetch(fbUrl(userKey), { signal: ctrl.signal });
+        if (!res.ok) throw new Error('Database error ' + res.status);
+        return await res.json();
+      } finally { clearTimeout(timer); }
     }
     async function dbPut(path, value) {
       const res = await fetch(fbUrl(path), { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(value) });
@@ -1630,11 +1637,12 @@
 
         async function initAuthSystem() {
       initTheme();
+      renderDashboard(); // paint the calendar grid immediately (shows the loading state until trades arrive)
       // 1) Firebase remembers the signed-in user across reloads. Trust that first.
       if (FIREBASE_WEB_CONFIG.apiKey) {
         try {
-          const auth = await ensureFirebaseAuth();
-          const user = await new Promise(res => { const off = auth.onAuthStateChanged(u => { off(); res(u); }); });
+          const auth = await withTimeout(ensureFirebaseAuth(), 8000, 'Firebase took too long to load');
+          const user = await withTimeout(new Promise(res => { const off = auth.onAuthStateChanged(u => { off(); res(u); }); }), 8000, 'Sign-in check timed out');
           if (user) {
             authToken = await user.getIdToken();
             currentSessionUser = 'fb_' + user.uid;
@@ -3323,6 +3331,7 @@
       slot.appendChild(cal);
       cal.style.display = '';
       document.getElementById('calOverlay').classList.add('open');
+      renderDashboard(); // always draw the day grid when the calendar is opened
     }
     function closeCalFull() {
       const cal = document.getElementById('perfCalendar');
