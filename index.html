@@ -2666,7 +2666,8 @@
       document.querySelectorAll('.tab-about').forEach(b => b.classList.toggle('active', about));
       el('nseChartCard').style.display = inst ? '' : 'none';
       el('toolsView').style.display = tools ? 'block' : 'none';
-      el('perfCalendar').style.display = 'none';
+      el('perfCalendar').style.display = perf ? '' : 'none';
+      el('perfKpis').style.display = perf ? '' : 'none';
       el('homeAbout').style.display = perf ? '' : 'none';
       el('platformsCard').style.display = perf ? 'none' : '';
       document.querySelectorAll('.copilot-sidebar-card, .discipline-box, .leak-tracker, #topAiButton').forEach(n => n.style.display = perf ? 'none' : '');
@@ -3339,12 +3340,12 @@
       if (cal && CAL_HOME.parent) {
         const next = CAL_HOME.next && CAL_HOME.next.parentNode === CAL_HOME.parent ? CAL_HOME.next : null;
         CAL_HOME.parent.insertBefore(cal, next);
-        cal.style.display = 'none';
+        cal.style.display = currentView === 'perf' ? '' : 'none';
       }
       if (kpis && CAL_HOME.kpiParent) {
         const kn = CAL_HOME.kpiNext && CAL_HOME.kpiNext.parentNode === CAL_HOME.kpiParent ? CAL_HOME.kpiNext : null;
         CAL_HOME.kpiParent.insertBefore(kpis, kn);
-        kpis.style.display = 'none';
+        kpis.style.display = currentView === 'perf' ? '' : 'none';
       }
       document.getElementById('calOverlay').classList.remove('open');
     }
