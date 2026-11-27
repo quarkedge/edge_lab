@@ -1137,7 +1137,7 @@
         <input type="file" id="avatarFileInput" accept="image/*" style="display:none" onchange="handleAvatarUpload(event)" />
       </div>
 
-      <div class="copilot-sidebar-card" style="display:none;">
+      <div class="copilot-sidebar-card">
         <div class="copilot-badge">✨ AI Edge Audit</div>
         <p>Autonomous scan of execution leaks, playbook expectancy, and discipline score.</p>
         <button class="btn-ai-trigger" id="openAiReportBtn">Generate Audit</button>
@@ -1186,7 +1186,7 @@
             <select id="yearSelect"></select>
             <button class="month-nav-btn" onclick="changeMonth(1)">›</button>
           </div>
-          <button class="btn-ai-trigger" id="topAiButton" style="display:none;">Generate Audit</button>
+          <button class="btn-ai-trigger" id="topAiButton">Generate Audit</button>
         </div>
       </div>
 
@@ -2670,7 +2670,7 @@
       el('perfKpis').style.display = perf ? '' : 'none';
       el('homeAbout').style.display = perf ? '' : 'none';
       el('platformsCard').style.display = perf ? 'none' : '';
-      document.querySelectorAll('.copilot-sidebar-card, .discipline-box, .leak-tracker, #topAiButton').forEach(n => n.style.display = perf ? 'none' : '');
+      document.querySelectorAll('.discipline-box, .leak-tracker').forEach(n => n.style.display = perf ? 'none' : '');
       el('instView').style.display = inst ? 'block' : 'none';
       el('newsView').style.display = news ? 'block' : 'none';
       document.querySelectorAll('.tab-perf').forEach(b => b.classList.toggle('active', perf));
