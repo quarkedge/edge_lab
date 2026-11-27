@@ -730,6 +730,9 @@
     .modal, .auth-card { animation: sheetIn .55s var(--spring) backwards; will-change: transform; overscroll-behavior: contain; }
     @keyframes ovIn { from { opacity: 0; } }
     @keyframes sheetIn { from { opacity: 0; transform: translateY(40px) scale(.95); } }
+    /* Journal popup opens immediately: short entrance, no long spring wait */
+    #tradeModalOverlay { animation: ovIn .12s ease backwards; }
+    #tradeModalOverlay .modal { animation: sheetIn .18s ease-out backwards; }
     .reveal { opacity: 0; transform: translateY(26px); transition: opacity .8s var(--spring), transform .8s var(--spring); }
     .reveal.in { opacity: 1; transform: none; }
     .swL { animation: swL .5s var(--spring); } .swR { animation: swR .5s var(--spring); }
@@ -3170,8 +3173,11 @@
       new MutationObserver(() => document.querySelectorAll('#aboutView .reveal:not(.in)').forEach(n => io && io.observe(n))).observe(document.getElementById('aboutView'), { attributes: true, attributeFilter: ['style'] });
     })();
 
-    // Start fetching the Top stories feed as soon as the page loads, so it is ready when the News tab opens
-    loadNews(false);
+    // Start the Top stories feed once the page is loaded and idle, so it never delays taps on the calendar
+    (function deferNewsStart() {
+      const start = () => { if ('requestIdleCallback' in window) requestIdleCallback(() => loadNews(false), { timeout: 3000 }); else setTimeout(() => loadNews(false), 1500); };
+      if (document.readyState === 'complete') start(); else window.addEventListener('load', start, { once: true });
+    })();
 
     // ===== Calendar home (it moves into a full-screen view and back) =====
     const CAL_HOME = { parent: null, next: null, kpiParent: null, kpiNext: null };
